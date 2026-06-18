@@ -5120,6 +5120,7 @@ SITEMAPEOF
             --purple-dim: rgba(139, 92, 246, 0.15);
             --red: #ef4444;
             --yellow: #f59e0b;
+            --orange: #f97316;
             --radius: 16px;
             --radius-sm: 10px;
             --radius-xs: 8px;
@@ -5139,22 +5140,88 @@ SITEMAPEOF
             line-height: 1.6;
             overflow-x: hidden;
             -webkit-font-smoothing: antialiased;
+            -webkit-tap-highlight-color: transparent;
         }
 
-        /* Background Pattern */
+        body.menu-open { overflow: hidden; }
+
+        /* ============ ANIMATIONS ============ */
+        @keyframes fadeInUp {
+            from { opacity: 0; transform: translateY(30px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes fadeInLeft {
+            from { opacity: 0; transform: translateX(-30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes fadeInRight {
+            from { opacity: 0; transform: translateX(30px); }
+            to { opacity: 1; transform: translateX(0); }
+        }
+        @keyframes scaleIn {
+            from { opacity: 0; transform: scale(0.9); }
+            to { opacity: 1; transform: scale(1); }
+        }
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+            50% { box-shadow: 0 0 0 10px transparent; }
+        }
+        @keyframes slideDown {
+            from { opacity: 0; transform: translateY(-100%); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes slideUp {
+            from { opacity: 0; transform: translateY(100%); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        @keyframes marquee {
+            0% { transform: translateX(100%); }
+            100% { transform: translateX(-100%); }
+        }
+        @keyframes ripple {
+            to { transform: scale(4); opacity: 0; }
+        }
+        @keyframes popupIn {
+            from { opacity: 0; transform: scale(0.85) translateY(20px); }
+            to { opacity: 1; transform: scale(1) translateY(0); }
+        }
+        
+        .animate {
+            opacity: 0;
+            transition: opacity 0.6s ease, transform 0.6s ease;
+        }
+        .animate.visible { opacity: 1; }
+        .animate.fade-up { transform: translateY(30px); }
+        .animate.fade-up.visible { transform: translateY(0); }
+        .animate.fade-left { transform: translateX(-30px); }
+        .animate.fade-left.visible { transform: translateX(0); }
+        .animate.fade-right { transform: translateX(30px); }
+        .animate.fade-right.visible { transform: translateX(0); }
+        .animate.scale-in { transform: scale(0.9); }
+        .animate.scale-in.visible { transform: scale(1); }
+
+        /* ============ RIPPLE EFFECT ============ */
+        .ripple {
+            position: relative; overflow: hidden;
+        }
+        .ripple-effect {
+            position: absolute; border-radius: 50%;
+            background: rgba(255,255,255,0.3);
+            transform: scale(0); animation: ripple 0.6s linear;
+            pointer-events: none;
+        }
+
+        /* ============ BACKGROUND ============ */
         .bg-pattern {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0;
             background-image: 
                 radial-gradient(ellipse at 20% 50%, rgba(20,184,166,0.03) 0%, transparent 50%),
                 radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.03) 0%, transparent 50%),
                 radial-gradient(ellipse at 50% 80%, rgba(139,92,246,0.03) 0%, transparent 50%);
         }
-
         .bg-grid {
-            position: fixed;
-            top: 0; left: 0; width: 100%; height: 100%;
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
             pointer-events: none; z-index: 0; opacity: 0.4;
             background-image: 
                 linear-gradient(rgba(100,116,139,0.06) 1px, transparent 1px),
@@ -5162,99 +5229,145 @@ SITEMAPEOF
             background-size: 60px 60px;
         }
 
-        /* Container */
+        /* ============ ANNOUNCEMENT BAR (RUNNING TEXT) ============ */
+        .announce-bar {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 2000;
+            background: linear-gradient(135deg, var(--accent), #0d9488);
+            color: #fff; font-size: 13px; font-weight: 600;
+            padding: 8px 0; overflow: hidden; display: none;
+            letter-spacing: 0.3px;
+        }
+        .announce-bar.active { display: block; animation: slideDown 0.4s ease; }
+        .announce-bar .marquee-wrap {
+            display: flex; align-items: center; white-space: nowrap;
+        }
+        .announce-bar .marquee-text {
+            display: inline-block; padding-right: 50px;
+            animation: marquee 25s linear infinite;
+        }
+        .announce-bar .announce-close {
+            position: absolute; right: 16px; top: 50%; transform: translateY(-50%);
+            background: rgba(255,255,255,0.2); border: none; color: #fff;
+            width: 24px; height: 24px; border-radius: 50%; cursor: pointer;
+            font-size: 12px; display: flex; align-items: center; justify-content: center;
+            transition: var(--transition); z-index: 1;
+        }
+        .announce-bar .announce-close:hover { background: rgba(255,255,255,0.4); }
+
+        /* ============ POPUP PROMO ============ */
+        .popup-overlay {
+            position: fixed; top: 0; left: 0; width: 100%; height: 100%;
+            z-index: 3000; background: rgba(0,0,0,0.7);
+            backdrop-filter: blur(6px); -webkit-backdrop-filter: blur(6px);
+            display: none; align-items: center; justify-content: center;
+            padding: 20px;
+        }
+        .popup-overlay.active { display: flex; }
+        .popup-modal {
+            background: var(--bg-secondary); border: 1px solid var(--border-hover);
+            border-radius: var(--radius); padding: 40px 32px;
+            max-width: 480px; width: 100%; position: relative;
+            text-align: center; box-shadow: 0 20px 60px rgba(0,0,0,0.5);
+            animation: popupIn 0.5s cubic-bezier(0.16, 1, 0.3, 1);
+        }
+        .popup-modal .popup-close {
+            position: absolute; top: 16px; right: 16px;
+            background: var(--bg-card); border: 1px solid var(--border);
+            color: var(--text-secondary); width: 32px; height: 32px;
+            border-radius: 50%; cursor: pointer; font-size: 14px;
+            display: flex; align-items: center; justify-content: center;
+            transition: var(--transition);
+        }
+        .popup-modal .popup-close:hover {
+            background: var(--red); color: #fff; border-color: var(--red);
+        }
+        .popup-modal .popup-icon {
+            font-size: 48px; margin-bottom: 16px;
+        }
+        .popup-modal h3 {
+            font-size: 24px; font-weight: 800; margin-bottom: 8px;
+            letter-spacing: -0.5px;
+        }
+        .popup-modal p {
+            color: var(--text-secondary); font-size: 14px;
+            margin-bottom: 24px; line-height: 1.6;
+        }
+        .popup-modal .popup-highlight {
+            display: inline-block; background: var(--accent-dim);
+            color: var(--accent-light); padding: 4px 16px;
+            border-radius: 100px; font-size: 13px; font-weight: 600;
+            margin-bottom: 20px;
+        }
+        .popup-modal .btn { width: 100%; justify-content: center; }
+
+        /* ============ CONTAINER ============ */
         .container {
             width: 100%; max-width: 1200px;
             margin: 0 auto; padding: 0 24px;
             position: relative; z-index: 1;
         }
 
-        /* Navigation */
+        /* ============ NAVIGATION ============ */
         .navbar {
             position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
-            padding: 14px 0;
-            transition: var(--transition);
-            backdrop-filter: blur(12px);
-            -webkit-backdrop-filter: blur(12px);
+            padding: 14px 0; transition: var(--transition);
+            backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px);
             background: rgba(15, 23, 42, 0.85);
             border-bottom: 1px solid transparent;
         }
-
-        .navbar.scrolled { 
-            border-bottom-color: var(--border);
-            background: rgba(15, 23, 42, 0.95);
-        }
-
+        .navbar.scrolled { border-bottom-color: var(--border); background: rgba(15, 23, 42, 0.95); }
         .nav-inner {
             display: flex; align-items: center; justify-content: space-between;
             width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px;
         }
-
         .nav-logo {
             display: flex; align-items: center; gap: 10px;
             font-size: 20px; font-weight: 800; color: var(--text-primary);
             text-decoration: none; letter-spacing: -0.5px;
         }
-
         .nav-logo .logo-icon {
             width: 36px; height: 36px;
             background: linear-gradient(135deg, var(--accent), var(--accent-light));
             border-radius: 10px; display: flex; align-items: center; justify-content: center;
             font-size: 18px; color: #0f172a; font-weight: 900;
         }
-
         .nav-links {
             display: flex; align-items: center; gap: 32px; list-style: none;
         }
-
         .nav-links a {
             color: var(--text-secondary); text-decoration: none;
-            font-size: 14px; font-weight: 500; transition: var(--transition);
-            position: relative;
+            font-size: 14px; font-weight: 500; transition: var(--transition); position: relative;
         }
-
         .nav-links a:hover, .nav-links a.active { color: var(--accent-light); }
-
         .nav-links a::after {
             content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
-            background: var(--accent); transition: var(--transition);
+            background: var(--accent); transition: width 0.3s ease;
         }
-
         .nav-links a:hover::after { width: 100%; }
-
         .nav-cta {
             padding: 8px 20px; background: var(--accent);
             color: #0f172a !important; border-radius: 100px;
             font-weight: 600 !important; font-size: 13px !important;
             transition: var(--transition);
         }
-
-        .nav-cta:hover {
-            background: var(--accent-light);
-            box-shadow: 0 0 24px var(--accent-glow);
-        }
-
+        .nav-cta:hover { background: var(--accent-light); box-shadow: 0 0 24px var(--accent-glow); }
         .nav-cta::after { display: none !important; }
-
         .mobile-toggle {
             display: none; background: none; border: none; cursor: pointer;
             width: 36px; height: 36px; position: relative; z-index: 1001;
         }
-
         .mobile-toggle span {
             display: block; width: 22px; height: 2px; background: var(--text-primary);
             margin: 5px auto; transition: var(--transition); border-radius: 2px;
         }
-
         .mobile-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
         .mobile-toggle.active span:nth-child(2) { opacity: 0; }
         .mobile-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
 
-        /* Hero */
+        /* ============ HERO ============ */
         .hero {
-            padding: 140px 0 80px; text-align: center; position: relative; z-index: 1;
+            padding: 160px 0 80px; text-align: center; position: relative; z-index: 1;
         }
-
         .hero-badge {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 6px 16px; background: var(--accent-dim);
@@ -5262,447 +5375,295 @@ SITEMAPEOF
             border-radius: 100px; font-size: 13px; font-weight: 500;
             color: var(--accent-light); margin-bottom: 28px;
         }
-
         .hero-badge .dot {
             width: 8px; height: 8px; background: var(--accent);
             border-radius: 50%; animation: pulse-dot 2s infinite;
         }
-
-        @keyframes pulse-dot {
-            0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
-            50% { box-shadow: 0 0 0 10px transparent; }
-        }
-
         .hero h1 {
             font-size: clamp(32px, 5vw, 56px); font-weight: 900;
             line-height: 1.15; margin-bottom: 20px; letter-spacing: -1px;
         }
-
         .hero h1 .highlight {
             background: linear-gradient(135deg, var(--accent-light), var(--accent));
             -webkit-background-clip: text; -webkit-text-fill-color: transparent;
             background-clip: text;
         }
-
         .hero p {
             font-size: 18px; color: var(--text-secondary); max-width: 600px;
             margin: 0 auto 36px; line-height: 1.7;
         }
-
-        .hero-buttons {
-            display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
-        }
-
+        .hero-buttons { display: flex; gap: 14px; justify-content: center; flex-wrap: wrap; }
         .btn {
             display: inline-flex; align-items: center; gap: 8px;
             padding: 14px 32px; border-radius: 100px; font-size: 15px;
-            font-weight: 600; text-decoration: none;
-            transition: var(--transition); cursor: pointer; border: none;
-            font-family: inherit;
+            font-weight: 600; text-decoration: none; cursor: pointer; border: none;
+            font-family: inherit; transition: all 0.35s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; overflow: hidden;
         }
-
+        .btn:active { transform: scale(0.96); }
         .btn-primary {
             background: linear-gradient(135deg, var(--accent), #0d9488);
             color: #fff; box-shadow: 0 4px 20px var(--accent-glow);
         }
-
         .btn-primary:hover {
-            transform: translateY(-2px); box-shadow: 0 8px 32px rgba(20,184,166,0.45);
+            transform: translateY(-3px); box-shadow: 0 8px 32px rgba(20,184,166,0.45);
         }
-
         .btn-outline {
             background: transparent; color: var(--text-primary);
             border: 1px solid var(--border);
         }
-
         .btn-outline:hover {
             border-color: var(--accent); background: var(--accent-dim);
+            transform: translateY(-3px);
         }
-
-        .hero-stats {
-            display: flex; justify-content: center; gap: 48px;
-            margin-top: 56px; flex-wrap: wrap;
-        }
-
+        .hero-stats { display: flex; justify-content: center; gap: 48px; margin-top: 56px; flex-wrap: wrap; }
         .hero-stat { text-align: center; }
-
         .hero-stat .stat-number {
-            font-size: 28px; font-weight: 800; color: var(--accent-light);
-            letter-spacing: -0.5px;
+            font-size: 28px; font-weight: 800; color: var(--accent-light); letter-spacing: -0.5px;
         }
+        .hero-stat .stat-label { font-size: 13px; color: var(--text-muted); margin-top: 4px; }
 
-        .hero-stat .stat-label {
-            font-size: 13px; color: var(--text-muted); margin-top: 4px;
-        }
-
-        /* Section */
+        /* ============ SECTION ============ */
         .section { padding: 80px 0; position: relative; z-index: 1; }
-
         .section-header { text-align: center; margin-bottom: 56px; }
-
         .section-tag {
             display: inline-block; padding: 5px 14px;
             background: var(--accent-dim); color: var(--accent-light);
             border-radius: 100px; font-size: 12px; font-weight: 600;
             text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;
         }
-
         .section-header h2 {
             font-size: clamp(24px, 4vw, 36px); font-weight: 800;
             letter-spacing: -0.5px; margin-bottom: 12px;
         }
-
         .section-header p {
             color: var(--text-secondary); font-size: 16px; max-width: 560px;
             margin: 0 auto; line-height: 1.7;
         }
 
-        /* Server Cards */
+        /* ============ SERVER CARDS ============ */
         .server-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
             gap: 24px;
         }
-
         .server-card {
             background: var(--bg-card); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 32px;
-            transition: var(--transition); position: relative; overflow: hidden;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative; overflow: hidden;
         }
-
         .server-card:hover {
             border-color: var(--border-hover);
-            transform: translateY(-4px);
+            transform: translateY(-6px);
             box-shadow: var(--shadow-hover);
         }
-
+        .server-card:active { transform: translateY(-2px) scale(0.98); }
         .server-card.featured {
             border-color: var(--accent);
             background: linear-gradient(135deg, rgba(20,184,166,0.08), var(--bg-card));
         }
-
         .server-card.featured::before {
-            content: '★ POPULER';
-            position: absolute; top: 16px; right: -28px;
+            content: '★ POPULER'; position: absolute; top: 16px; right: -28px;
             background: var(--accent); color: #0f172a;
             font-size: 10px; font-weight: 700; padding: 4px 36px;
             transform: rotate(45deg); letter-spacing: 1px;
         }
-
-        .server-flag {
-            font-size: 36px; margin-bottom: 16px;
-        }
-
-        .server-card h3 {
-            font-size: 20px; font-weight: 700; margin-bottom: 6px;
-        }
-
-        .server-location {
-            color: var(--text-muted); font-size: 13px; margin-bottom: 16px;
-        }
-
-        .server-features {
-            list-style: none; margin-bottom: 24px;
-        }
-
+        .server-flag { font-size: 36px; margin-bottom: 16px; }
+        .server-card h3 { font-size: 20px; font-weight: 700; margin-bottom: 6px; }
+        .server-location { color: var(--text-muted); font-size: 13px; margin-bottom: 16px; }
+        .server-features { list-style: none; margin-bottom: 24px; }
         .server-features li {
             padding: 6px 0; color: var(--text-secondary); font-size: 14px;
             display: flex; align-items: center; gap: 8px;
         }
-
         .server-features li i { color: var(--accent); font-size: 12px; }
+        .server-price { display: flex; align-items: baseline; gap: 4px; margin-bottom: 6px; }
+        .server-price .amount { font-size: 32px; font-weight: 800; color: var(--text-primary); }
+        .server-price .period { color: var(--text-muted); font-size: 14px; }
+        .server-price-alt { font-size: 13px; color: var(--text-muted); margin-bottom: 20px; }
+        .server-card .btn { width: 100%; justify-content: center; padding: 12px; font-size: 14px; }
 
-        .server-price {
-            display: flex; align-items: baseline; gap: 4px;
-            margin-bottom: 6px;
-        }
-
-        .server-price .amount {
-            font-size: 32px; font-weight: 800; color: var(--text-primary);
-        }
-
-        .server-price .period {
-            color: var(--text-muted); font-size: 14px;
-        }
-
-        .server-price-alt {
-            font-size: 13px; color: var(--text-muted); margin-bottom: 20px;
-        }
-
-        .server-card .btn {
-            width: 100%; justify-content: center; padding: 12px;
-            font-size: 14px;
-        }
-
-        /* Features */
+        /* ============ FEATURES ============ */
         .features-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
             gap: 24px;
         }
-
         .feature-card {
             background: var(--bg-card); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 28px;
-            transition: var(--transition); text-align: center;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1); text-align: center;
         }
-
-        .feature-card:hover {
-            border-color: var(--border-hover);
-            transform: translateY(-3px);
-        }
-
+        .feature-card:hover { border-color: var(--border-hover); transform: translateY(-4px); }
+        .feature-card:active { transform: translateY(-2px) scale(0.98); }
         .feature-icon {
             width: 56px; height: 56px; margin: 0 auto 20px;
             border-radius: 14px; display: flex; align-items: center; justify-content: center;
-            font-size: 24px;
+            font-size: 24px; transition: transform 0.3s ease;
         }
-
+        .feature-card:hover .feature-icon { transform: scale(1.1) rotate(-5deg); }
         .feature-icon.teal { background: var(--accent-dim); color: var(--accent-light); }
         .feature-icon.blue { background: var(--blue-dim); color: var(--blue); }
         .feature-icon.purple { background: var(--purple-dim); color: var(--purple); }
         .feature-icon.green { background: var(--green-dim); color: var(--green); }
+        .feature-icon.orange { background: rgba(249,115,22,0.15); color: var(--orange); }
+        .feature-card h3 { font-size: 16px; font-weight: 700; margin-bottom: 8px; }
+        .feature-card p { font-size: 13px; color: var(--text-muted); line-height: 1.6; }
 
-        .feature-card h3 {
-            font-size: 16px; font-weight: 700; margin-bottom: 8px;
-        }
-
-        .feature-card p {
-            font-size: 13px; color: var(--text-muted); line-height: 1.6;
-        }
-
-        /* Pricing Toggle */
+        /* ============ PRICING ============ */
         .pricing-toggle {
             display: flex; align-items: center; justify-content: center;
             gap: 16px; margin-bottom: 48px;
         }
-
         .pricing-toggle span {
             font-size: 14px; font-weight: 500; color: var(--text-muted);
             transition: var(--transition);
         }
-
         .pricing-toggle span.active { color: var(--text-primary); font-weight: 600; }
-
         .toggle-switch {
             width: 52px; height: 28px; background: var(--bg-secondary);
             border-radius: 100px; cursor: pointer; position: relative;
             border: 1px solid var(--border); transition: var(--transition);
         }
-
         .toggle-switch::after {
             content: ''; position: absolute; top: 3px; left: 3px;
             width: 20px; height: 20px; background: var(--accent);
             border-radius: 50%; transition: var(--transition);
         }
-
         .toggle-switch.yearly::after { left: 27px; }
         .toggle-switch.yearly { border-color: var(--accent); }
-
         .toggle-badge {
             font-size: 11px; font-weight: 700; padding: 3px 10px;
             background: var(--accent-dim); color: var(--accent-light);
             border-radius: 100px;
         }
-
-        /* Pricing Cards */
         .pricing-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
             gap: 24px;
         }
-
         .pricing-card {
             background: var(--bg-card); border: 1px solid var(--border);
             border-radius: var(--radius); padding: 36px 28px;
-            transition: var(--transition); text-align: center;
-            position: relative;
+            transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            text-align: center; position: relative;
         }
-
         .pricing-card:hover {
             border-color: var(--border-hover);
-            transform: translateY(-4px);
-            box-shadow: var(--shadow-hover);
+            transform: translateY(-6px); box-shadow: var(--shadow-hover);
         }
-
+        .pricing-card:active { transform: translateY(-2px) scale(0.98); }
         .pricing-card.popular {
             border-color: var(--accent);
             transform: scale(1.03);
             background: linear-gradient(135deg, rgba(20,184,166,0.06), var(--bg-card));
         }
-
-        .pricing-card.popular:hover { transform: scale(1.03) translateY(-4px); }
-
+        .pricing-card.popular:hover { transform: scale(1.03) translateY(-6px); }
         .popular-badge {
             position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
             background: linear-gradient(135deg, var(--accent), #0d9488);
             color: #fff; font-size: 12px; font-weight: 700; padding: 6px 20px;
             border-radius: 100px; letter-spacing: 0.5px;
         }
-
-        .pricing-name {
-            font-size: 18px; font-weight: 700; margin-bottom: 4px;
-        }
-
-        .pricing-desc {
-            font-size: 13px; color: var(--text-muted); margin-bottom: 24px;
-        }
-
-        .pricing-amount {
-            font-size: 42px; font-weight: 900; letter-spacing: -1px;
-            margin-bottom: 4px;
-        }
-
-        .pricing-period {
-            font-size: 13px; color: var(--text-muted); margin-bottom: 24px;
-        }
-
-        .pricing-features {
-            list-style: none; text-align: left; margin-bottom: 28px;
-        }
-
+        .pricing-name { font-size: 18px; font-weight: 700; margin-bottom: 4px; }
+        .pricing-desc { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+        .pricing-amount { font-size: 42px; font-weight: 900; letter-spacing: -1px; margin-bottom: 4px; }
+        .pricing-period { font-size: 13px; color: var(--text-muted); margin-bottom: 24px; }
+        .pricing-features { list-style: none; text-align: left; margin-bottom: 28px; }
         .pricing-features li {
             padding: 7px 0; font-size: 14px; color: var(--text-secondary);
             display: flex; align-items: center; gap: 10px;
         }
-
         .pricing-features li i.fa-check { color: var(--accent); }
         .pricing-features li i.fa-times { color: var(--text-muted); }
-
         .pricing-card .btn { width: 100%; justify-content: center; }
 
-        /* FAQ */
+        /* ============ FAQ ============ */
         .faq-list { max-width: 760px; margin: 0 auto; }
-
         .faq-item {
             background: var(--bg-card); border: 1px solid var(--border);
             border-radius: var(--radius-sm); margin-bottom: 12px;
-            overflow: hidden; transition: var(--transition); cursor: pointer;
+            overflow: hidden; transition: all 0.35s ease; cursor: pointer;
         }
-
         .faq-item:hover { border-color: var(--border-hover); }
-
+        .faq-item.active { border-color: var(--accent); background: var(--bg-card-hover); }
         .faq-question {
             padding: 18px 24px; display: flex; align-items: center;
             justify-content: space-between; font-weight: 600; font-size: 15px;
+            transition: color 0.3s ease;
         }
-
+        .faq-item.active .faq-question { color: var(--accent-light); }
         .faq-question i {
-            transition: var(--transition); color: var(--text-muted); font-size: 14px;
+            transition: transform 0.35s ease; color: var(--text-muted); font-size: 14px;
         }
-
         .faq-item.active .faq-question i { transform: rotate(180deg); color: var(--accent); }
-
         .faq-answer {
-            max-height: 0; overflow: hidden; transition: max-height 0.35s ease;
+            max-height: 0; overflow: hidden; transition: max-height 0.4s ease, padding 0.4s ease;
             padding: 0 24px;
         }
+        .faq-item.active .faq-answer { max-height: 300px; padding-bottom: 18px; }
+        .faq-answer p { color: var(--text-secondary); font-size: 14px; line-height: 1.7; }
 
-        .faq-item.active .faq-answer {
-            max-height: 300px; padding-bottom: 18px;
-        }
-
-        .faq-answer p {
-            color: var(--text-secondary); font-size: 14px; line-height: 1.7;
-        }
-
-        /* Server Status */
+        /* ============ STATUS ============ */
         .status-grid {
             display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
             gap: 16px; max-width: 800px; margin: 0 auto;
         }
-
         .status-item {
             display: flex; align-items: center; gap: 12px;
             padding: 14px 20px; background: var(--bg-card);
             border: 1px solid var(--border); border-radius: var(--radius-xs);
             transition: var(--transition);
         }
-
+        .status-item:hover { border-color: var(--border-hover); transform: translateY(-2px); }
         .status-dot {
             width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
         }
-
-        .status-dot.online { background: var(--green); box-shadow: 0 0 8px rgba(16,185,129,0.5); }
-
+        .status-dot.online { background: var(--green); box-shadow: 0 0 8px rgba(16,185,129,0.5); animation: pulse-dot 2s infinite; }
         .status-dot.offline { background: var(--red); }
-
         .status-info { flex: 1; }
-
         .status-name { font-size: 13px; font-weight: 600; }
-
         .status-label { font-size: 11px; color: var(--text-muted); }
 
-        /* CTA */
-        .cta-section {
-            padding: 80px 0; position: relative; z-index: 1; text-align: center;
-        }
-
+        /* ============ CTA ============ */
+        .cta-section { padding: 80px 0; position: relative; z-index: 1; text-align: center; }
         .cta-card {
             background: linear-gradient(135deg, rgba(20,184,166,0.1), rgba(59,130,246,0.1));
             border: 1px solid var(--border-hover); border-radius: var(--radius);
             padding: 56px 32px; max-width: 700px; margin: 0 auto;
         }
-
-        .cta-card h2 {
-            font-size: 30px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px;
-        }
-
-        .cta-card p {
-            color: var(--text-secondary); font-size: 16px;
-            max-width: 460px; margin: 0 auto 28px; line-height: 1.7;
-        }
-
+        .cta-card h2 { font-size: 30px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px; }
+        .cta-card p { color: var(--text-secondary); font-size: 16px; max-width: 460px; margin: 0 auto 28px; line-height: 1.7; }
         .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
 
-        /* Footer */
+        /* ============ FOOTER ============ */
         .footer {
             padding: 48px 0; border-top: 1px solid var(--border);
             text-align: center; position: relative; z-index: 1;
         }
-
         .footer p { color: var(--text-muted); font-size: 13px; }
-
-        .footer-links {
-            display: flex; gap: 24px; justify-content: center;
-            margin-bottom: 16px; flex-wrap: wrap;
-        }
-
-        .footer-links a {
-            color: var(--text-secondary); text-decoration: none;
-            font-size: 13px; transition: var(--transition);
-        }
-
+        .footer-links { display: flex; gap: 24px; justify-content: center; margin-bottom: 16px; flex-wrap: wrap; }
+        .footer-links a { color: var(--text-secondary); text-decoration: none; font-size: 13px; transition: var(--transition); }
         .footer-links a:hover { color: var(--accent-light); }
 
-        /* Mobile Responsive */
+        /* ============ MOBILE ============ */
         @media (max-width: 768px) {
             .nav-links {
                 position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
                 flex-direction: column; background: var(--bg-secondary);
                 padding: 80px 32px 32px; gap: 24px;
-                transition: var(--transition); border-left: 1px solid var(--border);
+                transition: right 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                border-left: 1px solid var(--border);
             }
-
             .nav-links.active { right: 0; }
-
             .mobile-toggle { display: block; }
-
-            .hero { padding: 120px 0 60px; }
-
+            .hero { padding: 140px 0 60px; }
             .hero-stats { gap: 28px; }
-
             .server-grid { grid-template-columns: 1fr; }
-
             .pricing-grid { grid-template-columns: 1fr; }
-
             .pricing-card.popular { transform: none; }
-
-            .pricing-card.popular:hover { transform: translateY(-4px); }
-
+            .pricing-card.popular:hover { transform: translateY(-6px); }
             .features-grid { grid-template-columns: 1fr; }
-
             .status-grid { grid-template-columns: 1fr 1fr; }
-
             .cta-card { padding: 36px 20px; }
-
             .cta-card h2 { font-size: 24px; }
         }
     </style>
@@ -5711,7 +5672,29 @@ SITEMAPEOF
     <div class="bg-pattern"></div>
     <div class="bg-grid"></div>
 
-    <!-- Navigation -->
+    <!-- ============ ANNOUNCEMENT BAR ============ -->
+    <div class="announce-bar" id="announceBar">
+        <div class="marquee-wrap">
+            <span class="marquee-text" id="announceText"></span>
+        </div>
+        <button class="announce-close" onclick="closeAnnounce()" aria-label="Tutup">✕</button>
+    </div>
+
+    <!-- ============ POPUP PROMO ============ -->
+    <div class="popup-overlay" id="promoPopup">
+        <div class="popup-modal">
+            <button class="popup-close" onclick="closePromo()" aria-label="Tutup">✕</button>
+            <div class="popup-icon" id="popupIcon">🎉</div>
+            <h3 id="popupTitle">Promo Spesial!</h3>
+            <span class="popup-highlight" id="popupHighlight">Diskon 20%</span>
+            <p id="popupDesc">Dapatkan diskon spesial untuk pembelian pertama Anda. Jangan sampai ketinggalan!</p>
+            <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener" id="popupCta">
+                <i class="fab fa-telegram-plane"></i> Klaim Sekarang
+            </a>
+        </div>
+    </div>
+
+    <!-- ============ NAVIGATION ============ -->
     <nav class="navbar" id="navbar">
         <div class="nav-inner">
             <a href="#home" class="nav-logo">
@@ -5724,9 +5707,7 @@ SITEMAPEOF
                 <li><a href="#fitur">Fitur</a></li>
                 <li><a href="#harga">Harga</a></li>
                 <li><a href="#faq">FAQ</a></li>
-                <li><a href="https://t.me/youzin_crabz" class="nav-cta" target="_blank" rel="noopener">
-                    <i class="fab fa-telegram-plane"></i> Order
-                </a></li>
+                <li><a href="https://t.me/youzin_crabz" class="nav-cta ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order</a></li>
             </ul>
             <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
                 <span></span><span></span><span></span>
@@ -5734,22 +5715,22 @@ SITEMAPEOF
         </div>
     </nav>
 
-    <!-- Hero -->
+    <!-- ============ HERO ============ -->
     <section class="hero" id="home">
         <div class="container">
-            <div class="hero-badge">
+            <div class="hero-badge animate fade-up" data-animate>
                 <span class="dot"></span> Server Online 99.9% Uptime
             </div>
-            <h1>Internet <span class="highlight">Cepat & Aman</span><br>Tanpa Batas</h1>
-            <p>
+            <h1 class="animate fade-up" data-animate>Internet <span class="highlight">Cepat & Aman</span><br>Tanpa Batas</h1>
+            <p class="animate fade-up" data-animate>
                 Layanan tunneling premium dengan berbagai protokol — SSH, VMess, VLess, Trojan, 
                 dan UDP Custom. Nikmati kebebasan internet dengan performa terbaik.
             </p>
-            <div class="hero-buttons">
-                <a href="#server" class="btn btn-primary"><i class="fas fa-rocket"></i> Mulai Sekarang</a>
-                <a href="#fitur" class="btn btn-outline"><i class="fas fa-info-circle"></i> Pelajari</a>
+            <div class="hero-buttons animate fade-up" data-animate>
+                <a href="#server" class="btn btn-primary ripple"><i class="fas fa-rocket"></i> Mulai Sekarang</a>
+                <a href="#fitur" class="btn btn-outline ripple"><i class="fas fa-info-circle"></i> Pelajari</a>
             </div>
-            <div class="hero-stats">
+            <div class="hero-stats animate fade-up" data-animate>
                 <div class="hero-stat">
                     <div class="stat-number">50+</div>
                     <div class="stat-label">Server Aktif</div>
@@ -5770,17 +5751,16 @@ SITEMAPEOF
         </div>
     </section>
 
-    <!-- Server Locations -->
+    <!-- ============ SERVER LOCATIONS ============ -->
     <section class="section" id="server">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header animate fade-up" data-animate>
                 <span class="section-tag">Server</span>
                 <h2>Pilih Server Terbaik Untukmu</h2>
                 <p>Tersedia di berbagai lokasi strategis dengan latency rendah dan kecepatan maksimal.</p>
             </div>
             <div class="server-grid">
-                <!-- Singapore -->
-                <div class="server-card featured">
+                <div class="server-card featured animate fade-left" data-animate>
                     <div class="server-flag">🇸🇬</div>
                     <h3>Server Singapore</h3>
                     <p class="server-location">Singapore · Low Latency</p>
@@ -5791,18 +5771,11 @@ SITEMAPEOF
                         <li><i class="fas fa-check-circle"></i> Dynamic Path & Wildcard</li>
                         <li><i class="fas fa-check-circle"></i> Anti Blocking</li>
                     </ul>
-                    <div class="server-price">
-                        <span class="amount">Rp 10.000</span>
-                        <span class="period">/Bulan</span>
-                    </div>
+                    <div class="server-price"><span class="amount">Rp 10.000</span><span class="period">/Bulan</span></div>
                     <p class="server-price-alt">Rp 15,62 /Jam (Pay As Go)</p>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-primary" target="_blank" rel="noopener">
-                        <i class="fab fa-telegram-plane"></i> Order Sekarang
-                    </a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order Sekarang</a>
                 </div>
-
-                <!-- Indonesia -->
-                <div class="server-card">
+                <div class="server-card animate scale-in" data-animate>
                     <div class="server-flag">🇮🇩</div>
                     <h3>Server Indonesia</h3>
                     <p class="server-location">Jakarta · Ultra Low Latency</p>
@@ -5813,18 +5786,11 @@ SITEMAPEOF
                         <li><i class="fas fa-check-circle"></i> Dynamic Path & Wildcard</li>
                         <li><i class="fas fa-check-circle"></i> Anti Blocking</li>
                     </ul>
-                    <div class="server-price">
-                        <span class="amount">Rp 10.000</span>
-                        <span class="period">/Bulan</span>
-                    </div>
+                    <div class="server-price"><span class="amount">Rp 10.000</span><span class="period">/Bulan</span></div>
                     <p class="server-price-alt">Rp 15,62 /Jam (Pay As Go)</p>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-outline" target="_blank" rel="noopener">
-                        <i class="fab fa-telegram-plane"></i> Order Sekarang
-                    </a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order Sekarang</a>
                 </div>
-
-                <!-- Always On -->
-                <div class="server-card">
+                <div class="server-card animate fade-right" data-animate>
                     <div class="server-flag">🌐</div>
                     <h3>Always On</h3>
                     <p class="server-location">Multi Location · High Quota</p>
@@ -5835,347 +5801,316 @@ SITEMAPEOF
                         <li><i class="fas fa-check-circle"></i> Dynamic Path & Wildcard</li>
                         <li><i class="fas fa-check-circle"></i> 135 GB Quota</li>
                     </ul>
-                    <div class="server-price">
-                        <span class="amount">Rp 15.000</span>
-                        <span class="period">/135 GB</span>
-                    </div>
+                    <div class="server-price"><span class="amount">Rp 15.000</span><span class="period">/135 GB</span></div>
                     <p class="server-price-alt">Kuota besar untuk kebutuhan tinggi</p>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-outline" target="_blank" rel="noopener">
-                        <i class="fab fa-telegram-plane"></i> Order Sekarang
-                    </a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order Sekarang</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Features -->
+    <!-- ============ FEATURES ============ -->
     <section class="section" id="fitur">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header animate fade-up" data-animate>
                 <span class="section-tag">Fitur</span>
                 <h2>Mengapa Memilih Kami?</h2>
                 <p>Dibangun dengan teknologi terkini untuk memberikan performa dan keamanan maksimal.</p>
             </div>
             <div class="features-grid">
-                <div class="feature-card">
-                    <div class="feature-icon teal"><i class="fas fa-bolt"></i></div>
-                    <h3>Kecepatan Maksimal</h3>
-                    <p>Server 10 Gbps dengan optimasi BBR dan jaringan tier-1 untuk latency minimal.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon blue"><i class="fas fa-shield-halved"></i></div>
-                    <h3>Enkripsi Kuat</h3>
-                    <p>TLS 1.3 dengan Xray-core, melindungi koneksi Anda dari sniffing dan pemblokiran.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon purple"><i class="fas fa-globe"></i></div>
-                    <h3>Multi Protokol</h3>
-                    <p>SSH, VMess, VLess, Trojan, UDP Custom, ZIVPN — semua dalam satu layanan.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon green"><i class="fas fa-credit-card"></i></div>
-                    <h3>Pembayaran Mudah</h3>
-                    <p>Sistem otomatis dengan berbagai metode: transfer bank, e-wallet, dan QRIS.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon teal"><i class="fas fa-sync-alt"></i></div>
-                    <h3>Auto Renew</h3>
-                    <p>Aktifkan perpanjangan otomatis dan tidak perlu khawatir akun expired.</p>
-                </div>
-                <div class="feature-card">
-                    <div class="feature-icon blue"><i class="fas fa-headset"></i></div>
-                    <h3>Support 24/7</h3>
-                    <p>Tim support siap membantu kapan saja melalui Telegram dan WhatsApp.</p>
-                </div>
+                <div class="feature-card animate fade-up" data-animate><div class="feature-icon teal"><i class="fas fa-bolt"></i></div><h3>Kecepatan Maksimal</h3><p>Server 10 Gbps dengan optimasi BBR dan jaringan tier-1 untuk latency minimal.</p></div>
+                <div class="feature-card animate fade-up" data-animate><div class="feature-icon blue"><i class="fas fa-shield-halved"></i></div><h3>Enkripsi Kuat</h3><p>TLS 1.3 dengan Xray-core, melindungi koneksi Anda dari sniffing dan pemblokiran.</p></div>
+                <div class="feature-card animate fade-up" data-animate><div class="feature-icon purple"><i class="fas fa-globe"></i></div><h3>Multi Protokol</h3><p>SSH, VMess, VLess, Trojan, UDP Custom, ZIVPN — semua dalam satu layanan.</p></div>
+                <div class="feature-card animate fade-up" data-animate><div class="feature-icon green"><i class="fas fa-credit-card"></i></div><h3>Pembayaran Mudah</h3><p>Sistem otomatis dengan berbagai metode: transfer bank, e-wallet, dan QRIS.</p></div>
+                <div class="feature-card animate fade-up" data-animate><div class="feature-icon orange"><i class="fas fa-sync-alt"></i></div><h3>Auto Renew</h3><p>Aktifkan perpanjangan otomatis dan tidak perlu khawatir akun expired.</p></div>
+                <div class="feature-card animate fade-up" data-animate><div class="feature-icon teal"><i class="fas fa-headset"></i></div><h3>Support 24/7</h3><p>Tim support siap membantu kapan saja melalui Telegram dan WhatsApp.</p></div>
             </div>
         </div>
     </section>
 
-    <!-- Pricing -->
+    <!-- ============ PRICING ============ -->
     <section class="section" id="harga">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header animate fade-up" data-animate>
                 <span class="section-tag">Harga</span>
                 <h2>Paket Berlangganan</h2>
                 <p>Pilih paket sesuai kebutuhan. Bayar sesuai pemakaian atau berlangganan bulanan.</p>
             </div>
-
-            <div class="pricing-toggle">
+            <div class="pricing-toggle animate scale-in" data-animate>
                 <span id="monthlyLabel" class="active">Bulanan</span>
                 <div class="toggle-switch" id="pricingToggle" onclick="togglePricing()"></div>
                 <span id="paygoLabel">Pay As Go</span>
                 <span class="toggle-badge">HEMAT</span>
             </div>
-
             <div class="pricing-grid">
-                <!-- Starter -->
-                <div class="pricing-card">
-                    <div class="pricing-name">Starter</div>
-                    <div class="pricing-desc">Untuk pemakaian ringan</div>
-                    <div class="pricing-amount monthly">Rp 10K</div>
-                    <div class="pricing-amount paygo" style="display:none">Rp 15,62</div>
-                    <div class="pricing-period monthly">/Bulan</div>
-                    <div class="pricing-period paygo" style="display:none">/Jam</div>
+                <div class="pricing-card animate fade-left" data-animate>
+                    <div class="pricing-name">Starter</div><div class="pricing-desc">Untuk pemakaian ringan</div>
+                    <div class="pricing-amount monthly">Rp 10K</div><div class="pricing-amount paygo" style="display:none">Rp 15,62</div>
+                    <div class="pricing-period monthly">/Bulan</div><div class="pricing-period paygo" style="display:none">/Jam</div>
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> 1 Akun SSH</li>
-                        <li><i class="fas fa-check"></i> UDP Custom</li>
-                        <li><i class="fas fa-check"></i> Unlimited Bandwidth</li>
-                        <li><i class="fas fa-check"></i> 2 Device</li>
-                        <li><i class="fas fa-times"></i> VMess / VLess / Trojan</li>
-                        <li><i class="fas fa-times"></i> gRPC Support</li>
+                        <li><i class="fas fa-check"></i> 1 Akun SSH</li><li><i class="fas fa-check"></i> UDP Custom</li>
+                        <li><i class="fas fa-check"></i> Unlimited Bandwidth</li><li><i class="fas fa-check"></i> 2 Device</li>
+                        <li><i class="fas fa-times"></i> VMess / VLess / Trojan</li><li><i class="fas fa-times"></i> gRPC Support</li>
                     </ul>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-outline" target="_blank" rel="noopener">Pilih Paket</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener">Pilih Paket</a>
                 </div>
-
-                <!-- Pro (Popular) -->
-                <div class="pricing-card popular">
+                <div class="pricing-card popular animate scale-in" data-animate>
                     <div class="popular-badge">★ PALING POPULER</div>
-                    <div class="pricing-name">Pro</div>
-                    <div class="pricing-desc">Untuk pengguna harian</div>
-                    <div class="pricing-amount monthly">Rp 25K</div>
-                    <div class="pricing-amount paygo" style="display:none">Rp 35</div>
-                    <div class="pricing-period monthly">/Bulan</div>
-                    <div class="pricing-period paygo" style="display:none">/Jam</div>
+                    <div class="pricing-name">Pro</div><div class="pricing-desc">Untuk pengguna harian</div>
+                    <div class="pricing-amount monthly">Rp 25K</div><div class="pricing-amount paygo" style="display:none">Rp 35</div>
+                    <div class="pricing-period monthly">/Bulan</div><div class="pricing-period paygo" style="display:none">/Jam</div>
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> 3 Akun SSH</li>
-                        <li><i class="fas fa-check"></i> UDP Custom</li>
-                        <li><i class="fas fa-check"></i> VMess / VLess / Trojan</li>
-                        <li><i class="fas fa-check"></i> WebSocket & gRPC</li>
-                        <li><i class="fas fa-check"></i> Unlimited Bandwidth</li>
-                        <li><i class="fas fa-check"></i> 3 Device</li>
+                        <li><i class="fas fa-check"></i> 3 Akun SSH</li><li><i class="fas fa-check"></i> UDP Custom</li>
+                        <li><i class="fas fa-check"></i> VMess / VLess / Trojan</li><li><i class="fas fa-check"></i> WebSocket & gRPC</li>
+                        <li><i class="fas fa-check"></i> Unlimited Bandwidth</li><li><i class="fas fa-check"></i> 3 Device</li>
                     </ul>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-primary" target="_blank" rel="noopener">Pilih Paket</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener">Pilih Paket</a>
                 </div>
-
-                <!-- Enterprise -->
-                <div class="pricing-card">
-                    <div class="pricing-name">Enterprise</div>
-                    <div class="pricing-desc">Untuk kebutuhan maksimal</div>
-                    <div class="pricing-amount monthly">Rp 50K</div>
-                    <div class="pricing-amount paygo" style="display:none">Rp 70</div>
-                    <div class="pricing-period monthly">/Bulan</div>
-                    <div class="pricing-period paygo" style="display:none">/Jam</div>
+                <div class="pricing-card animate fade-right" data-animate>
+                    <div class="pricing-name">Enterprise</div><div class="pricing-desc">Untuk kebutuhan maksimal</div>
+                    <div class="pricing-amount monthly">Rp 50K</div><div class="pricing-amount paygo" style="display:none">Rp 70</div>
+                    <div class="pricing-period monthly">/Bulan</div><div class="pricing-period paygo" style="display:none">/Jam</div>
                     <ul class="pricing-features">
-                        <li><i class="fas fa-check"></i> 10 Akun SSH</li>
-                        <li><i class="fas fa-check"></i> UDP Custom + ZIVPN</li>
-                        <li><i class="fas fa-check"></i> VMess / VLess / Trojan</li>
-                        <li><i class="fas fa-check"></i> WebSocket & gRPC</li>
-                        <li><i class="fas fa-check"></i> Unlimited Bandwidth</li>
-                        <li><i class="fas fa-check"></i> Unlimited Device</li>
+                        <li><i class="fas fa-check"></i> 10 Akun SSH</li><li><i class="fas fa-check"></i> UDP Custom + ZIVPN</li>
+                        <li><i class="fas fa-check"></i> VMess / VLess / Trojan</li><li><i class="fas fa-check"></i> WebSocket & gRPC</li>
+                        <li><i class="fas fa-check"></i> Unlimited Bandwidth</li><li><i class="fas fa-check"></i> Unlimited Device</li>
                     </ul>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-outline" target="_blank" rel="noopener">Pilih Paket</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener">Pilih Paket</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- FAQ -->
+    <!-- ============ FAQ ============ -->
     <section class="section" id="faq">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header animate fade-up" data-animate>
                 <span class="section-tag">FAQ</span>
                 <h2>Pertanyaan Umum</h2>
                 <p>Belum menemukan jawaban? Hubungi support kami langsung.</p>
             </div>
             <div class="faq-list">
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Apakah akun langsung aktif setelah order?
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Ya! Akun tunnel akan langsung aktif tanpa harus menunggu persetujuan. Anda bisa langsung menikmati layanan setelah pembayaran dikonfirmasi.</p>
-                    </div>
+                <div class="faq-item animate fade-up" data-animate>
+                    <div class="faq-question">Apakah akun langsung aktif setelah order? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>Ya! Akun tunnel akan langsung aktif tanpa harus menunggu persetujuan. Anda bisa langsung menikmati layanan setelah pembayaran dikonfirmasi.</p></div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Apakah bisa pindah server?
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Server dapat diubah dengan interval 15 menit setiap kali pemindahan. Perpindahan protokol dapat dilakukan untuk layanan Trojan, VMess, dan VLess.</p>
-                    </div>
+                <div class="faq-item animate fade-up" data-animate>
+                    <div class="faq-question">Apakah bisa pindah server? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>Server dapat diubah dengan interval 15 menit setiap kali pemindahan. Perpindahan protokol dapat dilakukan untuk layanan Trojan, VMess, dan VLess.</p></div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Berapa maksimal perangkat per akun?
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Tergantung paket: Starter 2 device, Pro 3 device, Enterprise unlimited. Dengan ketentuan STB maksimal 1 perangkat per akun.</p>
-                    </div>
+                <div class="faq-item animate fade-up" data-animate>
+                    <div class="faq-question">Berapa maksimal perangkat per akun? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>Tergantung paket: Starter 2 device, Pro 3 device, Enterprise unlimited. Dengan ketentuan STB maksimal 1 perangkat per akun.</p></div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Apakah ada fitur auto renew?
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Ya, Anda dapat mengaktifkan auto renew pada pengaturan akun. Pastikan saldo cukup sebelum masa aktif berakhir.</p>
-                    </div>
+                <div class="faq-item animate fade-up" data-animate>
+                    <div class="faq-question">Apakah ada fitur auto renew? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>Ya, Anda dapat mengaktifkan auto renew pada pengaturan akun. Pastikan saldo cukup sebelum masa aktif berakhir.</p></div>
                 </div>
-                <div class="faq-item">
-                    <div class="faq-question">
-                        Metode pembayaran apa yang tersedia?
-                        <i class="fas fa-chevron-down"></i>
-                    </div>
-                    <div class="faq-answer">
-                        <p>Kami menerima transfer bank (BCA, Mandiri, BRI), e-wallet (Dana, GoPay, ShopeePay), dan QRIS.</p>
-                    </div>
+                <div class="faq-item animate fade-up" data-animate>
+                    <div class="faq-question">Metode pembayaran apa yang tersedia? <i class="fas fa-chevron-down"></i></div>
+                    <div class="faq-answer"><p>Kami menerima transfer bank (BCA, Mandiri, BRI), e-wallet (Dana, GoPay, ShopeePay), dan QRIS.</p></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Server Status -->
+    <!-- ============ SERVER STATUS ============ -->
     <section class="section" id="status">
         <div class="container">
-            <div class="section-header">
+            <div class="section-header animate fade-up" data-animate>
                 <span class="section-tag">Status</span>
                 <h2>Status Server</h2>
                 <p>Pantau status server secara real-time.</p>
             </div>
             <div class="status-grid">
-                <div class="status-item">
+                <div class="status-item animate fade-up" data-animate>
                     <div class="status-dot online" id="status-xray"></div>
-                    <div class="status-info">
-                        <div class="status-name">XRAY Core</div>
-                        <div class="status-label" id="status-xray-label">Online</div>
-                    </div>
+                    <div class="status-info"><div class="status-name">XRAY Core</div><div class="status-label" id="status-xray-label">Online</div></div>
                 </div>
-                <div class="status-item">
+                <div class="status-item animate fade-up" data-animate>
                     <div class="status-dot online" id="status-nginx"></div>
-                    <div class="status-info">
-                        <div class="status-name">NGINX</div>
-                        <div class="status-label" id="status-nginx-label">Online</div>
-                    </div>
+                    <div class="status-info"><div class="status-name">NGINX</div><div class="status-label" id="status-nginx-label">Online</div></div>
                 </div>
-                <div class="status-item">
+                <div class="status-item animate fade-up" data-animate>
                     <div class="status-dot online" id="status-ssh"></div>
-                    <div class="status-info">
-                        <div class="status-name">SSH</div>
-                        <div class="status-label" id="status-ssh-label">Online</div>
-                    </div>
+                    <div class="status-info"><div class="status-name">SSH</div><div class="status-label" id="status-ssh-label">Online</div></div>
                 </div>
-                <div class="status-item">
+                <div class="status-item animate fade-up" data-animate>
                     <div class="status-dot online" id="status-dropbear"></div>
-                    <div class="status-info">
-                        <div class="status-name">Dropbear</div>
-                        <div class="status-label" id="status-dropbear-label">Online</div>
-                    </div>
+                    <div class="status-info"><div class="status-name">Dropbear</div><div class="status-label" id="status-dropbear-label">Online</div></div>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- CTA -->
+    <!-- ============ ORDER CTA ============ -->
     <section class="cta-section" id="order">
         <div class="container">
-            <div class="cta-card">
+            <div class="cta-card animate scale-in" data-animate>
                 <h2>Siap Untuk Internet Tanpa Batas?</h2>
                 <p>Dapatkan akses internet cepat, aman, dan bebas sekarang juga. Proses order mudah dan instan.</p>
                 <div class="cta-buttons">
-                    <a href="https://t.me/youzin_crabz" class="btn btn-primary" target="_blank" rel="noopener">
-                        <i class="fab fa-telegram-plane"></i> Order via Telegram
-                    </a>
-                    <a href="#harga" class="btn btn-outline">
-                        <i class="fas fa-tags"></i> Lihat Harga
-                    </a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order via Telegram</a>
+                    <a href="#harga" class="btn btn-outline ripple"><i class="fas fa-tags"></i> Lihat Harga</a>
                 </div>
             </div>
         </div>
     </section>
 
-    <!-- Footer -->
+    <!-- ============ FOOTER ============ -->
     <footer class="footer">
         <div class="container">
             <div class="footer-links">
-                <a href="#home">Beranda</a>
-                <a href="#server">Server</a>
-                <a href="#fitur">Fitur</a>
-                <a href="#harga">Harga</a>
-                <a href="#faq">FAQ</a>
+                <a href="#home">Beranda</a><a href="#server">Server</a><a href="#fitur">Fitur</a>
+                <a href="#harga">Harga</a><a href="#faq">FAQ</a>
                 <a href="https://t.me/youzin_crabz" target="_blank" rel="noopener">Telegram</a>
             </div>
             <p>&copy; 2026 Youzin Crabz Tunel — The Professor. All rights reserved.</p>
         </div>
     </footer>
 
+    <!-- ============ SCRIPTS ============ -->
     <script>
-        // FAQ Toggle
+        // ─── SCROLL ANIMATIONS (Intersection Observer) ───
+        (function() {
+            var observer = new IntersectionObserver(function(entries) {
+                entries.forEach(function(entry) {
+                    if (entry.isIntersecting) {
+                        entry.target.classList.add('visible');
+                        observer.unobserve(entry.target);
+                    }
+                });
+            }, { threshold: 0.15, rootMargin: '0px 0px -50px 0px' });
+
+            document.querySelectorAll('[data-animate]').forEach(function(el) {
+                observer.observe(el);
+            });
+        })();
+
+        // ─── RIPPLE EFFECT ───
+        document.addEventListener('click', function(e) {
+            var rippleEl = e.target.closest('.ripple');
+            if (!rippleEl) return;
+            var ripple = document.createElement('span');
+            ripple.className = 'ripple-effect';
+            var rect = rippleEl.getBoundingClientRect();
+            var size = Math.max(rect.width, rect.height);
+            ripple.style.width = ripple.style.height = size + 'px';
+            ripple.style.left = (e.clientX - rect.left - size/2) + 'px';
+            ripple.style.top = (e.clientY - rect.top - size/2) + 'px';
+            rippleEl.appendChild(ripple);
+            setTimeout(function() { ripple.remove(); }, 600);
+        });
+
+        // ─── FAQ TOGGLE ───
         document.querySelectorAll('.faq-item').forEach(function(item) {
             item.addEventListener('click', function() {
-                this.classList.toggle('active');
+                var wasActive = this.classList.contains('active');
+                document.querySelectorAll('.faq-item').forEach(function(i) { i.classList.remove('active'); });
+                if (!wasActive) this.classList.add('active');
             });
         });
 
-        // Pricing Toggle
+        // ─── PRICING TOGGLE ───
         function togglePricing() {
             var toggle = document.getElementById('pricingToggle');
             var monthlyEls = document.querySelectorAll('.monthly');
             var paygoEls = document.querySelectorAll('.paygo');
-            var monthlyLabel = document.getElementById('monthlyLabel');
-            var paygoLabel = document.getElementById('paygoLabel');
-
             toggle.classList.toggle('yearly');
             var showPaygo = toggle.classList.contains('yearly');
-
             monthlyEls.forEach(function(el) { el.style.display = showPaygo ? 'none' : ''; });
             paygoEls.forEach(function(el) { el.style.display = showPaygo ? '' : 'none'; });
-            monthlyLabel.classList.toggle('active', !showPaygo);
-            paygoLabel.classList.toggle('active', showPaygo);
+            document.getElementById('monthlyLabel').classList.toggle('active', !showPaygo);
+            document.getElementById('paygoLabel').classList.toggle('active', showPaygo);
         }
 
-        // Server Status - check every 30s
+        // ─── SERVER STATUS ───
         function checkStatus() {
             fetch('/status.json')
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
-                    var services = ['xray','nginx','ssh','dropbear'];
-                    services.forEach(function(svc) {
+                    ['xray','nginx','ssh','dropbear'].forEach(function(svc) {
                         var dot = document.getElementById('status-' + svc);
                         var label = document.getElementById('status-' + svc + '-label');
-                        if (dot && label) {
-                            if (data[svc]) {
-                                dot.className = 'status-dot online';
-                                label.textContent = 'Online';
-                            } else {
-                                dot.className = 'status-dot offline';
-                                label.textContent = 'Offline';
-                            }
-                        }
+                        if (!dot || !label) return;
+                        if (data[svc]) { dot.className = 'status-dot online'; label.textContent = 'Online'; }
+                        else { dot.className = 'status-dot offline'; label.textContent = 'Offline'; }
                     });
-                })
-                .catch(function() {});
+                }).catch(function() {});
         }
-
         checkStatus();
         setInterval(checkStatus, 30000);
 
-        // Navbar scroll effect
+        // ─── ANNOUNCEMENT BAR ───
+        function loadAnnouncements() {
+            fetch('/ordervpn/api/get_announcements.php')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (data.active && data.text) {
+                        var bar = document.getElementById('announceBar');
+                        document.getElementById('announceText').textContent = data.text;
+                        bar.classList.add('active');
+                        var h = bar.offsetHeight + 'px'; document.body.style.paddingTop = h; document.getElementById('navbar').style.top = h;
+                    }
+                }).catch(function() {});
+        }
+        function closeAnnounce() {
+            var bar = document.getElementById('announceBar');
+            bar.classList.remove('active');
+            document.body.style.paddingTop = '0';
+            document.getElementById('navbar').style.top = '0';
+            localStorage.setItem('announce_closed', Date.now().toString());
+        }
+        // Check if closed in last 2 hours
+        var ac = localStorage.getItem('announce_closed');
+        if (!ac || (Date.now() - parseInt(ac)) > 7200000) { loadAnnouncements(); }
+
+        // ─── POPUP PROMO ───
+        function loadPromo() {
+            fetch('/ordervpn/api/get_promo.php')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    if (!data.active) return;
+                    document.getElementById('popupTitle').textContent = data.title || 'Promo Spesial!';
+                    document.getElementById('popupDesc').textContent = data.description || '';
+                    if (data.highlight) document.getElementById('popupHighlight').textContent = data.highlight;
+                    if (data.icon) document.getElementById('popupIcon').textContent = data.icon;
+                    if (data.cta_text) document.getElementById('popupCta').innerHTML = '<i class="fab fa-telegram-plane"></i> ' + data.cta_text;
+                    if (data.cta_url) document.getElementById('popupCta').href = data.cta_url;
+                    document.getElementById('promoPopup').classList.add('active');
+                    document.body.style.overflow = 'hidden';
+                }).catch(function() {});
+        }
+        function closePromo() {
+            document.getElementById('promoPopup').classList.remove('active');
+            document.body.style.overflow = '';
+            var d = new Date(); d.setHours(24,0,0,0);
+            localStorage.setItem('promo_closed', d.getTime().toString());
+        }
+        // Show popup once per day
+        var pc = localStorage.getItem('promo_closed');
+        if (!pc || Date.now() > parseInt(pc)) {
+            setTimeout(function() { loadPromo(); }, 2000);
+        }
+
+        // ─── NAVBAR SCROLL ───
         window.addEventListener('scroll', function() {
-            var navbar = document.getElementById('navbar');
-            if (window.scrollY > 50) {
-                navbar.classList.add('scrolled');
-            } else {
-                navbar.classList.remove('scrolled');
-            }
+            document.getElementById('navbar').classList.toggle('scrolled', window.scrollY > 50);
         });
 
-        // Mobile menu
+        // ─── MOBILE MENU ───
         var toggle = document.getElementById('mobileToggle');
         var navLinks = document.getElementById('navLinks');
-
         toggle.addEventListener('click', function() {
             toggle.classList.toggle('active');
             navLinks.classList.toggle('active');
+            document.body.classList.toggle('menu-open');
         });
-
-        // Close mobile menu on link click
         navLinks.querySelectorAll('a').forEach(function(link) {
             link.addEventListener('click', function() {
                 toggle.classList.remove('active');
                 navLinks.classList.remove('active');
+                document.body.classList.remove('menu-open');
             });
         });
     </script>
@@ -6651,7 +6586,9 @@ DBEOF
 _ordervpn_deploy_files() {
     local DIR="/var/www/html/ordervpn"
     local DB_PASS="$1"
-    mkdir -p "$DIR"/{includes,api,admin,cron,uploads/bukti}
+    mkdir -p "$DIR"/{includes,api,admin,cron,uploads/bukti,uploads/qris,data}
+    chown -R www-data:www-data "$DIR"/data "$DIR"/uploads/qris "$DIR"/uploads/bukti 2>/dev/null
+    chmod 775 "$DIR"/data "$DIR"/uploads/qris "$DIR"/uploads/bukti 2>/dev/null
     # database.sql
     echo "LS0gT3JkZXJWUE4gRGF0YWJhc2UgU2NoZW1hIHYyLjAKLS0gYnkgVGhlIFByb2Zlc3NvcgoKQ1JFQVRFIERBVEFCQVNFIElGIE5PVCBFWElTVFMgb3JkZXJ2cG5fZGIgQ0hBUkFDVEVSIFNFVCB1dGY4bWI0IENPTExBVEUgdXRmOG1iNF91bmljb2RlX2NpOwpVU0Ugb3JkZXJ2cG5fZGI7CgpDUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyB1c2VycyAoCiAgICBpZCBJTlQgQVVUT19JTkNSRU1FTlQgUFJJTUFSWSBLRVksCiAgICB1c2VybmFtZSBWQVJDSEFSKDUwKSBVTklRVUUgTk9UIE5VTEwsCiAgICBlbWFpbCBWQVJDSEFSKDEwMCkgVU5JUVVFIE5PVCBOVUxMLAogICAgcGFzc3dvcmQgVkFSQ0hBUigyNTUpIE5PVCBOVUxMLAogICAgc2FsZG8gREVDSU1BTCgxNSwyKSBERUZBVUxUIDAuMDAsCiAgICByb2xlIEVOVU0oJ3VzZXInLCdhZG1pbicpIERFRkFVTFQgJ3VzZXInLAogICAgaXNfdmVyaWZpZWQgVElOWUlOVCgxKSBERUZBVUxUIDAsCiAgICBvdHBfY29kZSBWQVJDSEFSKDEwKSBERUZBVUxUIE5VTEwsCiAgICBvdHBfZXhwaXJlcyBEQVRFVElNRSBERUZBVUxUIE5VTEwsCiAgICBpcF9hZGRyZXNzIFZBUkNIQVIoNDUpLAogICAgd2hhdHNhcHAgVkFSQ0hBUigyMCkgREVGQVVMVCBOVUxMLAogICAgY3JlYXRlZF9hdCBUSU1FU1RBTVAgREVGQVVMVCBDVVJSRU5UX1RJTUVTVEFNUCwKICAgIHVwZGF0ZWRfYXQgVElNRVNUQU1QIERFRkFVTFQgQ1VSUkVOVF9USU1FU1RBTVAgT04gVVBEQVRFIENVUlJFTlRfVElNRVNUQU1QCik7CgpDUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBzZXJ2ZXJzICgKICAgIGlkIElOVCBBVVRPX0lOQ1JFTUVOVCBQUklNQVJZIEtFWSwKICAgIG5hbWFfc2VydmVyIFZBUkNIQVIoMTAwKSBOT1QgTlVMTCwKICAgIGNvZGVfc2VydmVyIFZBUkNIQVIoMjApIFVOSVFVRSBOT1QgTlVMTCwKICAgIGxva2FzaSBWQVJDSEFSKDEwMCkgTk9UIE5VTEwsCiAgICBmbGFnIFZBUkNIQVIoMTApIERFRkFVTFQgJ/Cfh67wn4epJywKICAgIGhhcmdhX2hhcmkgREVDSU1BTCgxMCwyKSBOT1QgTlVMTCwKICAgIGhhcmdhX2J1bGFuIERFQ0lNQUwoMTAsMikgTk9UIE5VTEwsCiAgICBpcF9saW1pdCBJTlQgREVGQVVMVCAyLAogICAgcXVvdGFfbGltaXQgSU5UIERFRkFVTFQgOTk5OSwKICAgIHN0YXR1cyBFTlVNKCdyZWFkeScsJ21haW50ZW5hbmNlJywnb2ZmbGluZScpIERFRkFVTFQgJ3JlYWR5JywKICAgIGhvc3QgVkFSQ0hBUigyNTUpIE5PVCBOVUxMLAogICAgcG9ydCBJTlQgREVGQVVMVCAyMiwKICAgIHNzaF91c2VyIFZBUkNIQVIoNTApIERFRkFVTFQgJ3Jvb3QnLAogICAgc3NoX3Bhc3N3b3JkIFZBUkNIQVIoMjU1KSBERUZBVUxUIE5VTEwsCiAgICBzc2hfa2V5IFZBUkNIQVIoMjU1KSBERUZBVUxUIE5VTEwsCiAgICBkb21haW4gVkFSQ0hBUigyNTUpIERFRkFVTFQgTlVMTCwKICAgIHhyYXlfY29uZmlnX3BhdGggVkFSQ0hBUigyNTUpIERFRkFVTFQgJy91c3IvbG9jYWwvZXRjL3hyYXkvY29uZmlnLmpzb24nLAogICAgY3JlYXRlZF9hdCBUSU1FU1RBTVAgREVGQVVMVCBDVVJSRU5UX1RJTUVTVEFNUAopOwoKQ1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgdnBuX2FjY291bnRzICgKICAgIGlkIElOVCBBVVRPX0lOQ1JFTUVOVCBQUklNQVJZIEtFWSwKICAgIHVzZXJfaWQgSU5UIE5PVCBOVUxMLAogICAgc2VydmVyX2lkIElOVCBOT1QgTlVMTCwKICAgIHRpcGUgRU5VTSgndm1lc3MnLCd2bGVzcycsJ3Ryb2phbicsJ3NzaCcsJ3RyaWFsJykgTk9UIE5VTEwsCiAgICB1c2VybmFtZSBWQVJDSEFSKDEwMCkgTk9UIE5VTEwsCiAgICByZW1hcmtzIFZBUkNIQVIoMTAwKSwKICAgIHV1aWQgVkFSQ0hBUigzNiksCiAgICBwYXNzd29yZF92cG4gVkFSQ0hBUigyNTUpLAogICAgbGlua19jb25maWcgVEVYVCwKICAgIGxpbmtfdGxzIFRFWFQsCiAgICBsaW5rX25vbnRscyBURVhULAogICAgbGlua19ncnBjIFRFWFQsCiAgICBtYXNhX2FrdGlmIERBVEVUSU1FIE5PVCBOVUxMLAogICAgZGF5c19vcmRlcmVkIElOVCBOT1QgTlVMTCwKICAgIGlzX3RyaWFsIFRJTllJTlQoMSkgREVGQVVMVCAwLAogICAgaGFyZ2FfdG90YWwgREVDSU1BTCgxMCwyKSBOT1QgTlVMTCBERUZBVUxUIDAsCiAgICBzdGF0dXMgRU5VTSgnYWN0aXZlJywnZXhwaXJlZCcsJ3N1c3BlbmRlZCcpIERFRkFVTFQgJ2FjdGl2ZScsCiAgICBjcmVhdGVkX2F0IFRJTUVTVEFNUCBERUZBVUxUIENVUlJFTlRfVElNRVNUQU1QLAogICAgRk9SRUlHTiBLRVkgKHVzZXJfaWQpIFJFRkVSRU5DRVMgdXNlcnMoaWQpIE9OIERFTEVURSBDQVNDQURFLAogICAgRk9SRUlHTiBLRVkgKHNlcnZlcl9pZCkgUkVGRVJFTkNFUyBzZXJ2ZXJzKGlkKSBPTiBERUxFVEUgQ0FTQ0FERQopOwoKQ1JFQVRFIFRBQkxFIElGIE5PVCBFWElTVFMgdHJhbnNhY3Rpb25zICgKICAgIGlkIElOVCBBVVRPX0lOQ1JFTUVOVCBQUklNQVJZIEtFWSwKICAgIHVzZXJfaWQgSU5UIE5PVCBOVUxMLAogICAgdHlwZSBFTlVNKCd0b3B1cCcsJ29yZGVyJywncmVmdW5kJywndHJpYWwnKSBOT1QgTlVMTCwKICAgIGFtb3VudCBERUNJTUFMKDE1LDIpIE5PVCBOVUxMLAogICAga2V0ZXJhbmdhbiBWQVJDSEFSKDI1NSksCiAgICBzdGF0dXMgRU5VTSgncGVuZGluZycsJ3N1Y2Nlc3MnLCdmYWlsZWQnKSBERUZBVUxUICdzdWNjZXNzJywKICAgIHJlZl9pZCBWQVJDSEFSKDEwMCksCiAgICBjcmVhdGVkX2F0IFRJTUVTVEFNUCBERUZBVUxUIENVUlJFTlRfVElNRVNUQU1QLAogICAgRk9SRUlHTiBLRVkgKHVzZXJfaWQpIFJFRkVSRU5DRVMgdXNlcnMoaWQpIE9OIERFTEVURSBDQVNDQURFCik7CgpDUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyB0b3B1cF9yZXF1ZXN0cyAoCiAgICBpZCBJTlQgQVVUT19JTkNSRU1FTlQgUFJJTUFSWSBLRVksCiAgICB1c2VyX2lkIElOVCBOT1QgTlVMTCwKICAgIGFtb3VudCBERUNJTUFMKDE1LDIpIE5PVCBOVUxMLAogICAgcGF5bWVudF9tZXRob2QgVkFSQ0hBUig1MCkgREVGQVVMVCAnbWFudWFsJywKICAgIGJ1a3RpX3RyYW5zZmVyIFZBUkNIQVIoMjU1KSwKICAgIHRyaXBheV9yZWYgVkFSQ0hBUigxMDApIERFRkFVTFQgTlVMTCwKICAgIHRyaXBheV9jaGFubmVsIFZBUkNIQVIoNTApIERFRkFVTFQgTlVMTCwKICAgIHRyaXBheV9xciBURVhUIERFRkFVTFQgTlVMTCwKICAgIHN0YXR1cyBFTlVNKCdwZW5kaW5nJywnYXBwcm92ZWQnLCdyZWplY3RlZCcpIERFRkFVTFQgJ3BlbmRpbmcnLAogICAgYWRtaW5fbm90ZSBWQVJDSEFSKDI1NSksCiAgICBjcmVhdGVkX2F0IFRJTUVTVEFNUCBERUZBVUxUIENVUlJFTlRfVElNRVNUQU1QLAogICAgcHJvY2Vzc2VkX2F0IFRJTUVTVEFNUCBOVUxMLAogICAgRk9SRUlHTiBLRVkgKHVzZXJfaWQpIFJFRkVSRU5DRVMgdXNlcnMoaWQpIE9OIERFTEVURSBDQVNDQURFCik7CgpDUkVBVEUgVEFCTEUgSUYgTk9UIEVYSVNUUyBhcHBfc2V0dGluZ3MgKAogICAgaWQgSU5UIEFVVE9fSU5DUkVNRU5UIFBSSU1BUlkgS0VZLAogICAgc2V0dGluZ19rZXkgVkFSQ0hBUigxMDApIFVOSVFVRSBOT1QgTlVMTCwKICAgIHNldHRpbmdfdmFsdWUgVEVYVCwKICAgIHVwZGF0ZWRfYXQgVElNRVNUQU1QIERFRkFVTFQgQ1VSUkVOVF9USU1FU1RBTVAgT04gVVBEQVRFIENVUlJFTlRfVElNRVNUQU1QCik7CgotLSBEZWZhdWx0IHNldHRpbmdzCklOU0VSVCBJR05PUkUgSU5UTyBhcHBfc2V0dGluZ3MgKHNldHRpbmdfa2V5LCBzZXR0aW5nX3ZhbHVlKSBWQUxVRVMKKCdhcHBfbmFtZScsICdPcmRlclZQTicpLAooJ2FwcF9sb2dvJywgJ1tTSUddJyksCignY29udGFjdF93YScsICcnKSwKKCdjb250YWN0X3RnJywgJycpLAooJ2NvbnRhY3RfaWcnLCAnJyksCignYmFua19uYW1lJywgJ0JDQScpLAooJ2JhbmtfYWNjb3VudCcsICcxMjM0NTY3ODkwJyksCignYmFua19ob2xkZXInLCAnQWRtaW4gT3JkZXJWUE4nKSwKKCdkYW5hX251bWJlcicsICcnKSwKKCdnb3BheV9udW1iZXInLCAnJyksCignc2hvcGVlX251bWJlcicsICcnKSwKKCdxcmlzX2ltYWdlJywgJycpLAooJ3RyaWFsX2R1cmF0aW9uX2hvdXJzJywgJzEnKSwKKCd0cmlhbF9xdW90YV9nYicsICcxJyksCignc210cF9ob3N0JywgJ3NtdHAuZ21haWwuY29tJyksCignc210cF9wb3J0JywgJzU4NycpLAooJ3NtdHBfdXNlcicsICcnKSwKKCdzbXRwX3Bhc3MnLCAnJyksCignc210cF9mcm9tJywgJycpLAooJ3RnX2JvdF90b2tlbicsICcnKSwKKCd0Z19jaGF0X2lkJywgJycpLAooJ3RyaXBheV9hcGlfa2V5JywgJycpLAooJ3RyaXBheV9wcml2YXRlX2tleScsICcnKSwKKCd0cmlwYXlfbWVyY2hhbnRfY29kZScsICcnKSwKKCd0cmlwYXlfbW9kZScsICdzYW5kYm94Jyk7CgpJTlNFUlQgSUdOT1JFIElOVE8gdXNlcnMgKHVzZXJuYW1lLCBlbWFpbCwgcGFzc3dvcmQsIHNhbGRvLCByb2xlLCBpc192ZXJpZmllZCkgVkFMVUVTCignYWRtaW4nLCAnYWRtaW5Ab3JkZXJ2cG4ubG9jYWwnLCAnJDJ5JDEwJDkySVhVTnBrak8wck9RNWJ5TWkuWWU0b0tvRWEzUm85bGxDLy5vZy9hdDIudWhlV0cvaWdpJywgOTk5OTk5LjAwLCAnYWRtaW4nLCAxKTsK" | base64 -d > "$DIR"/database.sql
     # Hapus hash admin123 default (akan diganti random saat install)
@@ -6685,6 +6622,21 @@ _ordervpn_deploy_files() {
     # cron/expire_accounts.php
     echo "PD9waHAKLy8gQ3JvbjogamFsYW5rYW4gc2V0aWFwIGphbSB2aWEgY3JvbnRhYgovLyAwICogKiAqICogcGhwIC92YXIvd3d3L2h0bWwvb3JkZXJ2cG4vY3Jvbi9leHBpcmVfYWNjb3VudHMucGhwCnJlcXVpcmVfb25jZSBfX0RJUl9fLicvLi4vaW5jbHVkZXMvY29uZmlnLnBocCc7CnJlcXVpcmVfb25jZSBfX0RJUl9fLicvLi4vaW5jbHVkZXMvdnBuX21hbmFnZXIucGhwJzsKJGNvdW50ID0gVlBOTWFuYWdlcjo6cHJvY2Vzc0V4cGlyZWRBY2NvdW50cygpOwplY2hvIGRhdGUoJ1ktbS1kIEg6aTpzJykuIiDigJQgRXhwaXJlZCB7JGNvdW50fSBhY2NvdW50c1xuIjsK" | base64 -d > "$DIR"/cron/expire_accounts.php
     sed -i "s|define('DB_PASS', 'password123')|define('DB_PASS', '${DB_PASS}')|g" "$DIR/includes/config.php"
+
+    # === NEW ADMIN FEATURES ===
+    echo "PD9waHAKaGVhZGVyKCdDb250ZW50LVR5cGU6IGFwcGxpY2F0aW9uL2pzb247IGNoYXJzZXQ9dXRmLTgnKTsKaGVhZGVyKCdBY2Nlc3MtQ29udHJvbC1BbGxvdy1PcmlnaW46IConKTsKJHNldHRpbmdzX2ZpbGUgPSBfX0RJUl9fIC4gJy8uLi9kYXRhL3NldHRpbmdzLmpzb24nOwppZiAoIWZpbGVfZXhpc3RzKCRzZXR0aW5nc19maWxlKSkgewogICAgZWNobyBqc29uX2VuY29kZShbJ3NpdGVfbmFtZScgPT4gJ1lvdXppbiBDcmFieiBUdW5lbCddKTsKICAgIGV4aXQ7Cn0KJHNldHRpbmdzID0ganNvbl9kZWNvZGUoZmlsZV9nZXRfY29udGVudHMoJHNldHRpbmdzX2ZpbGUpLCB0cnVlKTsKZWNobyBqc29uX2VuY29kZSgkc2V0dGluZ3MgPyBqc29uX2VuY29kZSgkc2V0dGluZ3MpIDoganNvbl9lbmNvZGUoWydzaXRlX25hbWUnID0+ICdZb3V6aW4gQ3JhYnogVHVuZWwnXSkpOwo=" | base64 -d > "$DIR"/api/get_settings.php
+    chmod 644 "$DIR"/api/get_settings.php
+
+    echo "PD9waHAKaGVhZGVyKCdDb250ZW50LVR5cGU6IGFwcGxpY2F0aW9uL2pzb247IGNoYXJzZXQ9dXRmLTgnKTsKaGVhZGVyKCdBY2Nlc3MtQ29udHJvbC1BbGxvdy1PcmlnaW46IConKTsKaGVhZGVyKCdDYWNoZS1Db250cm9sOiBuby1jYWNoZScpOwoKJGRhdGFfZmlsZSA9IF9fRElSX18gLiAnLy4uL2RhdGEvYW5ub3VuY2VtZW50cy5qc29uJzsKaWYgKCFmaWxlX2V4aXN0cygkZGF0YV9maWxlKSkgewogICAgZWNobyBqc29uX2VuY29kZShbJ2FjdGl2ZScgPT4gZmFsc2UsICd0ZXh0JyA9PiAnJ10pOwogICAgZXhpdDsKfQoKJGRhdGEgPSBqc29uX2RlY29kZShmaWxlX2dldF9jb250ZW50cygkZGF0YV9maWxlKSwgdHJ1ZSk7CmlmICghJGRhdGEgfHwgIWlzc2V0KCRkYXRhWydhY3RpdmUnXSkpIHsKICAgIGVjaG8ganNvbl9lbmNvZGUoWydhY3RpdmUnID0+IGZhbHNlLCAndGV4dCcgPT4gJyddKTsKICAgIGV4aXQ7Cn0KCi8vIE9ubHkgcmV0dXJuIGlmIGFjdGl2ZQppZiAoISRkYXRhWydhY3RpdmUnXSkgewogICAgZWNobyBqc29uX2VuY29kZShbJ2FjdGl2ZScgPT4gZmFsc2UsICd0ZXh0JyA9PiAnJ10pOwogICAgZXhpdDsKfQoKZWNobyBqc29uX2VuY29kZShbCiAgICAnYWN0aXZlJyA9PiB0cnVlLAogICAgJ3RleHQnID0+ICRkYXRhWyd0ZXh0J10gPz8gJycsCiAgICAndXBkYXRlZF9hdCcgPT4gJGRhdGFbJ3VwZGF0ZWRfYXQnXSA/PyAnJwpdKTsK" | base64 -d > "$DIR"/api/get_announcements.php
+    chmod 644 "$DIR"/api/get_announcements.php
+    echo "PD9waHAKaGVhZGVyKCdDb250ZW50LVR5cGU6IGFwcGxpY2F0aW9uL2pzb247IGNoYXJzZXQ9dXRmLTgnKTsKaGVhZGVyKCdBY2Nlc3MtQ29udHJvbC1BbGxvdy1PcmlnaW46IConKTsKaGVhZGVyKCdDYWNoZS1Db250cm9sOiBuby1jYWNoZScpOwoKJGRhdGFfZmlsZSA9IF9fRElSX18gLiAnLy4uL2RhdGEvcHJvbW8uanNvbic7CmlmICghZmlsZV9leGlzdHMoJGRhdGFfZmlsZSkpIHsKICAgIGVjaG8ganNvbl9lbmNvZGUoWydhY3RpdmUnID0+IGZhbHNlXSk7CiAgICBleGl0Owp9CgokZGF0YSA9IGpzb25fZGVjb2RlKGZpbGVfZ2V0X2NvbnRlbnRzKCRkYXRhX2ZpbGUpLCB0cnVlKTsKaWYgKCEkZGF0YSB8fCAhaXNzZXQoJGRhdGFbJ2FjdGl2ZSddKSkgewogICAgZWNobyBqc29uX2VuY29kZShbJ2FjdGl2ZScgPT4gZmFsc2VdKTsKICAgIGV4aXQ7Cn0KCmlmICghJGRhdGFbJ2FjdGl2ZSddKSB7CiAgICBlY2hvIGpzb25fZW5jb2RlKFsnYWN0aXZlJyA9PiBmYWxzZV0pOwogICAgZXhpdDsKfQoKZWNobyBqc29uX2VuY29kZShbCiAgICAnYWN0aXZlJyA9PiB0cnVlLAogICAgJ3RpdGxlJyA9PiAkZGF0YVsndGl0bGUnXSA/PyAnUHJvbW8gU3Blc2lhbCEnLAogICAgJ2Rlc2NyaXB0aW9uJyA9PiAkZGF0YVsnZGVzY3JpcHRpb24nXSA/PyAnJywKICAgICdoaWdobGlnaHQnID0+ICRkYXRhWydoaWdobGlnaHQnXSA/PyAnJywKICAgICdpY29uJyA9PiAkZGF0YVsnaWNvbiddID8/ICfwn46JJywKICAgICdjdGFfdGV4dCcgPT4gJGRhdGFbJ2N0YV90ZXh0J10gPz8gJ0tsYWltIFNla2FyYW5nJywKICAgICdjdGFfdXJsJyA9PiAkZGF0YVsnY3RhX3VybCddID8/ICdodHRwczovL3QubWUveW91emluX2NyYWJ6JywKICAgICd1cGRhdGVkX2F0JyA9PiAkZGF0YVsndXBkYXRlZF9hdCddID8/ICcnCl0pOwo=" | base64 -d > "$DIR"/api/get_promo.php
+    chmod 644 "$DIR"/api/get_promo.php
+    echo "PD9waHAKc2Vzc2lvbl9zdGFydCgpOwpyZXF1aXJlX29uY2UgX19ESVJfXyAuICcvLi4vaW5jbHVkZXMvY29uZmlnLnBocCc7CgppZiAoIWlzc2V0KCRfU0VTU0lPTlsndXNlcl9pZCddKSB8fCAkX1NFU1NJT05bJ3JvbGUnXSAhPT0gJ2FkbWluJykgewogICAgaGVhZGVyKCdMb2NhdGlvbjogL29yZGVydnBuL2FkbWluLycpOwogICAgZXhpdDsKfQoKJGRiID0gZ2V0REIoKTsKJHVzZXJfc3RtdCA9ICRkYi0+cHJlcGFyZSgnU0VMRUNUIHVzZXJuYW1lLCByb2xlIEZST00gdXNlcnMgV0hFUkUgaWQgPSA/Jyk7CiR1c2VyX3N0bXQtPmV4ZWN1dGUoWyRfU0VTU0lPTlsndXNlcl9pZCddXSk7CiRhZG1pbl91c2VyID0gJHVzZXJfc3RtdC0+ZmV0Y2goUERPOjpGRVRDSF9BU1NPQyk7CgokZGF0YV9kaXIgPSBfX0RJUl9fIC4gJy8uLi9kYXRhJzsKJGRhdGFfZmlsZSA9ICRkYXRhX2RpciAuICcvYW5ub3VuY2VtZW50cy5qc29uJzsKJG1zZyA9ICcnOyAkbXNnX3R5cGUgPSAnJzsKCi8vIENyZWF0ZSBkYXRhIGRpcmVjdG9yeSBpZiBub3QgZXhpc3RzCmlmICghaXNfZGlyKCRkYXRhX2RpcikpIG1rZGlyKCRkYXRhX2RpciwgMDc1NSwgdHJ1ZSk7CgovLyBMb2FkIGN1cnJlbnQgZGF0YQokY3VycmVudCA9IFsnYWN0aXZlJyA9PiBmYWxzZSwgJ3RleHQnID0+ICcnLCAndXBkYXRlZF9hdCcgPT4gJyddOwppZiAoZmlsZV9leGlzdHMoJGRhdGFfZmlsZSkpIHsKICAgICRsb2FkZWQgPSBqc29uX2RlY29kZShmaWxlX2dldF9jb250ZW50cygkZGF0YV9maWxlKSwgdHJ1ZSk7CiAgICBpZiAoJGxvYWRlZCkgJGN1cnJlbnQgPSBhcnJheV9tZXJnZSgkY3VycmVudCwgJGxvYWRlZCk7Cn0KCi8vIEhhbmRsZSBmb3JtIHN1Ym1pc3Npb24KaWYgKCRfU0VSVkVSWydSRVFVRVNUX01FVEhPRCddID09PSAnUE9TVCcpIHsKICAgICRhY3RpdmUgPSBpc3NldCgkX1BPU1RbJ2FjdGl2ZSddKSA/IHRydWUgOiBmYWxzZTsKICAgICR0ZXh0ID0gdHJpbSgkX1BPU1RbJ3RleHQnXSA/PyAnJyk7CiAgICAKICAgIGlmICgkYWN0aXZlICYmIGVtcHR5KCR0ZXh0KSkgewogICAgICAgICRtc2cgPSAnVGVrcyBwZW5ndW11bWFuIHRpZGFrIGJvbGVoIGtvc29uZyEnOwogICAgICAgICRtc2dfdHlwZSA9ICdlcnJvcic7CiAgICB9IGVsc2UgewogICAgICAgICRkYXRhID0gWwogICAgICAgICAgICAnYWN0aXZlJyA9PiAkYWN0aXZlLAogICAgICAgICAgICAndGV4dCcgPT4gJHRleHQsCiAgICAgICAgICAgICd1cGRhdGVkX2F0JyA9PiBkYXRlKCdZLW0tZCBIOmk6cycpCiAgICAgICAgXTsKICAgICAgICBpZiAoZmlsZV9wdXRfY29udGVudHMoJGRhdGFfZmlsZSwganNvbl9lbmNvZGUoJGRhdGEsIEpTT05fUFJFVFRZX1BSSU5UIHwgSlNPTl9VTkVTQ0FQRURfVU5JQ09ERSkpKSB7CiAgICAgICAgICAgICRjdXJyZW50ID0gJGRhdGE7CiAgICAgICAgICAgICRtc2cgPSAnUGVuZ3VtdW1hbiBiZXJoYXNpbCBkaXNpbXBhbiEnOwogICAgICAgICAgICAkbXNnX3R5cGUgPSAnc3VjY2Vzcyc7CiAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgJG1zZyA9ICdHYWdhbCBtZW55aW1wYW4gcGVuZ3VtdW1hbiEnOwogICAgICAgICAgICAkbXNnX3R5cGUgPSAnZXJyb3InOwogICAgICAgIH0KICAgIH0KfQo/Pgo8IURPQ1RZUEUgaHRtbD4KPGh0bWwgbGFuZz0iaWQiPgo8aGVhZD4KICAgIDxtZXRhIGNoYXJzZXQ9IlVURi04Ij4KICAgIDxtZXRhIG5hbWU9InZpZXdwb3J0IiBjb250ZW50PSJ3aWR0aD1kZXZpY2Utd2lkdGgsIGluaXRpYWwtc2NhbGU9MS4wIj4KICAgIDx0aXRsZT5QZW5ndW11bWFuIC0gT3JkZXJWUE4gQWRtaW48L3RpdGxlPgogICAgPHN0eWxlPgogICAgICAgIDpyb290IHsKICAgICAgICAgICAgLS1iZzogIzBmMTcyYTsgLS1jYXJkOiAjMWUyOTNiOyAtLWJvcmRlcjogIzMzNDE1NTsKICAgICAgICAgICAgLS10ZXh0OiAjZjFmNWY5OyAtLW11dGVkOiAjOTRhM2I4OyAtLXByaW1hcnk6ICMxNGI4YTY7CiAgICAgICAgICAgIC0tcHJpbWFyeS1kaW06IHJnYmEoMjAsMTg0LDE2NiwwLjE1KTsgLS1yZWQ6ICNlZjQ0NDQ7IC0tZ3JlZW46ICMxMGI5ODE7CiAgICAgICAgfQogICAgICAgICogeyBtYXJnaW46MDsgcGFkZGluZzowOyBib3gtc2l6aW5nOmJvcmRlci1ib3g7IH0KICAgICAgICBib2R5IHsgZm9udC1mYW1pbHk6J0ludGVyJyxzYW5zLXNlcmlmOyBiYWNrZ3JvdW5kOnZhcigtLWJnKTsgY29sb3I6dmFyKC0tdGV4dCk7IG1pbi1oZWlnaHQ6MTAwdmg7IH0KICAgICAgICAuc2lkZWJhciB7CiAgICAgICAgICAgIHBvc2l0aW9uOmZpeGVkOyBsZWZ0OjA7IHRvcDowOyB3aWR0aDoyNDBweDsgaGVpZ2h0OjEwMHZoOwogICAgICAgICAgICBiYWNrZ3JvdW5kOnZhcigtLWNhcmQpOyBib3JkZXItcmlnaHQ6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IHBhZGRpbmc6MjRweCAwOyB6LWluZGV4OjEwMDsKICAgICAgICB9CiAgICAgICAgLnNpZGViYXIgLmxvZ28geyBwYWRkaW5nOjAgMjBweCAyNHB4OyBmb250LXNpemU6MThweDsgZm9udC13ZWlnaHQ6ODAwOyBjb2xvcjp2YXIoLS1wcmltYXJ5KTsgfQogICAgICAgIC5zaWRlYmFyIG5hdiBhIHsKICAgICAgICAgICAgZGlzcGxheTpmbGV4OyBhbGlnbi1pdGVtczpjZW50ZXI7IGdhcDoxMHB4OyBwYWRkaW5nOjEycHggMjBweDsKICAgICAgICAgICAgY29sb3I6dmFyKC0tbXV0ZWQpOyB0ZXh0LWRlY29yYXRpb246bm9uZTsgZm9udC1zaXplOjE0cHg7IHRyYW5zaXRpb246LjJzOwogICAgICAgIH0KICAgICAgICAuc2lkZWJhciBuYXYgYTpob3ZlciwgLnNpZGViYXIgbmF2IGEuYWN0aXZlIHsgY29sb3I6dmFyKC0tdGV4dCk7IGJhY2tncm91bmQ6dmFyKC0tcHJpbWFyeS1kaW0pOyB9CiAgICAgICAgLm1haW4geyBtYXJnaW4tbGVmdDoyNDBweDsgcGFkZGluZzozMnB4OyB9CiAgICAgICAgLmhlYWRlciB7IGRpc3BsYXk6ZmxleDsganVzdGlmeS1jb250ZW50OnNwYWNlLWJldHdlZW47IGFsaWduLWl0ZW1zOmNlbnRlcjsgbWFyZ2luLWJvdHRvbTozMnB4OyB9CiAgICAgICAgLmhlYWRlciBoMSB7IGZvbnQtc2l6ZToyNHB4OyBmb250LXdlaWdodDo3MDA7IH0KICAgICAgICAuaGVhZGVyIC51c2VyIHsgZm9udC1zaXplOjEzcHg7IGNvbG9yOnZhcigtLW11dGVkKTsgfQogICAgICAgIC5jYXJkIHsgYmFja2dyb3VuZDp2YXIoLS1jYXJkKTsgYm9yZGVyOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyBib3JkZXItcmFkaXVzOjEycHg7IHBhZGRpbmc6MjhweDsgbWFyZ2luLWJvdHRvbToyNHB4OyB9CiAgICAgICAgLmNhcmQgaDIgeyBmb250LXNpemU6MThweDsgZm9udC13ZWlnaHQ6NzAwOyBtYXJnaW4tYm90dG9tOjIwcHg7IH0KICAgICAgICAuZm9ybS1ncm91cCB7IG1hcmdpbi1ib3R0b206MTZweDsgfQogICAgICAgIC5mb3JtLWdyb3VwIGxhYmVsIHsgZGlzcGxheTpibG9jazsgbWFyZ2luLWJvdHRvbTo2cHg7IGZvbnQtc2l6ZToxM3B4OyBmb250LXdlaWdodDo2MDA7IGNvbG9yOnZhcigtLW11dGVkKTsgdGV4dC10cmFuc2Zvcm06dXBwZXJjYXNlOyBsZXR0ZXItc3BhY2luZzouNXB4OyB9CiAgICAgICAgLmZvcm0tZ3JvdXAgaW5wdXRbdHlwZT0idGV4dCJdLCAuZm9ybS1ncm91cCB0ZXh0YXJlYSB7CiAgICAgICAgICAgIHdpZHRoOjEwMCU7IHBhZGRpbmc6MTBweCAxNHB4OyBiYWNrZ3JvdW5kOnZhcigtLWJnKTsgYm9yZGVyOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOwogICAgICAgICAgICBib3JkZXItcmFkaXVzOjhweDsgY29sb3I6dmFyKC0tdGV4dCk7IGZvbnQtZmFtaWx5OmluaGVyaXQ7IGZvbnQtc2l6ZToxNHB4OyBvdXRsaW5lOm5vbmU7IHRyYW5zaXRpb246LjJzOwogICAgICAgIH0KICAgICAgICAuZm9ybS1ncm91cCBpbnB1dDpmb2N1cywgLmZvcm0tZ3JvdXAgdGV4dGFyZWE6Zm9jdXMgeyBib3JkZXItY29sb3I6dmFyKC0tcHJpbWFyeSk7IH0KICAgICAgICAuZm9ybS1ncm91cCB0ZXh0YXJlYSB7IG1pbi1oZWlnaHQ6MTIwcHg7IHJlc2l6ZTp2ZXJ0aWNhbDsgfQogICAgICAgIC5jaGVja2JveC1ncm91cCB7IGRpc3BsYXk6ZmxleDsgYWxpZ24taXRlbXM6Y2VudGVyOyBnYXA6MTBweDsgfQogICAgICAgIC5jaGVja2JveC1ncm91cCBpbnB1dFt0eXBlPSJjaGVja2JveCJdIHsgd2lkdGg6MThweDsgaGVpZ2h0OjE4cHg7IGFjY2VudC1jb2xvcjp2YXIoLS1wcmltYXJ5KTsgfQogICAgICAgIC5idG4gewogICAgICAgICAgICBwYWRkaW5nOjEwcHggMjRweDsgYm9yZGVyOm5vbmU7IGJvcmRlci1yYWRpdXM6OHB4OyBmb250LXNpemU6MTRweDsgZm9udC13ZWlnaHQ6NjAwOwogICAgICAgICAgICBjdXJzb3I6cG9pbnRlcjsgdHJhbnNpdGlvbjouMnM7IGZvbnQtZmFtaWx5OmluaGVyaXQ7CiAgICAgICAgfQogICAgICAgIC5idG4tcHJpbWFyeSB7IGJhY2tncm91bmQ6dmFyKC0tcHJpbWFyeSk7IGNvbG9yOiMwZjE3MmE7IH0KICAgICAgICAuYnRuLXByaW1hcnk6aG92ZXIgeyBvcGFjaXR5Oi45OyB9CiAgICAgICAgLmJ0bi1kYW5nZXIgeyBiYWNrZ3JvdW5kOnZhcigtLXJlZCk7IGNvbG9yOiNmZmY7IH0KICAgICAgICAuYnRuLWRhbmdlcjpob3ZlciB7IG9wYWNpdHk6Ljk7IH0KICAgICAgICAuYWxlcnQgeyBwYWRkaW5nOjEycHggMTZweDsgYm9yZGVyLXJhZGl1czo4cHg7IG1hcmdpbi1ib3R0b206MTZweDsgZm9udC1zaXplOjE0cHg7IH0KICAgICAgICAuYWxlcnQtc3VjY2VzcyB7IGJhY2tncm91bmQ6cmdiYSgxNiwxODUsMTI5LC4xNSk7IGNvbG9yOnZhcigtLWdyZWVuKTsgYm9yZGVyOjFweCBzb2xpZCByZ2JhKDE2LDE4NSwxMjksLjIpOyB9CiAgICAgICAgLmFsZXJ0LWVycm9yIHsgYmFja2dyb3VuZDpyZ2JhKDIzOSw2OCw2OCwuMTUpOyBjb2xvcjp2YXIoLS1yZWQpOyBib3JkZXI6MXB4IHNvbGlkIHJnYmEoMjM5LDY4LDY4LC4yKTsgfQogICAgICAgIC5wcmV2aWV3IHsgYmFja2dyb3VuZDp2YXIoLS1iZyk7IGJvcmRlci1yYWRpdXM6OHB4OyBwYWRkaW5nOjE2cHg7IG1hcmdpbi10b3A6MTZweDsgZm9udC1zaXplOjEzcHg7IGNvbG9yOnZhcigtLW11dGVkKTsgfQogICAgICAgIC5wcmV2aWV3IC5iYXIgeyBiYWNrZ3JvdW5kOmxpbmVhci1ncmFkaWVudCgxMzVkZWcsdmFyKC0tcHJpbWFyeSksIzBkOTQ4OCk7IGNvbG9yOiNmZmY7IHBhZGRpbmc6OHB4IDE2cHg7IGJvcmRlci1yYWRpdXM6NHB4OyBkaXNwbGF5OmlubGluZS1ibG9jazsgfQogICAgPC9zdHlsZT4KPC9oZWFkPgo8Ym9keT4KPGRpdiBjbGFzcz0ic2lkZWJhciI+CiAgICA8ZGl2IGNsYXNzPSJsb2dvIj7imqEgT3JkZXJWUE4gQWRtaW48L2Rpdj4KICAgIDxuYXY+CiAgICAgICAgPGEgaHJlZj0iL29yZGVydnBuL2FkbWluLyI+8J+TiiBEYXNoYm9hcmQ8L2E+CiAgICAgICAgPGEgaHJlZj0ic2V0dGluZ3MucGhwIj7impnvuI8gU2V0dGluZ3MgV2ViPC9hPgogICAgICAgIDxhIGhyZWY9ImFubm91bmNlbWVudHMucGhwIiBjbGFzcz0iYWN0aXZlIj7wn5OiIFBlbmd1bXVtYW48L2E+CiAgICAgICAgPGEgaHJlZj0icHJvbW90aW9ucy5waHAiPvCfjokgUHJvbW9zaSAvIFBvcHVwPC9hPgogICAgICAgIDxhIGhyZWY9Ii9vcmRlcnZwbi9hZG1pbi9pbmRleC5waHAiPvCflKcgS29uZmlndXJhc2k8L2E+CiAgICAgICAgPGEgaHJlZj0iL29yZGVydnBuL2NoYW5nZV9wYXNzd29yZC5waHAiPvCflJEgR2FudGkgUGFzc3dvcmQ8L2E+CiAgICAgICAgPGEgaHJlZj0iL29yZGVydnBuL2FwaS9sb2dvdXQucGhwIj7wn5qqIExvZ291dDwvYT4KICAgIDwvbmF2Pgo8L2Rpdj4KPGRpdiBjbGFzcz0ibWFpbiI+CiAgICA8ZGl2IGNsYXNzPSJoZWFkZXIiPgogICAgICAgIDxoMT7wn5OiIEtlbG9sYSBQZW5ndW11bWFuIChSdW5uaW5nIFRleHQpPC9oMT4KICAgICAgICA8ZGl2IGNsYXNzPSJ1c2VyIj7wn5GkIDw/PSBodG1sc3BlY2lhbGNoYXJzKCRhZG1pbl91c2VyWyd1c2VybmFtZSddID8/ICdBZG1pbicpID8+ICg8Pz0gaHRtbHNwZWNpYWxjaGFycygkYWRtaW5fdXNlclsncm9sZSddID8/ICdhZG1pbicpID8+KTwvZGl2PgogICAgPC9kaXY+CiAgICAKICAgIDw/cGhwIGlmICgkbXNnKTogPz4KICAgIDxkaXYgY2xhc3M9ImFsZXJ0IGFsZXJ0LTw/PSAkbXNnX3R5cGUgPz4iPjw/PSBodG1sc3BlY2lhbGNoYXJzKCRtc2cpID8+PC9kaXY+CiAgICA8P3BocCBlbmRpZjsgPz4KICAgIAogICAgPGRpdiBjbGFzcz0iY2FyZCI+CiAgICAgICAgPGgyPlJ1bm5pbmcgVGV4dCAvIE1hcnF1ZWU8L2gyPgogICAgICAgIDxwIHN0eWxlPSJjb2xvcjp2YXIoLS1tdXRlZCk7Zm9udC1zaXplOjEzcHg7bWFyZ2luLWJvdHRvbToyMHB4OyI+VGVrcyBpbmkgYWthbiBiZXJqYWxhbiBkaSBiYWdpYW4gYXRhcyBoYWxhbWFuIHV0YW1hIHdlYnNpdGUuPC9wPgogICAgICAgIDxmb3JtIG1ldGhvZD0iUE9TVCI+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPgogICAgICAgICAgICAgICAgPGxhYmVsPkFrdGlma2FuIFBlbmd1bXVtYW48L2xhYmVsPgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iY2hlY2tib3gtZ3JvdXAiPgogICAgICAgICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJjaGVja2JveCIgbmFtZT0iYWN0aXZlIiBpZD0iYWN0aXZlIiA8Pz0gJGN1cnJlbnRbJ2FjdGl2ZSddID8gJ2NoZWNrZWQnIDogJycgPz4+CiAgICAgICAgICAgICAgICAgICAgPGxhYmVsIGZvcj0iYWN0aXZlIiBzdHlsZT0ibWFyZ2luOjA7dGV4dC10cmFuc2Zvcm06bm9uZTtmb250LXdlaWdodDo0MDA7Ij5UYW1waWxrYW4gcnVubmluZyB0ZXh0PC9sYWJlbD4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+CiAgICAgICAgICAgICAgICA8bGFiZWw+VGVrcyBQZW5ndW11bWFuPC9sYWJlbD4KICAgICAgICAgICAgICAgIDx0ZXh0YXJlYSBuYW1lPSJ0ZXh0IiBwbGFjZWhvbGRlcj0iQ29udG9oOiDwn5qAIFByb21vIHNwZXNpYWwhIERpc2tvbiAyMCUgc2VtdWEgcGFrZXQgYnVsYW4gaW5pLiBPcmRlciBzZWthcmFuZyBkaSBUZWxlZ3JhbSBAeW91emluX2NyYWJ6ISI+PD89IGh0bWxzcGVjaWFsY2hhcnMoJGN1cnJlbnRbJ3RleHQnXSkgPz48L3RleHRhcmVhPgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPGJ1dHRvbiB0eXBlPSJzdWJtaXQiIGNsYXNzPSJidG4gYnRuLXByaW1hcnkiPvCfkr4gU2ltcGFuIFBlbmd1bXVtYW48L2J1dHRvbj4KICAgICAgICA8L2Zvcm0+CiAgICAgICAgCiAgICAgICAgPGRpdiBjbGFzcz0icHJldmlldyI+CiAgICAgICAgICAgIDxzdHJvbmc+UHJldmlldzo8L3N0cm9uZz48YnI+CiAgICAgICAgICAgIDw/cGhwIGlmICgkY3VycmVudFsnYWN0aXZlJ10gJiYgJGN1cnJlbnRbJ3RleHQnXSk6ID8+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImJhciIgc3R5bGU9Im1hcmdpbi10b3A6OHB4OyI+PD89IGh0bWxzcGVjaWFsY2hhcnMoJGN1cnJlbnRbJ3RleHQnXSkgPz48L2Rpdj4KICAgICAgICAgICAgPD9waHAgZWxzZTogPz4KICAgICAgICAgICAgPHNwYW4gc3R5bGU9ImNvbG9yOnZhcigtLW11dGVkKSI+KFRpZGFrIGFrdGlmIC8gYmVsdW0gYWRhIHRla3MpPC9zcGFuPgogICAgICAgICAgICA8P3BocCBlbmRpZjsgPz4KICAgICAgICAgICAgPD9waHAgaWYgKCRjdXJyZW50Wyd1cGRhdGVkX2F0J10pOiA/PgogICAgICAgICAgICA8YnI+PHNtYWxsIHN0eWxlPSJjb2xvcjp2YXIoLS1tdXRlZCkiPlRlcmFraGlyIGRpdXBkYXRlOiA8Pz0gaHRtbHNwZWNpYWxjaGFycygkY3VycmVudFsndXBkYXRlZF9hdCddKSA/Pjwvc21hbGw+CiAgICAgICAgICAgIDw/cGhwIGVuZGlmOyA/PgogICAgICAgIDwvZGl2PgogICAgPC9kaXY+CjwvZGl2Pgo8L2JvZHk+CjwvaHRtbD4K" | base64 -d > "$DIR"/admin/announcements.php
+    chmod 644 "$DIR"/admin/announcements.php
+    echo "PD9waHAKc2Vzc2lvbl9zdGFydCgpOwpyZXF1aXJlX29uY2UgX19ESVJfXyAuICcvLi4vaW5jbHVkZXMvY29uZmlnLnBocCc7CgppZiAoIWlzc2V0KCRfU0VTU0lPTlsndXNlcl9pZCddKSB8fCAkX1NFU1NJT05bJ3JvbGUnXSAhPT0gJ2FkbWluJykgewogICAgaGVhZGVyKCdMb2NhdGlvbjogL29yZGVydnBuL2FkbWluLycpOwogICAgZXhpdDsKfQoKJGRiID0gZ2V0REIoKTsKJHVzZXJfc3RtdCA9ICRkYi0+cHJlcGFyZSgnU0VMRUNUIHVzZXJuYW1lLCByb2xlIEZST00gdXNlcnMgV0hFUkUgaWQgPSA/Jyk7CiR1c2VyX3N0bXQtPmV4ZWN1dGUoWyRfU0VTU0lPTlsndXNlcl9pZCddXSk7CiRhZG1pbl91c2VyID0gJHVzZXJfc3RtdC0+ZmV0Y2goUERPOjpGRVRDSF9BU1NPQyk7CgokZGF0YV9kaXIgPSBfX0RJUl9fIC4gJy8uLi9kYXRhJzsKJGRhdGFfZmlsZSA9ICRkYXRhX2RpciAuICcvcHJvbW8uanNvbic7CiRtc2cgPSAnJzsgJG1zZ190eXBlID0gJyc7CgppZiAoIWlzX2RpcigkZGF0YV9kaXIpKSBta2RpcigkZGF0YV9kaXIsIDA3NTUsIHRydWUpOwoKJGN1cnJlbnQgPSBbJ2FjdGl2ZScgPT4gZmFsc2UsICd0aXRsZScgPT4gJ1Byb21vIFNwZXNpYWwhJywgJ2Rlc2NyaXB0aW9uJyA9PiAnJywgJ2hpZ2hsaWdodCcgPT4gJycsICdpY29uJyA9PiAn8J+OiScsICdjdGFfdGV4dCcgPT4gJ0tsYWltIFNla2FyYW5nJywgJ2N0YV91cmwnID0+ICdodHRwczovL3QubWUveW91emluX2NyYWJ6JywgJ3VwZGF0ZWRfYXQnID0+ICcnXTsKaWYgKGZpbGVfZXhpc3RzKCRkYXRhX2ZpbGUpKSB7CiAgICAkbG9hZGVkID0ganNvbl9kZWNvZGUoZmlsZV9nZXRfY29udGVudHMoJGRhdGFfZmlsZSksIHRydWUpOwogICAgaWYgKCRsb2FkZWQpICRjdXJyZW50ID0gYXJyYXlfbWVyZ2UoJGN1cnJlbnQsICRsb2FkZWQpOwp9CgppZiAoJF9TRVJWRVJbJ1JFUVVFU1RfTUVUSE9EJ10gPT09ICdQT1NUJykgewogICAgJGRhdGEgPSBbCiAgICAgICAgJ2FjdGl2ZScgPT4gaXNzZXQoJF9QT1NUWydhY3RpdmUnXSksCiAgICAgICAgJ3RpdGxlJyA9PiB0cmltKCRfUE9TVFsndGl0bGUnXSA/PyAnUHJvbW8gU3Blc2lhbCEnKSwKICAgICAgICAnZGVzY3JpcHRpb24nID0+IHRyaW0oJF9QT1NUWydkZXNjcmlwdGlvbiddID8/ICcnKSwKICAgICAgICAnaGlnaGxpZ2h0JyA9PiB0cmltKCRfUE9TVFsnaGlnaGxpZ2h0J10gPz8gJycpLAogICAgICAgICdpY29uJyA9PiB0cmltKCRfUE9TVFsnaWNvbiddID8/ICfwn46JJyksCiAgICAgICAgJ2N0YV90ZXh0JyA9PiB0cmltKCRfUE9TVFsnY3RhX3RleHQnXSA/PyAnS2xhaW0gU2VrYXJhbmcnKSwKICAgICAgICAnY3RhX3VybCcgPT4gdHJpbSgkX1BPU1RbJ2N0YV91cmwnXSA/PyAnaHR0cHM6Ly90Lm1lL3lvdXppbl9jcmFieicpLAogICAgICAgICd1cGRhdGVkX2F0JyA9PiBkYXRlKCdZLW0tZCBIOmk6cycpCiAgICBdOwogICAgaWYgKCRkYXRhWydhY3RpdmUnXSAmJiBlbXB0eSgkZGF0YVsndGl0bGUnXSkpIHsKICAgICAgICAkbXNnID0gJ0p1ZHVsIHByb21vIHRpZGFrIGJvbGVoIGtvc29uZyEnOwogICAgICAgICRtc2dfdHlwZSA9ICdlcnJvcic7CiAgICB9IGVsc2UgewogICAgICAgIGlmIChmaWxlX3B1dF9jb250ZW50cygkZGF0YV9maWxlLCBqc29uX2VuY29kZSgkZGF0YSwgSlNPTl9QUkVUVFlfUFJJTlQgfCBKU09OX1VORVNDQVBFRF9VTklDT0RFKSkpIHsKICAgICAgICAgICAgJGN1cnJlbnQgPSAkZGF0YTsKICAgICAgICAgICAgJG1zZyA9ICdQcm9tbyBiZXJoYXNpbCBkaXNpbXBhbiEnOwogICAgICAgICAgICAkbXNnX3R5cGUgPSAnc3VjY2Vzcyc7CiAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgJG1zZyA9ICdHYWdhbCBtZW55aW1wYW4gcHJvbW8hJzsKICAgICAgICAgICAgJG1zZ190eXBlID0gJ2Vycm9yJzsKICAgICAgICB9CiAgICB9Cn0KPz4KPCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImlkIj4KPGhlYWQ+CiAgICA8bWV0YSBjaGFyc2V0PSJVVEYtOCI+CiAgICA8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMCI+CiAgICA8dGl0bGU+UHJvbW9zaSBQb3B1cCAtIE9yZGVyVlBOIEFkbWluPC90aXRsZT4KICAgIDxzdHlsZT4KICAgICAgICA6cm9vdCB7CiAgICAgICAgICAgIC0tYmc6ICMwZjE3MmE7IC0tY2FyZDogIzFlMjkzYjsgLS1ib3JkZXI6ICMzMzQxNTU7CiAgICAgICAgICAgIC0tdGV4dDogI2YxZjVmOTsgLS1tdXRlZDogIzk0YTNiODsgLS1wcmltYXJ5OiAjMTRiOGE2OwogICAgICAgICAgICAtLXByaW1hcnktZGltOiByZ2JhKDIwLDE4NCwxNjYsMC4xNSk7IC0tcmVkOiAjZWY0NDQ0OyAtLWdyZWVuOiAjMTBiOTgxOwogICAgICAgIH0KICAgICAgICAqIHsgbWFyZ2luOjA7IHBhZGRpbmc6MDsgYm94LXNpemluZzpib3JkZXItYm94OyB9CiAgICAgICAgYm9keSB7IGZvbnQtZmFtaWx5OidJbnRlcicsc2Fucy1zZXJpZjsgYmFja2dyb3VuZDp2YXIoLS1iZyk7IGNvbG9yOnZhcigtLXRleHQpOyBtaW4taGVpZ2h0OjEwMHZoOyB9CiAgICAgICAgLnNpZGViYXIgewogICAgICAgICAgICBwb3NpdGlvbjpmaXhlZDsgbGVmdDowOyB0b3A6MDsgd2lkdGg6MjQwcHg7IGhlaWdodDoxMDB2aDsKICAgICAgICAgICAgYmFja2dyb3VuZDp2YXIoLS1jYXJkKTsgYm9yZGVyLXJpZ2h0OjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyBwYWRkaW5nOjI0cHggMDsgei1pbmRleDoxMDA7CiAgICAgICAgfQogICAgICAgIC5zaWRlYmFyIC5sb2dvIHsgcGFkZGluZzowIDIwcHggMjRweDsgZm9udC1zaXplOjE4cHg7IGZvbnQtd2VpZ2h0OjgwMDsgY29sb3I6dmFyKC0tcHJpbWFyeSk7IH0KICAgICAgICAuc2lkZWJhciBuYXYgYSB7IGRpc3BsYXk6ZmxleDsgYWxpZ24taXRlbXM6Y2VudGVyOyBnYXA6MTBweDsgcGFkZGluZzoxMnB4IDIwcHg7IGNvbG9yOnZhcigtLW11dGVkKTsgdGV4dC1kZWNvcmF0aW9uOm5vbmU7IGZvbnQtc2l6ZToxNHB4OyB0cmFuc2l0aW9uOi4yczsgfQogICAgICAgIC5zaWRlYmFyIG5hdiBhOmhvdmVyLCAuc2lkZWJhciBuYXYgYS5hY3RpdmUgeyBjb2xvcjp2YXIoLS10ZXh0KTsgYmFja2dyb3VuZDp2YXIoLS1wcmltYXJ5LWRpbSk7IH0KICAgICAgICAubWFpbiB7IG1hcmdpbi1sZWZ0OjI0MHB4OyBwYWRkaW5nOjMycHg7IH0KICAgICAgICAuaGVhZGVyIHsgZGlzcGxheTpmbGV4OyBqdXN0aWZ5LWNvbnRlbnQ6c3BhY2UtYmV0d2VlbjsgYWxpZ24taXRlbXM6Y2VudGVyOyBtYXJnaW4tYm90dG9tOjMycHg7IH0KICAgICAgICAuaGVhZGVyIGgxIHsgZm9udC1zaXplOjI0cHg7IGZvbnQtd2VpZ2h0OjcwMDsgfQogICAgICAgIC5oZWFkZXIgLnVzZXIgeyBmb250LXNpemU6MTNweDsgY29sb3I6dmFyKC0tbXV0ZWQpOyB9CiAgICAgICAgLmNhcmQgeyBiYWNrZ3JvdW5kOnZhcigtLWNhcmQpOyBib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IGJvcmRlci1yYWRpdXM6MTJweDsgcGFkZGluZzoyOHB4OyBtYXJnaW4tYm90dG9tOjI0cHg7IH0KICAgICAgICAuY2FyZCBoMiB7IGZvbnQtc2l6ZToxOHB4OyBmb250LXdlaWdodDo3MDA7IG1hcmdpbi1ib3R0b206MjBweDsgfQogICAgICAgIC5mb3JtLWdyb3VwIHsgbWFyZ2luLWJvdHRvbToxNnB4OyB9CiAgICAgICAgLmZvcm0tZ3JvdXAgbGFiZWwgeyBkaXNwbGF5OmJsb2NrOyBtYXJnaW4tYm90dG9tOjZweDsgZm9udC1zaXplOjEzcHg7IGZvbnQtd2VpZ2h0OjYwMDsgY29sb3I6dmFyKC0tbXV0ZWQpOyB0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7IGxldHRlci1zcGFjaW5nOi41cHg7IH0KICAgICAgICAuZm9ybS1ncm91cCBpbnB1dFt0eXBlPSJ0ZXh0Il0sIC5mb3JtLWdyb3VwIHRleHRhcmVhIHsgd2lkdGg6MTAwJTsgcGFkZGluZzoxMHB4IDE0cHg7IGJhY2tncm91bmQ6dmFyKC0tYmcpOyBib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IGJvcmRlci1yYWRpdXM6OHB4OyBjb2xvcjp2YXIoLS10ZXh0KTsgZm9udC1mYW1pbHk6aW5oZXJpdDsgZm9udC1zaXplOjE0cHg7IG91dGxpbmU6bm9uZTsgdHJhbnNpdGlvbjouMnM7IH0KICAgICAgICAuZm9ybS1ncm91cCBpbnB1dDpmb2N1cywgLmZvcm0tZ3JvdXAgdGV4dGFyZWE6Zm9jdXMgeyBib3JkZXItY29sb3I6dmFyKC0tcHJpbWFyeSk7IH0KICAgICAgICAuZm9ybS1ncm91cCB0ZXh0YXJlYSB7IG1pbi1oZWlnaHQ6ODBweDsgcmVzaXplOnZlcnRpY2FsOyB9CiAgICAgICAgLmNoZWNrYm94LWdyb3VwIHsgZGlzcGxheTpmbGV4OyBhbGlnbi1pdGVtczpjZW50ZXI7IGdhcDoxMHB4OyB9CiAgICAgICAgLmNoZWNrYm94LWdyb3VwIGlucHV0W3R5cGU9ImNoZWNrYm94Il0geyB3aWR0aDoxOHB4OyBoZWlnaHQ6MThweDsgYWNjZW50LWNvbG9yOnZhcigtLXByaW1hcnkpOyB9CiAgICAgICAgLmJ0biB7IHBhZGRpbmc6MTBweCAyNHB4OyBib3JkZXI6bm9uZTsgYm9yZGVyLXJhZGl1czo4cHg7IGZvbnQtc2l6ZToxNHB4OyBmb250LXdlaWdodDo2MDA7IGN1cnNvcjpwb2ludGVyOyB0cmFuc2l0aW9uOi4yczsgZm9udC1mYW1pbHk6aW5oZXJpdDsgfQogICAgICAgIC5idG4tcHJpbWFyeSB7IGJhY2tncm91bmQ6dmFyKC0tcHJpbWFyeSk7IGNvbG9yOiMwZjE3MmE7IH0KICAgICAgICAuYnRuLXByaW1hcnk6aG92ZXIgeyBvcGFjaXR5Oi45OyB9CiAgICAgICAgLmJ0bi1kYW5nZXIgeyBiYWNrZ3JvdW5kOnZhcigtLXJlZCk7IGNvbG9yOiNmZmY7IH0KICAgICAgICAuYWxlcnQgeyBwYWRkaW5nOjEycHggMTZweDsgYm9yZGVyLXJhZGl1czo4cHg7IG1hcmdpbi1ib3R0b206MTZweDsgZm9udC1zaXplOjE0cHg7IH0KICAgICAgICAuYWxlcnQtc3VjY2VzcyB7IGJhY2tncm91bmQ6cmdiYSgxNiwxODUsMTI5LC4xNSk7IGNvbG9yOnZhcigtLWdyZWVuKTsgYm9yZGVyOjFweCBzb2xpZCByZ2JhKDE2LDE4NSwxMjksLjIpOyB9CiAgICAgICAgLmFsZXJ0LWVycm9yIHsgYmFja2dyb3VuZDpyZ2JhKDIzOSw2OCw2OCwuMTUpOyBjb2xvcjp2YXIoLS1yZWQpOyBib3JkZXI6MXB4IHNvbGlkIHJnYmEoMjM5LDY4LDY4LC4yKTsgfQogICAgICAgIC5yb3cgeyBkaXNwbGF5OmdyaWQ7IGdyaWQtdGVtcGxhdGUtY29sdW1uczoxZnIgMWZyOyBnYXA6MTZweDsgfQogICAgICAgIC5wcmV2aWV3LWJveCB7IGJhY2tncm91bmQ6dmFyKC0tYmcpOyBib3JkZXItcmFkaXVzOjEycHg7IHBhZGRpbmc6MzJweCAyNHB4OyB0ZXh0LWFsaWduOmNlbnRlcjsgbWFyZ2luLXRvcDoxNnB4OyB9CiAgICAgICAgLnByZXZpZXctYm94IC5wb3B1cC1wcmV2aWV3IHsKICAgICAgICAgICAgZGlzcGxheTppbmxpbmUtYmxvY2s7IGJhY2tncm91bmQ6dmFyKC0tY2FyZCk7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tcHJpbWFyeSk7CiAgICAgICAgICAgIGJvcmRlci1yYWRpdXM6MTJweDsgcGFkZGluZzozMnB4IDI0cHg7IG1heC13aWR0aDo0MDBweDsgdGV4dC1hbGlnbjpjZW50ZXI7CiAgICAgICAgfQogICAgICAgIC5wcmV2aWV3LWJveCAucG9wdXAtcHJldmlldyAuaWNvbiB7IGZvbnQtc2l6ZTozNnB4OyBtYXJnaW4tYm90dG9tOjEycHg7IH0KICAgICAgICAucHJldmlldy1ib3ggLnBvcHVwLXByZXZpZXcgaDMgeyBmb250LXNpemU6MjBweDsgbWFyZ2luLWJvdHRvbTo4cHg7IH0KICAgICAgICAucHJldmlldy1ib3ggLnBvcHVwLXByZXZpZXcgLmhpZ2hsaWdodCB7IGRpc3BsYXk6aW5saW5lLWJsb2NrOyBiYWNrZ3JvdW5kOnZhcigtLXByaW1hcnktZGltKTsgY29sb3I6dmFyKC0tcHJpbWFyeSk7IHBhZGRpbmc6NHB4IDEycHg7IGJvcmRlci1yYWRpdXM6MTAwcHg7IGZvbnQtc2l6ZToxMnB4OyBmb250LXdlaWdodDo2MDA7IG1hcmdpbi1ib3R0b206MTJweDsgfQogICAgICAgIC5wcmV2aWV3LWJveCAucG9wdXAtcHJldmlldyBwIHsgY29sb3I6dmFyKC0tbXV0ZWQpOyBmb250LXNpemU6MTNweDsgbWFyZ2luLWJvdHRvbToxNnB4OyB9CiAgICAgICAgLnByZXZpZXctYm94IC5wb3B1cC1wcmV2aWV3IC5idG4tY3RhIHsgZGlzcGxheTppbmxpbmUtYmxvY2s7IHBhZGRpbmc6MTBweCAyNHB4OyBiYWNrZ3JvdW5kOnZhcigtLXByaW1hcnkpOyBjb2xvcjojMGYxNzJhOyBib3JkZXItcmFkaXVzOjEwMHB4OyBmb250LXNpemU6MTNweDsgZm9udC13ZWlnaHQ6NjAwOyB0ZXh0LWRlY29yYXRpb246bm9uZTsgfQogICAgICAgIEBtZWRpYSAobWF4LXdpZHRoOjc2OHB4KSB7IC5zaWRlYmFyIHsgZGlzcGxheTpub25lOyB9IC5tYWluIHsgbWFyZ2luLWxlZnQ6MDsgfSAucm93IHsgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmcjsgfSB9CiAgICA8L3N0eWxlPgo8L2hlYWQ+Cjxib2R5Pgo8ZGl2IGNsYXNzPSJzaWRlYmFyIj4KICAgIDxkaXYgY2xhc3M9ImxvZ28iPuKaoSBPcmRlclZQTiBBZG1pbjwvZGl2PgogICAgPG5hdj4KICAgICAgICA8YSBocmVmPSIvb3JkZXJ2cG4vYWRtaW4vIj7wn5OKIERhc2hib2FyZDwvYT4KICAgICAgICA8YSBocmVmPSJzZXR0aW5ncy5waHAiPuKame+4jyBTZXR0aW5ncyBXZWI8L2E+CiAgICAgICAgPGEgaHJlZj0iYW5ub3VuY2VtZW50cy5waHAiPvCfk6IgUGVuZ3VtdW1hbjwvYT4KICAgICAgICA8YSBocmVmPSJwcm9tb3Rpb25zLnBocCIgY2xhc3M9ImFjdGl2ZSI+8J+OiSBQcm9tb3NpIC8gUG9wdXA8L2E+CiAgICAgICAgPGEgaHJlZj0iL29yZGVydnBuL2FkbWluL2luZGV4LnBocCI+8J+UpyBLb25maWd1cmFzaTwvYT4KICAgICAgICA8YSBocmVmPSIvb3JkZXJ2cG4vY2hhbmdlX3Bhc3N3b3JkLnBocCI+8J+UkSBHYW50aSBQYXNzd29yZDwvYT4KICAgICAgICA8YSBocmVmPSIvb3JkZXJ2cG4vYXBpL2xvZ291dC5waHAiPvCfmqogTG9nb3V0PC9hPgogICAgPC9uYXY+CjwvZGl2Pgo8ZGl2IGNsYXNzPSJtYWluIj4KICAgIDxkaXYgY2xhc3M9ImhlYWRlciI+CiAgICAgICAgPGgxPvCfjokgS2Vsb2xhIFByb21vc2kgUG9wdXA8L2gxPgogICAgICAgIDxkaXYgY2xhc3M9InVzZXIiPvCfkaQgPD89IGh0bWxzcGVjaWFsY2hhcnMoJGFkbWluX3VzZXJbJ3VzZXJuYW1lJ10gPz8gJ0FkbWluJykgPz48L2Rpdj4KICAgIDwvZGl2PgogICAgCiAgICA8P3BocCBpZiAoJG1zZyk6ID8+CiAgICA8ZGl2IGNsYXNzPSJhbGVydCBhbGVydC08Pz0gJG1zZ190eXBlID8+Ij48Pz0gaHRtbHNwZWNpYWxjaGFycygkbXNnKSA/PjwvZGl2PgogICAgPD9waHAgZW5kaWY7ID8+CiAgICAKICAgIDxkaXYgY2xhc3M9ImNhcmQiPgogICAgICAgIDxoMj5Qb3B1cCBQcm9tb3NpPC9oMj4KICAgICAgICA8cCBzdHlsZT0iY29sb3I6dmFyKC0tbXV0ZWQpO2ZvbnQtc2l6ZToxM3B4O21hcmdpbi1ib3R0b206MjBweDsiPlBvcHVwIGFrYW4gbXVuY3VsIHNla2FsaSBwZXIgaGFyaSBzYWF0IHBlbmd1bmp1bmcgbWVtYnVrYSB3ZWJzaXRlLjwvcD4KICAgICAgICA8Zm9ybSBtZXRob2Q9IlBPU1QiPgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImNoZWNrYm94LWdyb3VwIj4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgdHlwZT0iY2hlY2tib3giIG5hbWU9ImFjdGl2ZSIgaWQ9ImFjdGl2ZSIgPD89ICRjdXJyZW50WydhY3RpdmUnXSA/ICdjaGVja2VkJyA6ICcnID8+PgogICAgICAgICAgICAgICAgICAgIDxsYWJlbCBmb3I9ImFjdGl2ZSIgc3R5bGU9Im1hcmdpbjowO3RleHQtdHJhbnNmb3JtOm5vbmU7Zm9udC13ZWlnaHQ6NDAwOyI+QWt0aWZrYW4gcG9wdXAgcHJvbW9zaTwvbGFiZWw+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9InJvdyI+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj4KICAgICAgICAgICAgICAgICAgICA8bGFiZWw+SnVkdWwgUHJvbW88L2xhYmVsPgogICAgICAgICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJ0ZXh0IiBuYW1lPSJ0aXRsZSIgdmFsdWU9Ijw/PSBodG1sc3BlY2lhbGNoYXJzKCRjdXJyZW50Wyd0aXRsZSddKSA/PiIgcGxhY2Vob2xkZXI9IlByb21vIFNwZXNpYWwhIj4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+CiAgICAgICAgICAgICAgICAgICAgPGxhYmVsPklrb24gKEVtb2ppKTwvbGFiZWw+CiAgICAgICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9InRleHQiIG5hbWU9Imljb24iIHZhbHVlPSI8Pz0gaHRtbHNwZWNpYWxjaGFycygkY3VycmVudFsnaWNvbiddKSA/PiIgcGxhY2Vob2xkZXI9IvCfjokiIG1heGxlbmd0aD0iMTAiPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj4KICAgICAgICAgICAgICAgIDxsYWJlbD5EZXNrcmlwc2kgUHJvbW88L2xhYmVsPgogICAgICAgICAgICAgICAgPHRleHRhcmVhIG5hbWU9ImRlc2NyaXB0aW9uIiBwbGFjZWhvbGRlcj0iRGVza3JpcHNpIHByb21vIHlhbmcgbWVuYXJpay4uLiI+PD89IGh0bWxzcGVjaWFsY2hhcnMoJGN1cnJlbnRbJ2Rlc2NyaXB0aW9uJ10pID8+PC90ZXh0YXJlYT4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9InJvdyI+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj4KICAgICAgICAgICAgICAgICAgICA8bGFiZWw+SGlnaGxpZ2h0IEJhZGdlPC9sYWJlbD4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgdHlwZT0idGV4dCIgbmFtZT0iaGlnaGxpZ2h0IiB2YWx1ZT0iPD89IGh0bWxzcGVjaWFsY2hhcnMoJGN1cnJlbnRbJ2hpZ2hsaWdodCddKSA/PiIgcGxhY2Vob2xkZXI9IkRpc2tvbiAyMCUiPgogICAgICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj4KICAgICAgICAgICAgICAgICAgICA8bGFiZWw+VGVrcyBUb21ib2wgQ1RBPC9sYWJlbD4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgdHlwZT0idGV4dCIgbmFtZT0iY3RhX3RleHQiIHZhbHVlPSI8Pz0gaHRtbHNwZWNpYWxjaGFycygkY3VycmVudFsnY3RhX3RleHQnXSkgPz4iIHBsYWNlaG9sZGVyPSJLbGFpbSBTZWthcmFuZyI+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPgogICAgICAgICAgICAgICAgPGxhYmVsPlVSTCBUb21ib2wgQ1RBPC9sYWJlbD4KICAgICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJ0ZXh0IiBuYW1lPSJjdGFfdXJsIiB2YWx1ZT0iPD89IGh0bWxzcGVjaWFsY2hhcnMoJGN1cnJlbnRbJ2N0YV91cmwnXSkgPz4iIHBsYWNlaG9sZGVyPSJodHRwczovL3QubWUveW91emluX2NyYWJ6Ij4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDxidXR0b24gdHlwZT0ic3VibWl0IiBjbGFzcz0iYnRuIGJ0bi1wcmltYXJ5Ij7wn5K+IFNpbXBhbiBQcm9tbzwvYnV0dG9uPgogICAgICAgIDwvZm9ybT4KICAgICAgICAKICAgICAgICA8ZGl2IGNsYXNzPSJwcmV2aWV3LWJveCI+CiAgICAgICAgICAgIDxzdHJvbmcgc3R5bGU9ImNvbG9yOnZhcigtLW11dGVkKTsiPlByZXZpZXcgUG9wdXA6PC9zdHJvbmc+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9InBvcHVwLXByZXZpZXciIHN0eWxlPSJtYXJnaW4tdG9wOjEycHg7Ij4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9Imljb24iPjw/PSBodG1sc3BlY2lhbGNoYXJzKCRjdXJyZW50WydpY29uJ10pID8+PC9kaXY+CiAgICAgICAgICAgICAgICA8aDM+PD89IGh0bWxzcGVjaWFsY2hhcnMoJGN1cnJlbnRbJ3RpdGxlJ10pID8+PC9oMz4KICAgICAgICAgICAgICAgIDw/cGhwIGlmICgkY3VycmVudFsnaGlnaGxpZ2h0J10pOiA/PgogICAgICAgICAgICAgICAgPGRpdiBjbGFzcz0iaGlnaGxpZ2h0Ij48Pz0gaHRtbHNwZWNpYWxjaGFycygkY3VycmVudFsnaGlnaGxpZ2h0J10pID8+PC9kaXY+CiAgICAgICAgICAgICAgICA8P3BocCBlbmRpZjsgPz4KICAgICAgICAgICAgICAgIDw/cGhwIGlmICgkY3VycmVudFsnZGVzY3JpcHRpb24nXSk6ID8+CiAgICAgICAgICAgICAgICA8cD48Pz0gaHRtbHNwZWNpYWxjaGFycygkY3VycmVudFsnZGVzY3JpcHRpb24nXSkgPz48L3A+CiAgICAgICAgICAgICAgICA8P3BocCBlbmRpZjsgPz4KICAgICAgICAgICAgICAgIDxhIGhyZWY9Ijw/PSBodG1sc3BlY2lhbGNoYXJzKCRjdXJyZW50WydjdGFfdXJsJ10pID8+IiBjbGFzcz0iYnRuLWN0YSIgdGFyZ2V0PSJfYmxhbmsiPjw/PSBodG1sc3BlY2lhbGNoYXJzKCRjdXJyZW50WydjdGFfdGV4dCddKSA/PjwvYT4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDw/cGhwIGlmICgkY3VycmVudFsndXBkYXRlZF9hdCddKTogPz4KICAgICAgICAgICAgPGJyPjxzbWFsbCBzdHlsZT0iY29sb3I6dmFyKC0tbXV0ZWQpOyI+VGVyYWtoaXIgZGl1cGRhdGU6IDw/PSBodG1sc3BlY2lhbGNoYXJzKCRjdXJyZW50Wyd1cGRhdGVkX2F0J10pID8+PC9zbWFsbD4KICAgICAgICAgICAgPD9waHAgZW5kaWY7ID8+CiAgICAgICAgPC9kaXY+CiAgICA8L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=" | base64 -d > "$DIR"/admin/promotions.php
+    chmod 644 "$DIR"/admin/promotions.php
+    echo "PD9waHAKc2Vzc2lvbl9zdGFydCgpOwpyZXF1aXJlX29uY2UgX19ESVJfXyAuICcvLi4vaW5jbHVkZXMvY29uZmlnLnBocCc7CgppZiAoIWlzc2V0KCRfU0VTU0lPTlsndXNlcl9pZCddKSB8fCAkX1NFU1NJT05bJ3JvbGUnXSAhPT0gJ2FkbWluJykgewogICAgaGVhZGVyKCdMb2NhdGlvbjogL29yZGVydnBuL2FkbWluLycpOwogICAgZXhpdDsKfQoKJGRiID0gZ2V0REIoKTsKJHVzZXJfc3RtdCA9ICRkYi0+cHJlcGFyZSgnU0VMRUNUIHVzZXJuYW1lLCByb2xlIEZST00gdXNlcnMgV0hFUkUgaWQgPSA/Jyk7CiR1c2VyX3N0bXQtPmV4ZWN1dGUoWyRfU0VTU0lPTlsndXNlcl9pZCddXSk7CiRhZG1pbl91c2VyID0gJHVzZXJfc3RtdC0+ZmV0Y2goUERPOjpGRVRDSF9BU1NPQyk7CgokZGF0YV9kaXIgPSBfX0RJUl9fIC4gJy8uLi9kYXRhJzsKJHNldHRpbmdzX2ZpbGUgPSAkZGF0YV9kaXIgLiAnL3NldHRpbmdzLmpzb24nOwokdXBsb2FkX2RpciA9IF9fRElSX18gLiAnLy4uL3VwbG9hZHMvcXJpcyc7CiRtc2cgPSAnJzsgJG1zZ190eXBlID0gJyc7CgppZiAoIWlzX2RpcigkZGF0YV9kaXIpKSBta2RpcigkZGF0YV9kaXIsIDA3NTUsIHRydWUpOwppZiAoIWlzX2RpcigkdXBsb2FkX2RpcikpIG1rZGlyKCR1cGxvYWRfZGlyLCAwNzU1LCB0cnVlKTsKCi8vIExvYWQgY3VycmVudCBzZXR0aW5ncwokc2V0dGluZ3MgPSBbCiAgICAnc2l0ZV9uYW1lJyA9PiAnWW91emluIENyYWJ6IFR1bmVsJywKICAgICdzaXRlX2xvZ28nID0+ICfimqEnLAogICAgJ3FyaXNfaW1hZ2UnID0+ICcnLAogICAgJ3RlbGVncmFtX2xpbmsnID0+ICdodHRwczovL3QubWUveW91emluX2NyYWJ6JywKICAgICd3aGF0c2FwcF9udW1iZXInID0+ICcnLAogICAgJ2Zvb3Rlcl90ZXh0JyA9PiAnVGhlIFByb2Zlc3NvcicsCiAgICAndXBkYXRlZF9hdCcgPT4gJycKXTsKaWYgKGZpbGVfZXhpc3RzKCRzZXR0aW5nc19maWxlKSkgewogICAgJGxvYWRlZCA9IGpzb25fZGVjb2RlKGZpbGVfZ2V0X2NvbnRlbnRzKCRzZXR0aW5nc19maWxlKSwgdHJ1ZSk7CiAgICBpZiAoJGxvYWRlZCkgJHNldHRpbmdzID0gYXJyYXlfbWVyZ2UoJHNldHRpbmdzLCAkbG9hZGVkKTsKfQoKLy8gSGFuZGxlIGZvcm0gc3VibWlzc2lvbgppZiAoJF9TRVJWRVJbJ1JFUVVFU1RfTUVUSE9EJ10gPT09ICdQT1NUJykgewogICAgJHNldHRpbmdzWydzaXRlX25hbWUnXSA9IHRyaW0oJF9QT1NUWydzaXRlX25hbWUnXSA/PyAnWW91emluIENyYWJ6IFR1bmVsJyk7CiAgICAkc2V0dGluZ3NbJ3NpdGVfbG9nbyddID0gdHJpbSgkX1BPU1RbJ3NpdGVfbG9nbyddID8/ICfimqEnKTsKICAgICRzZXR0aW5nc1sndGVsZWdyYW1fbGluayddID0gdHJpbSgkX1BPU1RbJ3RlbGVncmFtX2xpbmsnXSA/PyAnJyk7CiAgICAkc2V0dGluZ3NbJ3doYXRzYXBwX251bWJlciddID0gdHJpbSgkX1BPU1RbJ3doYXRzYXBwX251bWJlciddID8/ICcnKTsKICAgICRzZXR0aW5nc1snZm9vdGVyX3RleHQnXSA9IHRyaW0oJF9QT1NUWydmb290ZXJfdGV4dCddID8/ICcnKTsKICAgICRzZXR0aW5nc1sndXBkYXRlZF9hdCddID0gZGF0ZSgnWS1tLWQgSDppOnMnKTsKCiAgICAvLyBIYW5kbGUgUVJJUyB1cGxvYWQKICAgIGlmIChpc3NldCgkX0ZJTEVTWydxcmlzX2ltYWdlJ10pICYmICRfRklMRVNbJ3FyaXNfaW1hZ2UnXVsnZXJyb3InXSA9PT0gVVBMT0FEX0VSUl9PSykgewogICAgICAgICRleHQgPSBzdHJ0b2xvd2VyKHBhdGhpbmZvKCRfRklMRVNbJ3FyaXNfaW1hZ2UnXVsnbmFtZSddLCBQQVRISU5GT19FWFRFTlNJT04pKTsKICAgICAgICBpZiAoaW5fYXJyYXkoJGV4dCwgWydqcGcnLCAnanBlZycsICdwbmcnLCAnd2VicCddKSkgewogICAgICAgICAgICAkbmV3X25hbWUgPSAncXJpc18nIC4gdGltZSgpIC4gJy4nIC4gJGV4dDsKICAgICAgICAgICAgJGRlc3QgPSAkdXBsb2FkX2RpciAuICcvJyAuICRuZXdfbmFtZTsKICAgICAgICAgICAgaWYgKG1vdmVfdXBsb2FkZWRfZmlsZSgkX0ZJTEVTWydxcmlzX2ltYWdlJ11bJ3RtcF9uYW1lJ10sICRkZXN0KSkgewogICAgICAgICAgICAgICAgLy8gRGVsZXRlIG9sZCBRUklTIGlmIGV4aXN0cwogICAgICAgICAgICAgICAgaWYgKCRzZXR0aW5nc1sncXJpc19pbWFnZSddICYmIGZpbGVfZXhpc3RzKCR1cGxvYWRfZGlyIC4gJy8nIC4gJHNldHRpbmdzWydxcmlzX2ltYWdlJ10pKSB7CiAgICAgICAgICAgICAgICAgICAgdW5saW5rKCR1cGxvYWRfZGlyIC4gJy8nIC4gJHNldHRpbmdzWydxcmlzX2ltYWdlJ10pOwogICAgICAgICAgICAgICAgfQogICAgICAgICAgICAgICAgJHNldHRpbmdzWydxcmlzX2ltYWdlJ10gPSAkbmV3X25hbWU7CiAgICAgICAgICAgICAgICAkbXNnID0gJ1FSSVMgYmVyaGFzaWwgZGl1cGxvYWQhJzsKICAgICAgICAgICAgICAgICRtc2dfdHlwZSA9ICdzdWNjZXNzJzsKICAgICAgICAgICAgfQogICAgICAgIH0gZWxzZSB7CiAgICAgICAgICAgICRtc2cgPSAnRm9ybWF0IGZpbGUgdGlkYWsgZGlkdWt1bmcuIEd1bmFrYW4gSlBHLCBQTkcsIGF0YXUgV2ViUC4nOwogICAgICAgICAgICAkbXNnX3R5cGUgPSAnZXJyb3InOwogICAgICAgIH0KICAgIH0KCiAgICBpZiAoZW1wdHkoJG1zZykpIHsKICAgICAgICBpZiAoZmlsZV9wdXRfY29udGVudHMoJHNldHRpbmdzX2ZpbGUsIGpzb25fZW5jb2RlKCRzZXR0aW5ncywgSlNPTl9QUkVUVFlfUFJJTlQgfCBKU09OX1VORVNDQVBFRF9VTklDT0RFKSkpIHsKICAgICAgICAgICAgJG1zZyA9ICRtc2cgPzogJ1NldHRpbmdzIGJlcmhhc2lsIGRpc2ltcGFuISc7CiAgICAgICAgICAgICRtc2dfdHlwZSA9ICRtc2dfdHlwZSA/OiAnc3VjY2Vzcyc7CiAgICAgICAgfSBlbHNlIHsKICAgICAgICAgICAgJG1zZyA9ICdHYWdhbCBtZW55aW1wYW4gc2V0dGluZ3MhJzsKICAgICAgICAgICAgJG1zZ190eXBlID0gJ2Vycm9yJzsKICAgICAgICB9CiAgICB9Cn0KPz4KPCFET0NUWVBFIGh0bWw+CjxodG1sIGxhbmc9ImlkIj4KPGhlYWQ+CiAgICA8bWV0YSBjaGFyc2V0PSJVVEYtOCI+CiAgICA8bWV0YSBuYW1lPSJ2aWV3cG9ydCIgY29udGVudD0id2lkdGg9ZGV2aWNlLXdpZHRoLCBpbml0aWFsLXNjYWxlPTEuMCI+CiAgICA8dGl0bGU+U2V0dGluZ3MgV2ViIC0gT3JkZXJWUE4gQWRtaW48L3RpdGxlPgogICAgPHN0eWxlPgogICAgICAgIDpyb290IHsKICAgICAgICAgICAgLS1iZzogIzBmMTcyYTsgLS1jYXJkOiAjMWUyOTNiOyAtLWJvcmRlcjogIzMzNDE1NTsKICAgICAgICAgICAgLS10ZXh0OiAjZjFmNWY5OyAtLW11dGVkOiAjOTRhM2I4OyAtLXByaW1hcnk6ICMxNGI4YTY7CiAgICAgICAgICAgIC0tcHJpbWFyeS1kaW06IHJnYmEoMjAsMTg0LDE2NiwwLjE1KTsgLS1yZWQ6ICNlZjQ0NDQ7IC0tZ3JlZW46ICMxMGI5ODE7CiAgICAgICAgfQogICAgICAgICogeyBtYXJnaW46MDsgcGFkZGluZzowOyBib3gtc2l6aW5nOmJvcmRlci1ib3g7IH0KICAgICAgICBib2R5IHsgZm9udC1mYW1pbHk6J0ludGVyJyxzYW5zLXNlcmlmOyBiYWNrZ3JvdW5kOnZhcigtLWJnKTsgY29sb3I6dmFyKC0tdGV4dCk7IG1pbi1oZWlnaHQ6MTAwdmg7IH0KICAgICAgICAuc2lkZWJhciB7CiAgICAgICAgICAgIHBvc2l0aW9uOmZpeGVkOyBsZWZ0OjA7IHRvcDowOyB3aWR0aDoyNDBweDsgaGVpZ2h0OjEwMHZoOwogICAgICAgICAgICBiYWNrZ3JvdW5kOnZhcigtLWNhcmQpOyBib3JkZXItcmlnaHQ6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IHBhZGRpbmc6MjRweCAwOyB6LWluZGV4OjEwMDsKICAgICAgICB9CiAgICAgICAgLnNpZGViYXIgLmxvZ28geyBwYWRkaW5nOjAgMjBweCAyNHB4OyBmb250LXNpemU6MThweDsgZm9udC13ZWlnaHQ6ODAwOyBjb2xvcjp2YXIoLS1wcmltYXJ5KTsgfQogICAgICAgIC5zaWRlYmFyIG5hdiBhIHsgZGlzcGxheTpmbGV4OyBhbGlnbi1pdGVtczpjZW50ZXI7IGdhcDoxMHB4OyBwYWRkaW5nOjEycHggMjBweDsgY29sb3I6dmFyKC0tbXV0ZWQpOyB0ZXh0LWRlY29yYXRpb246bm9uZTsgZm9udC1zaXplOjE0cHg7IHRyYW5zaXRpb246LjJzOyB9CiAgICAgICAgLnNpZGViYXIgbmF2IGE6aG92ZXIsIC5zaWRlYmFyIG5hdiBhLmFjdGl2ZSB7IGNvbG9yOnZhcigtLXRleHQpOyBiYWNrZ3JvdW5kOnZhcigtLXByaW1hcnktZGltKTsgfQogICAgICAgIC5tYWluIHsgbWFyZ2luLWxlZnQ6MjQwcHg7IHBhZGRpbmc6MzJweDsgfQogICAgICAgIC5oZWFkZXIgeyBkaXNwbGF5OmZsZXg7IGp1c3RpZnktY29udGVudDpzcGFjZS1iZXR3ZWVuOyBhbGlnbi1pdGVtczpjZW50ZXI7IG1hcmdpbi1ib3R0b206MzJweDsgfQogICAgICAgIC5oZWFkZXIgaDEgeyBmb250LXNpemU6MjRweDsgZm9udC13ZWlnaHQ6NzAwOyB9CiAgICAgICAgLmNhcmQgeyBiYWNrZ3JvdW5kOnZhcigtLWNhcmQpOyBib3JkZXI6MXB4IHNvbGlkIHZhcigtLWJvcmRlcik7IGJvcmRlci1yYWRpdXM6MTJweDsgcGFkZGluZzoyOHB4OyBtYXJnaW4tYm90dG9tOjI0cHg7IH0KICAgICAgICAuY2FyZCBoMiB7IGZvbnQtc2l6ZToxOHB4OyBmb250LXdlaWdodDo3MDA7IG1hcmdpbi1ib3R0b206MjBweDsgfQogICAgICAgIC5mb3JtLWdyb3VwIHsgbWFyZ2luLWJvdHRvbToxNnB4OyB9CiAgICAgICAgLmZvcm0tZ3JvdXAgbGFiZWwgeyBkaXNwbGF5OmJsb2NrOyBtYXJnaW4tYm90dG9tOjZweDsgZm9udC1zaXplOjEzcHg7IGZvbnQtd2VpZ2h0OjYwMDsgY29sb3I6dmFyKC0tbXV0ZWQpOyB0ZXh0LXRyYW5zZm9ybTp1cHBlcmNhc2U7IGxldHRlci1zcGFjaW5nOi41cHg7IH0KICAgICAgICAuZm9ybS1ncm91cCBpbnB1dFt0eXBlPSJ0ZXh0Il0sIC5mb3JtLWdyb3VwIGlucHV0W3R5cGU9InVybCJdLCAuZm9ybS1ncm91cCBpbnB1dFt0eXBlPSJmaWxlIl0gewogICAgICAgICAgICB3aWR0aDoxMDAlOyBwYWRkaW5nOjEwcHggMTRweDsgYmFja2dyb3VuZDp2YXIoLS1iZyk7IGJvcmRlcjoxcHggc29saWQgdmFyKC0tYm9yZGVyKTsKICAgICAgICAgICAgYm9yZGVyLXJhZGl1czo4cHg7IGNvbG9yOnZhcigtLXRleHQpOyBmb250LWZhbWlseTppbmhlcml0OyBmb250LXNpemU6MTRweDsgb3V0bGluZTpub25lOyB0cmFuc2l0aW9uOi4yczsKICAgICAgICB9CiAgICAgICAgLmZvcm0tZ3JvdXAgaW5wdXQ6Zm9jdXMgeyBib3JkZXItY29sb3I6dmFyKC0tcHJpbWFyeSk7IH0KICAgICAgICAuZm9ybS1ncm91cCBpbnB1dFt0eXBlPSJmaWxlIl0geyBwYWRkaW5nOjhweDsgfQogICAgICAgIC5idG4geyBwYWRkaW5nOjEwcHggMjRweDsgYm9yZGVyOm5vbmU7IGJvcmRlci1yYWRpdXM6OHB4OyBmb250LXNpemU6MTRweDsgZm9udC13ZWlnaHQ6NjAwOyBjdXJzb3I6cG9pbnRlcjsgdHJhbnNpdGlvbjouMnM7IGZvbnQtZmFtaWx5OmluaGVyaXQ7IH0KICAgICAgICAuYnRuLXByaW1hcnkgeyBiYWNrZ3JvdW5kOnZhcigtLXByaW1hcnkpOyBjb2xvcjojMGYxNzJhOyB9CiAgICAgICAgLmJ0bi1wcmltYXJ5OmhvdmVyIHsgb3BhY2l0eTouOTsgfQogICAgICAgIC5hbGVydCB7IHBhZGRpbmc6MTJweCAxNnB4OyBib3JkZXItcmFkaXVzOjhweDsgbWFyZ2luLWJvdHRvbToxNnB4OyBmb250LXNpemU6MTRweDsgfQogICAgICAgIC5hbGVydC1zdWNjZXNzIHsgYmFja2dyb3VuZDpyZ2JhKDE2LDE4NSwxMjksLjE1KTsgY29sb3I6dmFyKC0tZ3JlZW4pOyBib3JkZXI6MXB4IHNvbGlkIHJnYmEoMTYsMTg1LDEyOSwuMik7IH0KICAgICAgICAuYWxlcnQtZXJyb3IgeyBiYWNrZ3JvdW5kOnJnYmEoMjM5LDY4LDY4LC4xNSk7IGNvbG9yOnZhcigtLXJlZCk7IGJvcmRlcjoxcHggc29saWQgcmdiYSgyMzksNjgsNjgsLjIpOyB9CiAgICAgICAgLnJvdyB7IGRpc3BsYXk6Z3JpZDsgZ3JpZC10ZW1wbGF0ZS1jb2x1bW5zOjFmciAxZnI7IGdhcDoxNnB4OyB9CiAgICAgICAgLnFyaXMtcHJldmlldyB7IG1hcmdpbi10b3A6MTJweDsgfQogICAgICAgIC5xcmlzLXByZXZpZXcgaW1nIHsgbWF4LXdpZHRoOjIwMHB4OyBib3JkZXItcmFkaXVzOjhweDsgYm9yZGVyOjFweCBzb2xpZCB2YXIoLS1ib3JkZXIpOyB9CiAgICAgICAgQG1lZGlhIChtYXgtd2lkdGg6NzY4cHgpIHsgLnNpZGViYXIgeyBkaXNwbGF5Om5vbmU7IH0gLm1haW4geyBtYXJnaW4tbGVmdDowOyB9IC5yb3cgeyBncmlkLXRlbXBsYXRlLWNvbHVtbnM6MWZyOyB9IH0KICAgIDwvc3R5bGU+CjwvaGVhZD4KPGJvZHk+CjxkaXYgY2xhc3M9InNpZGViYXIiPgogICAgPGRpdiBjbGFzcz0ibG9nbyI+4pqhIE9yZGVyVlBOIEFkbWluPC9kaXY+CiAgICA8bmF2PgogICAgICAgIDxhIGhyZWY9Ii9vcmRlcnZwbi9hZG1pbi8iPvCfk4ogRGFzaGJvYXJkPC9hPgogICAgICAgIDxhIGhyZWY9InNldHRpbmdzLnBocCIgY2xhc3M9ImFjdGl2ZSI+4pqZ77iPIFNldHRpbmdzIFdlYjwvYT4KICAgICAgICA8YSBocmVmPSJhbm5vdW5jZW1lbnRzLnBocCI+8J+ToiBQZW5ndW11bWFuPC9hPgogICAgICAgIDxhIGhyZWY9InByb21vdGlvbnMucGhwIj7wn46JIFByb21vc2kgLyBQb3B1cDwvYT4KICAgICAgICA8YSBocmVmPSIvb3JkZXJ2cG4vYWRtaW4vaW5kZXgucGhwIj7wn5SnIEtvbmZpZ3VyYXNpPC9hPgogICAgICAgIDxhIGhyZWY9Ii9vcmRlcnZwbi9jaGFuZ2VfcGFzc3dvcmQucGhwIj7wn5SRIEdhbnRpIFBhc3N3b3JkPC9hPgogICAgICAgIDxhIGhyZWY9Ii9vcmRlcnZwbi9hcGkvbG9nb3V0LnBocCI+8J+aqiBMb2dvdXQ8L2E+CiAgICA8L25hdj4KPC9kaXY+CjxkaXYgY2xhc3M9Im1haW4iPgogICAgPGRpdiBjbGFzcz0iaGVhZGVyIj4KICAgICAgICA8aDE+4pqZ77iPIFNldHRpbmdzIFdlYnNpdGU8L2gxPgogICAgICAgIDxkaXYgY2xhc3M9InVzZXIiPvCfkaQgPD89IGh0bWxzcGVjaWFsY2hhcnMoJGFkbWluX3VzZXJbJ3VzZXJuYW1lJ10gPz8gJ0FkbWluJykgPz48L2Rpdj4KICAgIDwvZGl2PgogICAgCiAgICA8P3BocCBpZiAoJG1zZyk6ID8+CiAgICA8ZGl2IGNsYXNzPSJhbGVydCBhbGVydC08Pz0gJG1zZ190eXBlID8+Ij48Pz0gaHRtbHNwZWNpYWxjaGFycygkbXNnKSA/PjwvZGl2PgogICAgPD9waHAgZW5kaWY7ID8+CiAgICAKICAgIDxkaXYgY2xhc3M9ImNhcmQiPgogICAgICAgIDxoMj5JZGVudGl0YXMgV2Vic2l0ZTwvaDI+CiAgICAgICAgPGZvcm0gbWV0aG9kPSJQT1NUIiBlbmN0eXBlPSJtdWx0aXBhcnQvZm9ybS1kYXRhIj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0icm93Ij4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPgogICAgICAgICAgICAgICAgICAgIDxsYWJlbD5OYW1hIFdlYnNpdGU8L2xhYmVsPgogICAgICAgICAgICAgICAgICAgIDxpbnB1dCB0eXBlPSJ0ZXh0IiBuYW1lPSJzaXRlX25hbWUiIHZhbHVlPSI8Pz0gaHRtbHNwZWNpYWxjaGFycygkc2V0dGluZ3NbJ3NpdGVfbmFtZSddKSA/PiIgcmVxdWlyZWQ+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPgogICAgICAgICAgICAgICAgICAgIDxsYWJlbD5Mb2dvIC8gSWtvbiAoRW1vamkpPC9sYWJlbD4KICAgICAgICAgICAgICAgICAgICA8aW5wdXQgdHlwZT0idGV4dCIgbmFtZT0ic2l0ZV9sb2dvIiB2YWx1ZT0iPD89IGh0bWxzcGVjaWFsY2hhcnMoJHNldHRpbmdzWydzaXRlX2xvZ28nXSkgPz4iIG1heGxlbmd0aD0iNCI+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPC9kaXY+CiAgICAgICAgICAgIDxkaXYgY2xhc3M9InJvdyI+CiAgICAgICAgICAgICAgICA8ZGl2IGNsYXNzPSJmb3JtLWdyb3VwIj4KICAgICAgICAgICAgICAgICAgICA8bGFiZWw+TGluayBUZWxlZ3JhbTwvbGFiZWw+CiAgICAgICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9InVybCIgbmFtZT0idGVsZWdyYW1fbGluayIgdmFsdWU9Ijw/PSBodG1sc3BlY2lhbGNoYXJzKCRzZXR0aW5nc1sndGVsZWdyYW1fbGluayddKSA/PiIgcGxhY2Vob2xkZXI9Imh0dHBzOi8vdC5tZS91c2VybmFtZSI+CiAgICAgICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgICAgIDxkaXYgY2xhc3M9ImZvcm0tZ3JvdXAiPgogICAgICAgICAgICAgICAgICAgIDxsYWJlbD5Ob21vciBXaGF0c0FwcDwvbGFiZWw+CiAgICAgICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9InRleHQiIG5hbWU9IndoYXRzYXBwX251bWJlciIgdmFsdWU9Ijw/PSBodG1sc3BlY2lhbGNoYXJzKCRzZXR0aW5nc1snd2hhdHNhcHBfbnVtYmVyJ10pID8+IiBwbGFjZWhvbGRlcj0iNjI4MTIzNDU2Nzg5Ij4KICAgICAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+CiAgICAgICAgICAgICAgICA8bGFiZWw+Rm9vdGVyIFRleHQ8L2xhYmVsPgogICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9InRleHQiIG5hbWU9ImZvb3Rlcl90ZXh0IiB2YWx1ZT0iPD89IGh0bWxzcGVjaWFsY2hhcnMoJHNldHRpbmdzWydmb290ZXJfdGV4dCddKSA/PiIgcGxhY2Vob2xkZXI9IlRoZSBQcm9mZXNzb3IiPgogICAgICAgICAgICA8L2Rpdj4KICAgICAgICAgICAgPGJ1dHRvbiB0eXBlPSJzdWJtaXQiIGNsYXNzPSJidG4gYnRuLXByaW1hcnkiIHN0eWxlPSJtYXJnaW4tYm90dG9tOjI0cHg7Ij7wn5K+IFNpbXBhbiBTZXR0aW5nczwvYnV0dG9uPgogICAgICAgIDwvZm9ybT4KICAgIDwvZGl2PgogICAgCiAgICA8ZGl2IGNsYXNzPSJjYXJkIj4KICAgICAgICA8aDI+8J+TsSBRUklTIHVudHVrIFRvcCBVcDwvaDI+CiAgICAgICAgPHAgc3R5bGU9ImNvbG9yOnZhcigtLW11dGVkKTtmb250LXNpemU6MTNweDttYXJnaW4tYm90dG9tOjIwcHg7Ij5VcGxvYWQgZ2FtYmFyIFFSSVMgeWFuZyBha2FuIGRpdGFtcGlsa2FuIGRpIGhhbGFtYW4gdG9wIHVwIC8gcGVtYmF5YXJhbi48L3A+CiAgICAgICAgPGZvcm0gbWV0aG9kPSJQT1NUIiBlbmN0eXBlPSJtdWx0aXBhcnQvZm9ybS1kYXRhIj4KICAgICAgICAgICAgPGRpdiBjbGFzcz0iZm9ybS1ncm91cCI+CiAgICAgICAgICAgICAgICA8bGFiZWw+VXBsb2FkIFFSSVMgKEpQRy9QTkcvV2ViUCwgbWF4IDJNQik8L2xhYmVsPgogICAgICAgICAgICAgICAgPGlucHV0IHR5cGU9ImZpbGUiIG5hbWU9InFyaXNfaW1hZ2UiIGFjY2VwdD0iaW1hZ2UvanBlZyxpbWFnZS9wbmcsaW1hZ2Uvd2VicCI+CiAgICAgICAgICAgICAgICA8aW5wdXQgdHlwZT0iaGlkZGVuIiBuYW1lPSJzaXRlX25hbWUiIHZhbHVlPSI8Pz0gaHRtbHNwZWNpYWxjaGFycygkc2V0dGluZ3NbJ3NpdGVfbmFtZSddKSA/PiI+CiAgICAgICAgICAgIDwvZGl2PgogICAgICAgICAgICA8YnV0dG9uIHR5cGU9InN1Ym1pdCIgY2xhc3M9ImJ0biBidG4tcHJpbWFyeSI+8J+TpCBVcGxvYWQgUVJJUzwvYnV0dG9uPgogICAgICAgIDwvZm9ybT4KICAgICAgICA8P3BocCBpZiAoJHNldHRpbmdzWydxcmlzX2ltYWdlJ10pOiA/PgogICAgICAgIDxkaXYgY2xhc3M9InFyaXMtcHJldmlldyI+CiAgICAgICAgICAgIDxzdHJvbmcgc3R5bGU9ImNvbG9yOnZhcigtLW11dGVkKTtmb250LXNpemU6MTNweDsiPlFSSVMgU2FhdCBJbmk6PC9zdHJvbmc+PGJyPgogICAgICAgICAgICA8aW1nIHNyYz0iL29yZGVydnBuL3VwbG9hZHMvcXJpcy88Pz0gaHRtbHNwZWNpYWxjaGFycygkc2V0dGluZ3NbJ3FyaXNfaW1hZ2UnXSkgPz4iIGFsdD0iUVJJUyIgc3R5bGU9Im1hcmdpbi10b3A6OHB4OyI+CiAgICAgICAgPC9kaXY+CiAgICAgICAgPD9waHAgZW5kaWY7ID8+CiAgICA8L2Rpdj4KPC9kaXY+CjwvYm9keT4KPC9odG1sPgo=" | base64 -d > "$DIR"/admin/settings.php
+    chmod 644 "$DIR"/admin/settings.php
 }
 
 _ordervpn_deploy_bridge() {
