@@ -6126,7 +6126,7 @@ SITEMAPEOF
                         if (metaDesc) metaDesc.content = 'Layanan tunneling premium — ' + s.site_name;
                     }
                     if (s.site_logo) {
-                        document.getElementById('siteLogo').textContent = s.site_logo;
+                        document.getElementById('siteLogo').innerHTML = s.site_logo;
                     }
                     if (s.footer_text) {
                         document.getElementById('footerText').innerHTML = '&copy; ' + new Date().getFullYear() + ' ' + s.site_name + ' — ' + s.footer_text + '. All rights reserved.';
