@@ -6692,16 +6692,74 @@ SUDOEOF
 }
 
 _ordervpn_setup_nginx() {
-    local PORT="${1:-8888}"
-    local SUB="${2:-}"
+    local SUB="${1:-}"
     local DIR="/var/www/html/ordervpn"
     local PHP_SOCK=""
     for sock in /var/run/php/php*.fpm.sock; do [[ -S "$sock" ]] && { PHP_SOCK="unix:$sock"; break; }; done
     [[ -z "$PHP_SOCK" ]] && PHP_SOCK="unix:/var/run/php/php8.1-fpm.sock"
-    cat > /etc/nginx/sites-available/ordervpn << NGINXEOF
+    
+    # Remove old configs
+    rm -f /etc/nginx/sites-{available,enabled}/ordervpn{,-domain} 2>/dev/null
+    
+    if [[ -n "$SUB" ]]; then
+        # Subdomain mode: serve on port 80/443, root = /var/www/html
+        # Landing page at /, OrderVPN panel at /ordervpn/
+        cat > /etc/nginx/sites-available/ordervpn << NGINXEOF
 server {
-    listen ${PORT};
-    listen [::]:${PORT};
+    listen 80;
+    server_name ${SUB};
+    root /var/www/html;
+    index index.html index.php;
+    charset utf-8;
+    client_max_body_size 5M;
+    location ~ /includes/ { deny all; }
+    location ~ /cron/     { deny all; }
+    location ~ /\.ht      { deny all; }
+    location / { try_files \$uri \$uri/ =404; }
+    location ~ \.php$ {
+        try_files \$uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass ${PHP_SOCK};
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_read_timeout 120;
+    }
+}
+server {
+    listen 443 ssl http2;
+    server_name ${SUB};
+    ssl_certificate /etc/xray/xray.crt;
+    ssl_certificate_key /etc/xray/xray.key;
+    ssl_protocols TLSv1.2 TLSv1.3;
+    ssl_ciphers HIGH:!aNULL:!MD5;
+    ssl_session_cache shared:SSL:10m;
+    ssl_session_timeout 1d;
+    root /var/www/html;
+    index index.html index.php;
+    charset utf-8;
+    client_max_body_size 5M;
+    location ~ /includes/ { deny all; }
+    location ~ /cron/     { deny all; }
+    location ~ /\.ht      { deny all; }
+    location / { try_files \$uri \$uri/ =404; }
+    location ~ \.php$ {
+        try_files \$uri =404;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
+        fastcgi_pass ${PHP_SOCK};
+        fastcgi_index index.php;
+        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
+        include fastcgi_params;
+        fastcgi_read_timeout 120;
+    }
+}
+NGINXEOF
+    else
+        # No subdomain fallback: port 8888
+        cat > /etc/nginx/sites-available/ordervpn << NGINXEOF
+server {
+    listen 8888;
+    listen [::]:8888;
     server_name _;
     root ${DIR};
     index index.php;
@@ -6713,7 +6771,7 @@ server {
     location / { try_files \$uri \$uri/ /index.php?\$query_string; }
     location ~ \.php$ {
         try_files \$uri =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)\$;
+        fastcgi_split_path_info ^(.+\.php)(/.+)$;
         fastcgi_pass ${PHP_SOCK};
         fastcgi_index index.php;
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
@@ -6722,62 +6780,10 @@ server {
     }
 }
 NGINXEOF
-    ln -sf /etc/nginx/sites-available/ordervpn /etc/nginx/sites-enabled/ordervpn 2>/dev/null
-    if [[ -n "$SUB" ]]; then
-        cat > /etc/nginx/sites-available/ordervpn-domain << NGINXEOF2
-server {
-    listen 80;
-    server_name ${SUB};
-    root ${DIR};
-    index index.php;
-    charset utf-8;
-    client_max_body_size 5M;
-    location ~ /includes/ { deny all; }
-    location ~ /cron/     { deny all; }
-    location ~ /\.ht      { deny all; }
-    location / { try_files \$uri \$uri/ /index.php?\$query_string; }
-    location ~ \.php$ {
-        try_files \$uri =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)\$;
-        fastcgi_pass ${PHP_SOCK};
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
-        include fastcgi_params;
-        fastcgi_read_timeout 120;
-    }
-}
-server {
-    listen 443 ssl http2;
-    server_name ${SUB};
-
-    ssl_certificate /etc/xray/xray.crt;
-    ssl_certificate_key /etc/xray/xray.key;
-    ssl_protocols TLSv1.2 TLSv1.3;
-    ssl_ciphers HIGH:!aNULL:!MD5;
-    ssl_session_cache shared:SSL:10m;
-    ssl_session_timeout 1d;
-
-    root ${DIR};
-    index index.php;
-    charset utf-8;
-    client_max_body_size 5M;
-    location ~ /includes/ { deny all; }
-    location ~ /cron/     { deny all; }
-    location ~ /\.ht      { deny all; }
-    location / { try_files \$uri \$uri/ /index.php?\$query_string; }
-    location ~ \.php$ {
-        try_files \$uri =404;
-        fastcgi_split_path_info ^(.+\.php)(/.+)\$;
-        fastcgi_pass ${PHP_SOCK};
-        fastcgi_index index.php;
-        fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
-        include fastcgi_params;
-        fastcgi_read_timeout 120;
-    }
-}
-NGINXEOF2
-        ln -sf /etc/nginx/sites-available/ordervpn-domain /etc/nginx/sites-enabled/ordervpn-domain 2>/dev/null
     fi
+    
+    ln -sf /etc/nginx/sites-available/ordervpn /etc/nginx/sites-enabled/ordervpn 2>/dev/null
+    
     # Start dan enable PHP-FPM versi berapapun yang terinstall
     for svc in $(systemctl list-units --type=service 2>/dev/null | grep -oE 'php[0-9.]+-fpm' | sort -u); do
         systemctl start "$svc" 2>/dev/null
@@ -6799,7 +6805,7 @@ menu_ordervpn() {
         [[ -n "$DOMAIN" ]] && DISPLAY_HOST="$DOMAIN"
         if [[ -f /var/www/html/ordervpn/index.php ]]; then
             printf "  Status : ${GREEN}✔ Terinstall${NC}\n"
-            printf "  URL    : ${CYAN}http://%s:8888${NC}\n" "$DISPLAY_HOST"
+            [[ -n "$SUBDOMAIN" ]] && printf "  URL    : ${CYAN}http://%s${NC}\n" "$SUBDOMAIN" || printf "  URL    : ${CYAN}http://%s:8888${NC}\n" "$DISPLAY_HOST"
         echo -e "  ${RED}⚠ Ganti password admin default! Pilih menu [9] di bawah.${NC}"
             [[ -n "$DOMAIN" ]] && printf "  Domain : ${CYAN}http://%s${NC} (jika sudah setup subdomain)\n" "$DOMAIN"
         else
@@ -6808,7 +6814,7 @@ menu_ordervpn() {
         echo ""
         printf "  ${WHITE}[1]${NC} Install / Reinstall OrderVPN\n"
         printf "  ${WHITE}[2]${NC} Test vpn-api bridge + cek DB\n"
-        printf "  ${WHITE}[3]${NC} Restart PHP-FPM + Nginx (port 8888)\n"
+        printf "  ${WHITE}[3]${NC} Restart PHP-FPM + Nginx"
         printf "  ${WHITE}[4]${NC} Lihat log instalasi\n"
         printf "  ${WHITE}[5]${NC} Setup subdomain custom\n"
         printf "  ${WHITE}[6]${NC} Uninstall OrderVPN\n"
@@ -6889,7 +6895,7 @@ menu_ordervpn() {
                     sleep 2
                 else
                     printf "  ${CYAN}▸${NC} Setup nginx untuk %s...\n" "$subdomain"
-                    if _ordervpn_setup_nginx 8888 "$subdomain"; then
+                    if _ordervpn_setup_nginx "$subdomain"; then
                         echo -e "  ${GREEN}✔ Subdomain $subdomain berhasil disetup${NC}"
                         printf "  ${DIM}Pastikan DNS subdomain sudah mengarah ke IP: %s${NC}\n" "$IP_NOW"
                     else
@@ -6963,12 +6969,12 @@ _ordervpn_install() {
     printf "  ${DIM}1. Install PHP, MySQL (jika belum)${NC}\n"
     printf "  ${DIM}2. Deploy web OrderVPN ke /var/www/html/ordervpn${NC}\n"
     printf "  ${DIM}3. Pasang vpn-api bridge (sync tunnel.sh)${NC}\n"
-    printf "  ${DIM}4. Setup Nginx port 8888${NC}\n"
+    printf "  ${DIM}4. Setup Nginx (subdomain/port 80)${NC}\n"
     printf "  ${DIM}5. Setup database otomatis${NC}\n"
     echo ""
     read -rp "  Lanjut? [y/N]: " confirm
     [[ "${confirm,,}" != "y" ]] && return
-    echo ""; read -rp "  Subdomain custom? (kosongkan=skip): " SUBDOMAIN
+    echo ""; read -rp "  Subdomain? (contoh: panel.domain.com, kosongkan=port 8888): " SUBDOMAIN
 
     # Install deps
     printf "  ${CYAN}▸${NC} Install dependensi...\n"
@@ -7042,14 +7048,16 @@ SQLEOF2
     printf "  ${GREEN}✔${NC} vpn-api OK\n"
 
     # Nginx
-    printf "  ${CYAN}▸${NC} Setup Nginx port 8888...\n"
-    _ordervpn_setup_nginx 8888 "$SUBDOMAIN"
+    printf "  ${CYAN}▸${NC} Setup Nginx...\n"
+    _ordervpn_setup_nginx "$SUBDOMAIN"
     printf "  ${GREEN}✔${NC} Nginx OK\n"
 
-    # UFW - buka port 8888
+    # UFW - buka port 80 & 443 untuk web
     if command -v ufw >/dev/null 2>&1 && ufw status 2>/dev/null | grep -q "active"; then
-        ufw allow 8888/tcp >/dev/null 2>&1
-        printf "  ${GREEN}✔${NC} UFW port 8888 dibuka\n"
+        ufw allow 80/tcp >/dev/null 2>&1
+        ufw allow 443/tcp >/dev/null 2>&1
+        printf "  ${GREEN}✔${NC} UFW port 80 & 443 dibuka
+"
     fi
 
     # Cron
@@ -7076,8 +7084,8 @@ CREDEOF
     printf "  ${GREEN}╚══════════════════════════════════════════════╝${NC}\n"
     echo ""
     echo -e "  ${RED}⚠ PENTING! Ganti password admin via menu [9] atau web panel /change_password.php${NC}"
-    printf "  ${WHITE}URL Panel   :${NC} ${CYAN}http://%s:8888${NC}\n" "$IP_VPS"
-    [[ -n "$SUBDOMAIN" ]] && printf "  ${WHITE}Subdomain   :${NC} ${CYAN}http://%s${NC}\n" "$SUBDOMAIN"
+    printf "  ${WHITE}URL Panel   :${NC} ${CYAN}http://%s${NC}\n" "$SUBDOMAIN"
+    [[ -z "$SUBDOMAIN" ]] && printf "  ${WHITE}URL Panel   :${NC} ${CYAN}http://%s:8888${NC}\n" "$IP_VPS"
     if [[ -f /root/.ordervpn_admin ]]; then
         local ap; ap=$(cat /root/.ordervpn_admin)
         printf "  ${WHITE}Admin Login :${NC} admin / ${GREEN}%s${NC}\n" "$ap"
