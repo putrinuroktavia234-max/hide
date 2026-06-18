@@ -5077,1216 +5077,1111 @@ SITEMAPEOF
 <!DOCTYPE html>
 <html lang="id">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PAGE_TITLE | VPN Premium</title>
-<meta name="description" content="PAGE_DESC">
-<meta name="keywords" content="VPN, Xray, VMess, VLess, Trojan, WebSocket, gRPC, proxy, tunnel, SSH">
-<meta name="robots" content="index, follow">
-<meta name="author" content="Youzin Crabz Tunel">
-<meta name="theme-color" content="#0a0a1a">
-<link rel="canonical" href="SITE_URL">
-<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🔒</text></svg>">
-<!-- Open Graph -->
-<meta property="og:type" content="website">
-<meta property="og:url" content="SITE_URL">
-<meta property="og:title" content="PAGE_TITLE | VPN Premium">
-<meta property="og:description" content="PAGE_DESC">
-<meta property="og:image" content="SITE_URL/og-image.png">
-<meta property="og:locale" content="id_ID">
-<!-- Twitter Cards -->
-<meta name="twitter:card" content="summary_large_image">
-<meta name="twitter:title" content="PAGE_TITLE | VPN Premium">
-<meta name="twitter:description" content="PAGE_DESC">
-<!-- Google Search Console -->
-<meta name="google-site-verification" content="GOOGLE_VERIFICATION">
-<!-- Google Analytics -->
-<script>
-var gaId = 'GA_ID';
-if (gaId) {
-  var s = document.createElement('script');
-  s.async = true;
-  s.src = 'https://www.googletagmanager.com/gtag/js?id=' + gaId;
-  document.head.appendChild(s);
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-  gtag('config', gaId);
-}
-</script>
-<!-- Schema.org Structured Data -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "Organization",
-  "name": "Youzin Crabz Tunnel",
-  "description": "PAGE_DESC",
-  "url": "SITE_URL",
-  "logo": "SITE_URL/logo.png",
-  "contactPoint": {
-    "@type": "ContactPoint",
-    "telephone": "+62-xxx-xxxx-xxxx",
-    "contactType": "customer service",
-    "availableLanguage": ["Indonesia", "English"]
-  },
-  "sameAs": [
-    "https://t.me/youzin_crabz"
-  ]
-}
-</script>
-<!-- FAQ Schema -->
-<script type="application/ld+json">
-{
-  "@context": "https://schema.org",
-  "@type": "FAQPage",
-  "mainEntity": [
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PAGE_TITLE</title>
+    <meta name="description" content="PAGE_DESC">
+    <meta name="theme-color" content="#0f172a">
+    <meta property="og:title" content="PAGE_TITLE">
+    <meta property="og:description" content="PAGE_DESC">
+    <meta property="og:type" content="website">
+    <script type="application/ld+json">
     {
-      "@type": "Question",
-      "name": "Apa itu Youzin Crabz Tunnel?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Layanan VPN premium berbasis Xray-core yang mendukung berbagai protokol seperti VMess, VLess, Trojan, dan SSH dengan koneksi WebSocket dan gRPC."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Bagaimana cara order VPN?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Hubungi admin melalui Telegram untuk melakukan pemesanan dan pembayaran. Setelah konfirmasi, akun akan dibuat dalam waktu singkat."
-      }
-    },
-    {
-      "@type": "Question",
-      "name": "Apakah ada garansi?",
-      "acceptedAnswer": {
-        "@type": "Answer",
-        "text": "Ya, kami menyediakan garansi server aktif 24/7 dengan monitoring otomatis. Jika ada masalah, tim support siap membantu."
-      }
+      "@context": "https://schema.org",
+      "@type": "WebApplication",
+      "name": "PAGE_TITLE",
+      "description": "PAGE_DESC",
+      "url": "SITE_URL",
+      "applicationCategory": "VPNService"
     }
-  ]
-}
-</script>
-<!-- Preconnect -->
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-<style>
-:root {
-  --bg: #08081a;
-  --bg2: #0d0d25;
-  --bg3: #12123a;
-  --surface: rgba(255,255,255,0.04);
-  --surface-hover: rgba(255,255,255,0.08);
-  --border: rgba(255,255,255,0.08);
-  --border-hover: rgba(255,255,255,0.15);
-  --text: #e8e8f0;
-  --text-dim: #8888aa;
-  --text-bright: #ffffff;
-  --primary: #00d4ff;
-  --primary-dim: rgba(0,212,255,0.15);
-  --secondary: #7c3aed;
-  --secondary-dim: rgba(124,58,237,0.15);
-  --accent: #10b981;
-  --accent-dim: rgba(16,185,129,0.15);
-  --gold: #f59e0b;
-  --gold-dim: rgba(245,158,11,0.15);
-  --radius: 16px;
-  --radius-sm: 8px;
-  --shadow: 0 4px 30px rgba(0,0,0,0.3);
-}
-* { margin: 0; padding: 0; box-sizing: border-box; }
-html { scroll-behavior: smooth; }
-body {
-  font-family: 'Inter', -apple-system, sans-serif;
-  background: var(--bg);
-  color: var(--text);
-  line-height: 1.6;
-  overflow-x: hidden;
-}
-::selection { background: var(--primary); color: var(--bg); }
+    </script>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.1/css/all.min.css">
+    <style>
+        :root {
+            --bg-primary: #0f172a;
+            --bg-secondary: #1e293b;
+            --bg-card: rgba(30, 41, 59, 0.7);
+            --bg-card-hover: rgba(30, 41, 59, 0.9);
+            --border: rgba(100, 116, 139, 0.2);
+            --border-hover: rgba(20, 184, 166, 0.4);
+            --text-primary: #f1f5f9;
+            --text-secondary: #94a3b8;
+            --text-muted: #64748b;
+            --accent: #14b8a6;
+            --accent-light: #5eead4;
+            --accent-dim: rgba(20, 184, 166, 0.15);
+            --accent-glow: rgba(20, 184, 166, 0.3);
+            --green: #10b981;
+            --green-dim: rgba(16, 185, 129, 0.15);
+            --blue: #3b82f6;
+            --blue-dim: rgba(59, 130, 246, 0.15);
+            --purple: #8b5cf6;
+            --purple-dim: rgba(139, 92, 246, 0.15);
+            --red: #ef4444;
+            --yellow: #f59e0b;
+            --radius: 16px;
+            --radius-sm: 10px;
+            --radius-xs: 8px;
+            --shadow: 0 4px 24px rgba(0,0,0,0.3);
+            --shadow-hover: 0 8px 40px rgba(0,0,0,0.4);
+            --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+        }
 
-/* Ambient Background */
-#bg-glow {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  overflow: hidden;
-}
-.orb {
-  position: absolute;
-  border-radius: 50%;
-  filter: blur(80px);
-  opacity: 0.3;
-  animation: orbFloat 20s ease-in-out infinite;
-}
-.orb-1 {
-  width: 600px; height: 600px;
-  background: radial-gradient(circle, var(--primary), transparent);
-  top: -200px; right: -100px;
-  animation-delay: 0s;
-}
-.orb-2 {
-  width: 500px; height: 500px;
-  background: radial-gradient(circle, var(--secondary), transparent);
-  bottom: -150px; left: -150px;
-  animation-delay: -7s;
-}
-.orb-3 {
-  width: 400px; height: 400px;
-  background: radial-gradient(circle, var(--accent), transparent);
-  top: 50%; left: 50%;
-  transform: translate(-50%, -50%);
-  animation-delay: -14s;
-}
-@keyframes orbFloat {
-  0%, 100% { transform: translate(0, 0) scale(1); }
-  25% { transform: translate(50px, -50px) scale(1.1); }
-  50% { transform: translate(-30px, 30px) scale(0.9); }
-  75% { transform: translate(40px, 20px) scale(1.05); }
-}
+        * { margin: 0; padding: 0; box-sizing: border-box; }
 
-/* Grid pattern overlay */
-#grid-overlay {
-  position: fixed;
-  inset: 0;
-  z-index: 0;
-  pointer-events: none;
-  background-image: linear-gradient(rgba(255,255,255,0.02) 1px, transparent 1px),
-                    linear-gradient(90deg, rgba(255,255,255,0.02) 1px, transparent 1px);
-  background-size: 60px 60px;
-}
+        html { scroll-behavior: smooth; }
 
-.container {
-  position: relative;
-  z-index: 1;
-  max-width: 1200px;
-  margin: 0 auto;
-  padding: 0 24px;
-}
+        body {
+            font-family: 'Inter', system-ui, -apple-system, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+        }
 
-/* Nav */
-.nav {
-  position: fixed;
-  top: 0; left: 0; right: 0;
-  z-index: 100;
-  padding: 16px 0;
-  backdrop-filter: blur(20px);
-  -webkit-backdrop-filter: blur(20px);
-  background: rgba(8,8,26,0.8);
-  border-bottom: 1px solid var(--border);
-  transition: all 0.3s;
-}
-.nav .container {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-}
-.nav-logo {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  font-size: 18px;
-  font-weight: 700;
-  color: var(--text-bright);
-  text-decoration: none;
-}
-.nav-logo-icon {
-  width: 36px;
-  height: 36px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 10px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 18px;
-}
-.nav-links {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-  list-style: none;
-}
-.nav-links a {
-  padding: 8px 16px;
-  border-radius: var(--radius-sm);
-  color: var(--text-dim);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 500;
-  transition: all 0.2s;
-}
-.nav-links a:hover { color: var(--text); background: var(--surface); }
-.nav-cta {
-  padding: 8px 20px !important;
-  background: linear-gradient(135deg, var(--primary), var(--secondary)) !important;
-  color: var(--text-bright) !important;
-  border-radius: var(--radius-sm) !important;
-  font-weight: 600 !important;
-}
-.nav-cta:hover { opacity: 0.9; transform: translateY(-1px); }
-.mobile-toggle {
-  display: none;
-  background: none;
-  border: none;
-  color: var(--text);
-  font-size: 24px;
-  cursor: pointer;
-  padding: 8px;
-}
+        /* Background Pattern */
+        .bg-pattern {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0;
+            background-image: 
+                radial-gradient(ellipse at 20% 50%, rgba(20,184,166,0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 80% 20%, rgba(59,130,246,0.03) 0%, transparent 50%),
+                radial-gradient(ellipse at 50% 80%, rgba(139,92,246,0.03) 0%, transparent 50%);
+        }
 
-/* Hero */
-.hero {
-  min-height: 100vh;
-  display: flex;
-  align-items: center;
-  padding: 120px 0 80px;
-  position: relative;
-}
-.hero-content {
-  text-align: center;
-  max-width: 800px;
-  margin: 0 auto;
-}
-.hero-badge {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 8px 16px;
-  background: var(--primary-dim);
-  border: 1px solid rgba(0,212,255,0.2);
-  border-radius: 100px;
-  font-size: 13px;
-  font-weight: 500;
-  color: var(--primary);
-  margin-bottom: 24px;
-}
-.hero-badge .dot {
-  width: 8px; height: 8px;
-  background: var(--accent);
-  border-radius: 50%;
-  animation: pulse 2s infinite;
-}
-@keyframes pulse {
-  0%, 100% { opacity: 1; box-shadow: 0 0 0 0 rgba(16,185,129,0.5); }
-  50% { opacity: 0.7; box-shadow: 0 0 0 8px rgba(16,185,129,0); }
-}
-.hero h1 {
-  font-size: clamp(36px, 6vw, 64px);
-  font-weight: 800;
-  line-height: 1.1;
-  margin-bottom: 20px;
-  color: var(--text-bright);
-}
-.hero h1 span {
-  background: linear-gradient(135deg, var(--primary), var(--secondary), var(--accent));
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  background-clip: text;
-}
-.hero p {
-  font-size: 18px;
-  color: var(--text-dim);
-  max-width: 640px;
-  margin: 0 auto 32px;
-  line-height: 1.7;
-}
-.hero-cta {
-  display: flex;
-  gap: 12px;
-  justify-content: center;
-  flex-wrap: wrap;
-}
-.btn {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 14px 28px;
-  border-radius: var(--radius-sm);
-  font-size: 15px;
-  font-weight: 600;
-  text-decoration: none;
-  cursor: pointer;
-  transition: all 0.3s;
-  border: none;
-}
-.btn-primary {
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  color: #fff;
-  box-shadow: 0 4px 20px rgba(0,212,255,0.3);
-}
-.btn-primary:hover { transform: translateY(-2px); box-shadow: 0 8px 30px rgba(0,212,255,0.4); }
-.btn-secondary {
-  background: var(--surface);
-  color: var(--text);
-  border: 1px solid var(--border);
-}
-.btn-secondary:hover { background: var(--surface-hover); border-color: var(--border-hover); transform: translateY(-2px); }
+        .bg-grid {
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            pointer-events: none; z-index: 0; opacity: 0.4;
+            background-image: 
+                linear-gradient(rgba(100,116,139,0.06) 1px, transparent 1px),
+                linear-gradient(90deg, rgba(100,116,139,0.06) 1px, transparent 1px);
+            background-size: 60px 60px;
+        }
 
-.hero-stats {
-  display: flex;
-  gap: 40px;
-  justify-content: center;
-  margin-top: 48px;
-  padding-top: 32px;
-  border-top: 1px solid var(--border);
-}
-.hero-stat { text-align: center; }
-.hero-stat-value {
-  font-size: 28px;
-  font-weight: 700;
-  color: var(--text-bright);
-  font-family: 'JetBrains Mono', monospace;
-}
-.hero-stat-label {
-  font-size: 13px;
-  color: var(--text-dim);
-  margin-top: 4px;
-}
+        /* Container */
+        .container {
+            width: 100%; max-width: 1200px;
+            margin: 0 auto; padding: 0 24px;
+            position: relative; z-index: 1;
+        }
 
-/* Section */
-.section {
-  padding: 100px 0;
-}
-.section-label {
-  display: inline-flex;
-  align-items: center;
-  gap: 8px;
-  padding: 6px 14px;
-  background: var(--primary-dim);
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 600;
-  color: var(--primary);
-  text-transform: uppercase;
-  letter-spacing: 1px;
-  margin-bottom: 16px;
-}
-.section-title {
-  font-size: clamp(28px, 4vw, 40px);
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 16px;
-}
-.section-desc {
-  font-size: 16px;
-  color: var(--text-dim);
-  max-width: 600px;
-  line-height: 1.7;
-  margin-bottom: 48px;
-}
-.section-center {
-  text-align: center;
-}
-.section-center .section-desc {
-  margin-left: auto;
-  margin-right: auto;
-}
+        /* Navigation */
+        .navbar {
+            position: fixed; top: 0; left: 0; width: 100%; z-index: 1000;
+            padding: 14px 0;
+            transition: var(--transition);
+            backdrop-filter: blur(12px);
+            -webkit-backdrop-filter: blur(12px);
+            background: rgba(15, 23, 42, 0.85);
+            border-bottom: 1px solid transparent;
+        }
 
-/* Pricing */
-pricing-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 24px;
-  margin-top: 40px;
-}
-.pricing-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 32px;
-  transition: all 0.3s;
-  position: relative;
-}
-.pricing-card:hover {
-  transform: translateY(-4px);
-  border-color: var(--border-hover);
-  box-shadow: var(--shadow);
-}
-.pricing-card.featured {
-  border-color: var(--primary);
-  background: linear-gradient(180deg, var(--primary-dim), var(--surface));
-}
-.pricing-card.featured .pricing-badge {
-  position: absolute;
-  top: -12px;
-  left: 50%;
-  transform: translateX(-50%);
-  padding: 4px 16px;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  border-radius: 100px;
-  font-size: 12px;
-  font-weight: 600;
-  color: #fff;
-}
-.pricing-name {
-  font-size: 20px;
-  font-weight: 700;
-  color: var(--text-bright);
-  margin-bottom: 8px;
-}
-.pricing-price {
-  font-size: 36px;
-  font-weight: 800;
-  color: var(--text-bright);
-  font-family: 'JetBrains Mono', monospace;
-  margin-bottom: 4px;
-}
-.pricing-price span {
-  font-size: 16px;
-  font-weight: 400;
-  color: var(--text-dim);
-}
-.pricing-desc {
-  font-size: 14px;
-  color: var(--text-dim);
-  margin-bottom: 24px;
-}
-.pricing-features {
-  list-style: none;
-  margin-bottom: 28px;
-}
-.pricing-features li {
-  padding: 8px 0;
-  font-size: 14px;
-  color: var(--text);
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.pricing-features li::before {
-  content: "✓";
-  color: var(--accent);
-  font-weight: 700;
-}
-.pricing-btn {
-  width: 100%;
-  text-align: center;
-  justify-content: center;
-}
+        .navbar.scrolled { 
+            border-bottom-color: var(--border);
+            background: rgba(15, 23, 42, 0.95);
+        }
 
-/* Features */
-.features-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-  gap: 20px;
-}
-.feature-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-  transition: all 0.3s;
-}
-.feature-card:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-hover);
-  transform: translateY(-2px);
-}
-.feature-icon {
-  width: 48px;
-  height: 48px;
-  background: var(--primary-dim);
-  border-radius: 12px;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 22px;
-  margin-bottom: 16px;
-}
-.feature-card h3 {
-  font-size: 16px;
-  font-weight: 600;
-  color: var(--text-bright);
-  margin-bottom: 8px;
-}
-.feature-card p {
-  font-size: 14px;
-  color: var(--text-dim);
-  line-height: 1.6;
-}
+        .nav-inner {
+            display: flex; align-items: center; justify-content: space-between;
+            width: 100%; max-width: 1200px; margin: 0 auto; padding: 0 24px;
+        }
 
-/* Protocols */
-.protocols-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
-  gap: 16px;
-}
-.protocol-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 24px;
-  text-align: center;
-  transition: all 0.3s;
-}
-.protocol-card:hover {
-  border-color: var(--primary);
-  background: var(--primary-dim);
-  transform: translateY(-2px);
-}
-.protocol-icon {
-  font-size: 32px;
-  margin-bottom: 8px;
-}
-.protocol-card h3 {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text);
-}
+        .nav-logo {
+            display: flex; align-items: center; gap: 10px;
+            font-size: 20px; font-weight: 800; color: var(--text-primary);
+            text-decoration: none; letter-spacing: -0.5px;
+        }
 
-/* Testimonials */
-testimonial-grid {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 20px;
-}
-.testimonial-card {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius);
-  padding: 28px;
-}
-.testimonial-stars {
-  color: var(--gold);
-  margin-bottom: 12px;
-  font-size: 14px;
-}
-.testimonial-text {
-  font-size: 14px;
-  color: var(--text);
-  line-height: 1.7;
-  margin-bottom: 16px;
-  font-style: italic;
-}
-.testimonial-author {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-}
-.testimonial-avatar {
-  width: 40px;
-  height: 40px;
-  border-radius: 50%;
-  background: linear-gradient(135deg, var(--primary), var(--secondary));
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 16px;
-  font-weight: 700;
-  color: #fff;
-}
-.testimonial-name {
-  font-size: 14px;
-  font-weight: 600;
-  color: var(--text-bright);
-}
-.testimonial-role {
-  font-size: 12px;
-  color: var(--text-dim);
-}
+        .nav-logo .logo-icon {
+            width: 36px; height: 36px;
+            background: linear-gradient(135deg, var(--accent), var(--accent-light));
+            border-radius: 10px; display: flex; align-items: center; justify-content: center;
+            font-size: 18px; color: #0f172a; font-weight: 900;
+        }
 
-/* FAQ */
-.faq-list {
-  max-width: 720px;
-  margin: 0 auto;
-}
-.faq-item {
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  margin-bottom: 12px;
-  overflow: hidden;
-  cursor: pointer;
-}
-.faq-question {
-  padding: 20px 24px;
-  font-size: 15px;
-  font-weight: 600;
-  color: var(--text);
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  transition: all 0.2s;
-  user-select: none;
-}
-.faq-question:hover { color: var(--primary); }
-.faq-question::after {
-  content: "+";
-  font-size: 20px;
-  transition: transform 0.3s;
-  color: var(--text-dim);
-}
-.faq-item.active .faq-question::after {
-  transform: rotate(45deg);
-  color: var(--primary);
-}
-.faq-answer {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease, padding 0.3s ease;
-  padding: 0 24px;
-  font-size: 14px;
-  color: var(--text-dim);
-  line-height: 1.7;
-}
-.faq-item.active .faq-answer {
-  max-height: 200px;
-  padding: 0 24px 20px;
-}
+        .nav-links {
+            display: flex; align-items: center; gap: 32px; list-style: none;
+        }
 
-/* Contact */
-.contact-grid {
-  display: grid;
-  grid-template-columns: 1fr 1fr;
-  gap: 40px;
-  align-items: start;
-}
-@media (max-width: 768px) {
-  .contact-grid { grid-template-columns: 1fr; }
-}
-.contact-info h3 {
-  font-size: 20px;
-  font-weight: 600;
-  color: var(--text-bright);
-  margin-bottom: 16px;
-}
-.contact-info p {
-  font-size: 14px;
-  color: var(--text-dim);
-  line-height: 1.7;
-  margin-bottom: 24px;
-}
-.contact-links {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-.contact-link {
-  display: flex;
-  align-items: center;
-  gap: 12px;
-  padding: 14px 18px;
-  background: var(--surface);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-  text-decoration: none;
-  color: var(--text);
-  font-size: 14px;
-  transition: all 0.2s;
-}
-.contact-link:hover {
-  background: var(--surface-hover);
-  border-color: var(--border-hover);
-  transform: translateX(4px);
-}
-.contact-link-icon {
-  font-size: 20px;
-  width: 32px;
-  text-align: center;
-}
+        .nav-links a {
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 14px; font-weight: 500; transition: var(--transition);
+            position: relative;
+        }
 
-/* Footer */
-.footer {
-  border-top: 1px solid var(--border);
-  padding: 40px 0;
-  margin-top: 40px;
-}
-.footer-content {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 20px;
-}
-.footer-copy {
-  font-size: 13px;
-  color: var(--text-dim);
-}
-.footer-links {
-  display: flex;
-  gap: 20px;
-}
-.footer-links a {
-  font-size: 13px;
-  color: var(--text-dim);
-  text-decoration: none;
-  transition: color 0.2s;
-}
-.footer-links a:hover { color: var(--primary); }
+        .nav-links a:hover, .nav-links a.active { color: var(--accent-light); }
 
-/* Mobile */
-@media (max-width: 768px) {
-  .nav-links {
-    display: none;
-    position: absolute;
-    top: 100%;
-    left: 0; right: 0;
-    flex-direction: column;
-    padding: 16px 24px;
-    background: rgba(8,8,26,0.95);
-    backdrop-filter: blur(20px);
-    border-bottom: 1px solid var(--border);
-  }
-  .nav-links.open { display: flex; }
-  .mobile-toggle { display: block; }
-  .hero-stats { flex-wrap: wrap; gap: 20px; }
-  .pricing-card.featured { transform: none; }
-}
-</style>
+        .nav-links a::after {
+            content: ''; position: absolute; bottom: -4px; left: 0; width: 0; height: 2px;
+            background: var(--accent); transition: var(--transition);
+        }
+
+        .nav-links a:hover::after { width: 100%; }
+
+        .nav-cta {
+            padding: 8px 20px; background: var(--accent);
+            color: #0f172a !important; border-radius: 100px;
+            font-weight: 600 !important; font-size: 13px !important;
+            transition: var(--transition);
+        }
+
+        .nav-cta:hover {
+            background: var(--accent-light);
+            box-shadow: 0 0 24px var(--accent-glow);
+        }
+
+        .nav-cta::after { display: none !important; }
+
+        .mobile-toggle {
+            display: none; background: none; border: none; cursor: pointer;
+            width: 36px; height: 36px; position: relative; z-index: 1001;
+        }
+
+        .mobile-toggle span {
+            display: block; width: 22px; height: 2px; background: var(--text-primary);
+            margin: 5px auto; transition: var(--transition); border-radius: 2px;
+        }
+
+        .mobile-toggle.active span:nth-child(1) { transform: rotate(45deg) translate(5px,5px); }
+        .mobile-toggle.active span:nth-child(2) { opacity: 0; }
+        .mobile-toggle.active span:nth-child(3) { transform: rotate(-45deg) translate(5px,-5px); }
+
+        /* Hero */
+        .hero {
+            padding: 140px 0 80px; text-align: center; position: relative; z-index: 1;
+        }
+
+        .hero-badge {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 6px 16px; background: var(--accent-dim);
+            border: 1px solid rgba(20,184,166,0.25);
+            border-radius: 100px; font-size: 13px; font-weight: 500;
+            color: var(--accent-light); margin-bottom: 28px;
+        }
+
+        .hero-badge .dot {
+            width: 8px; height: 8px; background: var(--accent);
+            border-radius: 50%; animation: pulse-dot 2s infinite;
+        }
+
+        @keyframes pulse-dot {
+            0%, 100% { box-shadow: 0 0 0 0 var(--accent-glow); }
+            50% { box-shadow: 0 0 0 10px transparent; }
+        }
+
+        .hero h1 {
+            font-size: clamp(32px, 5vw, 56px); font-weight: 900;
+            line-height: 1.15; margin-bottom: 20px; letter-spacing: -1px;
+        }
+
+        .hero h1 .highlight {
+            background: linear-gradient(135deg, var(--accent-light), var(--accent));
+            -webkit-background-clip: text; -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .hero p {
+            font-size: 18px; color: var(--text-secondary); max-width: 600px;
+            margin: 0 auto 36px; line-height: 1.7;
+        }
+
+        .hero-buttons {
+            display: flex; gap: 14px; justify-content: center; flex-wrap: wrap;
+        }
+
+        .btn {
+            display: inline-flex; align-items: center; gap: 8px;
+            padding: 14px 32px; border-radius: 100px; font-size: 15px;
+            font-weight: 600; text-decoration: none;
+            transition: var(--transition); cursor: pointer; border: none;
+            font-family: inherit;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, var(--accent), #0d9488);
+            color: #fff; box-shadow: 0 4px 20px var(--accent-glow);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-2px); box-shadow: 0 8px 32px rgba(20,184,166,0.45);
+        }
+
+        .btn-outline {
+            background: transparent; color: var(--text-primary);
+            border: 1px solid var(--border);
+        }
+
+        .btn-outline:hover {
+            border-color: var(--accent); background: var(--accent-dim);
+        }
+
+        .hero-stats {
+            display: flex; justify-content: center; gap: 48px;
+            margin-top: 56px; flex-wrap: wrap;
+        }
+
+        .hero-stat { text-align: center; }
+
+        .hero-stat .stat-number {
+            font-size: 28px; font-weight: 800; color: var(--accent-light);
+            letter-spacing: -0.5px;
+        }
+
+        .hero-stat .stat-label {
+            font-size: 13px; color: var(--text-muted); margin-top: 4px;
+        }
+
+        /* Section */
+        .section { padding: 80px 0; position: relative; z-index: 1; }
+
+        .section-header { text-align: center; margin-bottom: 56px; }
+
+        .section-tag {
+            display: inline-block; padding: 5px 14px;
+            background: var(--accent-dim); color: var(--accent-light);
+            border-radius: 100px; font-size: 12px; font-weight: 600;
+            text-transform: uppercase; letter-spacing: 1px; margin-bottom: 16px;
+        }
+
+        .section-header h2 {
+            font-size: clamp(24px, 4vw, 36px); font-weight: 800;
+            letter-spacing: -0.5px; margin-bottom: 12px;
+        }
+
+        .section-header p {
+            color: var(--text-secondary); font-size: 16px; max-width: 560px;
+            margin: 0 auto; line-height: 1.7;
+        }
+
+        /* Server Cards */
+        .server-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 24px;
+        }
+
+        .server-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 32px;
+            transition: var(--transition); position: relative; overflow: hidden;
+        }
+
+        .server-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .server-card.featured {
+            border-color: var(--accent);
+            background: linear-gradient(135deg, rgba(20,184,166,0.08), var(--bg-card));
+        }
+
+        .server-card.featured::before {
+            content: '★ POPULER';
+            position: absolute; top: 16px; right: -28px;
+            background: var(--accent); color: #0f172a;
+            font-size: 10px; font-weight: 700; padding: 4px 36px;
+            transform: rotate(45deg); letter-spacing: 1px;
+        }
+
+        .server-flag {
+            font-size: 36px; margin-bottom: 16px;
+        }
+
+        .server-card h3 {
+            font-size: 20px; font-weight: 700; margin-bottom: 6px;
+        }
+
+        .server-location {
+            color: var(--text-muted); font-size: 13px; margin-bottom: 16px;
+        }
+
+        .server-features {
+            list-style: none; margin-bottom: 24px;
+        }
+
+        .server-features li {
+            padding: 6px 0; color: var(--text-secondary); font-size: 14px;
+            display: flex; align-items: center; gap: 8px;
+        }
+
+        .server-features li i { color: var(--accent); font-size: 12px; }
+
+        .server-price {
+            display: flex; align-items: baseline; gap: 4px;
+            margin-bottom: 6px;
+        }
+
+        .server-price .amount {
+            font-size: 32px; font-weight: 800; color: var(--text-primary);
+        }
+
+        .server-price .period {
+            color: var(--text-muted); font-size: 14px;
+        }
+
+        .server-price-alt {
+            font-size: 13px; color: var(--text-muted); margin-bottom: 20px;
+        }
+
+        .server-card .btn {
+            width: 100%; justify-content: center; padding: 12px;
+            font-size: 14px;
+        }
+
+        /* Features */
+        .features-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+            gap: 24px;
+        }
+
+        .feature-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 28px;
+            transition: var(--transition); text-align: center;
+        }
+
+        .feature-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-3px);
+        }
+
+        .feature-icon {
+            width: 56px; height: 56px; margin: 0 auto 20px;
+            border-radius: 14px; display: flex; align-items: center; justify-content: center;
+            font-size: 24px;
+        }
+
+        .feature-icon.teal { background: var(--accent-dim); color: var(--accent-light); }
+        .feature-icon.blue { background: var(--blue-dim); color: var(--blue); }
+        .feature-icon.purple { background: var(--purple-dim); color: var(--purple); }
+        .feature-icon.green { background: var(--green-dim); color: var(--green); }
+
+        .feature-card h3 {
+            font-size: 16px; font-weight: 700; margin-bottom: 8px;
+        }
+
+        .feature-card p {
+            font-size: 13px; color: var(--text-muted); line-height: 1.6;
+        }
+
+        /* Pricing Toggle */
+        .pricing-toggle {
+            display: flex; align-items: center; justify-content: center;
+            gap: 16px; margin-bottom: 48px;
+        }
+
+        .pricing-toggle span {
+            font-size: 14px; font-weight: 500; color: var(--text-muted);
+            transition: var(--transition);
+        }
+
+        .pricing-toggle span.active { color: var(--text-primary); font-weight: 600; }
+
+        .toggle-switch {
+            width: 52px; height: 28px; background: var(--bg-secondary);
+            border-radius: 100px; cursor: pointer; position: relative;
+            border: 1px solid var(--border); transition: var(--transition);
+        }
+
+        .toggle-switch::after {
+            content: ''; position: absolute; top: 3px; left: 3px;
+            width: 20px; height: 20px; background: var(--accent);
+            border-radius: 50%; transition: var(--transition);
+        }
+
+        .toggle-switch.yearly::after { left: 27px; }
+        .toggle-switch.yearly { border-color: var(--accent); }
+
+        .toggle-badge {
+            font-size: 11px; font-weight: 700; padding: 3px 10px;
+            background: var(--accent-dim); color: var(--accent-light);
+            border-radius: 100px;
+        }
+
+        /* Pricing Cards */
+        .pricing-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+            gap: 24px;
+        }
+
+        .pricing-card {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius); padding: 36px 28px;
+            transition: var(--transition); text-align: center;
+            position: relative;
+        }
+
+        .pricing-card:hover {
+            border-color: var(--border-hover);
+            transform: translateY(-4px);
+            box-shadow: var(--shadow-hover);
+        }
+
+        .pricing-card.popular {
+            border-color: var(--accent);
+            transform: scale(1.03);
+            background: linear-gradient(135deg, rgba(20,184,166,0.06), var(--bg-card));
+        }
+
+        .pricing-card.popular:hover { transform: scale(1.03) translateY(-4px); }
+
+        .popular-badge {
+            position: absolute; top: -14px; left: 50%; transform: translateX(-50%);
+            background: linear-gradient(135deg, var(--accent), #0d9488);
+            color: #fff; font-size: 12px; font-weight: 700; padding: 6px 20px;
+            border-radius: 100px; letter-spacing: 0.5px;
+        }
+
+        .pricing-name {
+            font-size: 18px; font-weight: 700; margin-bottom: 4px;
+        }
+
+        .pricing-desc {
+            font-size: 13px; color: var(--text-muted); margin-bottom: 24px;
+        }
+
+        .pricing-amount {
+            font-size: 42px; font-weight: 900; letter-spacing: -1px;
+            margin-bottom: 4px;
+        }
+
+        .pricing-period {
+            font-size: 13px; color: var(--text-muted); margin-bottom: 24px;
+        }
+
+        .pricing-features {
+            list-style: none; text-align: left; margin-bottom: 28px;
+        }
+
+        .pricing-features li {
+            padding: 7px 0; font-size: 14px; color: var(--text-secondary);
+            display: flex; align-items: center; gap: 10px;
+        }
+
+        .pricing-features li i.fa-check { color: var(--accent); }
+        .pricing-features li i.fa-times { color: var(--text-muted); }
+
+        .pricing-card .btn { width: 100%; justify-content: center; }
+
+        /* FAQ */
+        .faq-list { max-width: 760px; margin: 0 auto; }
+
+        .faq-item {
+            background: var(--bg-card); border: 1px solid var(--border);
+            border-radius: var(--radius-sm); margin-bottom: 12px;
+            overflow: hidden; transition: var(--transition); cursor: pointer;
+        }
+
+        .faq-item:hover { border-color: var(--border-hover); }
+
+        .faq-question {
+            padding: 18px 24px; display: flex; align-items: center;
+            justify-content: space-between; font-weight: 600; font-size: 15px;
+        }
+
+        .faq-question i {
+            transition: var(--transition); color: var(--text-muted); font-size: 14px;
+        }
+
+        .faq-item.active .faq-question i { transform: rotate(180deg); color: var(--accent); }
+
+        .faq-answer {
+            max-height: 0; overflow: hidden; transition: max-height 0.35s ease;
+            padding: 0 24px;
+        }
+
+        .faq-item.active .faq-answer {
+            max-height: 300px; padding-bottom: 18px;
+        }
+
+        .faq-answer p {
+            color: var(--text-secondary); font-size: 14px; line-height: 1.7;
+        }
+
+        /* Server Status */
+        .status-grid {
+            display: grid; grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 16px; max-width: 800px; margin: 0 auto;
+        }
+
+        .status-item {
+            display: flex; align-items: center; gap: 12px;
+            padding: 14px 20px; background: var(--bg-card);
+            border: 1px solid var(--border); border-radius: var(--radius-xs);
+            transition: var(--transition);
+        }
+
+        .status-dot {
+            width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0;
+        }
+
+        .status-dot.online { background: var(--green); box-shadow: 0 0 8px rgba(16,185,129,0.5); }
+
+        .status-dot.offline { background: var(--red); }
+
+        .status-info { flex: 1; }
+
+        .status-name { font-size: 13px; font-weight: 600; }
+
+        .status-label { font-size: 11px; color: var(--text-muted); }
+
+        /* CTA */
+        .cta-section {
+            padding: 80px 0; position: relative; z-index: 1; text-align: center;
+        }
+
+        .cta-card {
+            background: linear-gradient(135deg, rgba(20,184,166,0.1), rgba(59,130,246,0.1));
+            border: 1px solid var(--border-hover); border-radius: var(--radius);
+            padding: 56px 32px; max-width: 700px; margin: 0 auto;
+        }
+
+        .cta-card h2 {
+            font-size: 30px; font-weight: 800; margin-bottom: 12px; letter-spacing: -0.5px;
+        }
+
+        .cta-card p {
+            color: var(--text-secondary); font-size: 16px;
+            max-width: 460px; margin: 0 auto 28px; line-height: 1.7;
+        }
+
+        .cta-buttons { display: flex; gap: 12px; justify-content: center; flex-wrap: wrap; }
+
+        /* Footer */
+        .footer {
+            padding: 48px 0; border-top: 1px solid var(--border);
+            text-align: center; position: relative; z-index: 1;
+        }
+
+        .footer p { color: var(--text-muted); font-size: 13px; }
+
+        .footer-links {
+            display: flex; gap: 24px; justify-content: center;
+            margin-bottom: 16px; flex-wrap: wrap;
+        }
+
+        .footer-links a {
+            color: var(--text-secondary); text-decoration: none;
+            font-size: 13px; transition: var(--transition);
+        }
+
+        .footer-links a:hover { color: var(--accent-light); }
+
+        /* Mobile Responsive */
+        @media (max-width: 768px) {
+            .nav-links {
+                position: fixed; top: 0; right: -100%; width: 280px; height: 100vh;
+                flex-direction: column; background: var(--bg-secondary);
+                padding: 80px 32px 32px; gap: 24px;
+                transition: var(--transition); border-left: 1px solid var(--border);
+            }
+
+            .nav-links.active { right: 0; }
+
+            .mobile-toggle { display: block; }
+
+            .hero { padding: 120px 0 60px; }
+
+            .hero-stats { gap: 28px; }
+
+            .server-grid { grid-template-columns: 1fr; }
+
+            .pricing-grid { grid-template-columns: 1fr; }
+
+            .pricing-card.popular { transform: none; }
+
+            .pricing-card.popular:hover { transform: translateY(-4px); }
+
+            .features-grid { grid-template-columns: 1fr; }
+
+            .status-grid { grid-template-columns: 1fr 1fr; }
+
+            .cta-card { padding: 36px 20px; }
+
+            .cta-card h2 { font-size: 24px; }
+        }
+    </style>
 </head>
 <body>
-<div id="bg-glow">
-  <div class="orb orb-1"></div>
-  <div class="orb orb-2"></div>
-  <div class="orb orb-3"></div>
-</div>
-<div id="grid-overlay"></div>
+    <div class="bg-pattern"></div>
+    <div class="bg-grid"></div>
 
-<!-- Nav -->
-<nav class="nav" role="navigation" aria-label="Navigasi utama">
-  <div class="container">
-    <a href="#" class="nav-logo">
-      <div class="nav-logo-icon">&#x1F6E1;</div>
-      PAGE_TITLE
-    </a>
-    <button class="mobile-toggle" onclick="this.nextElementSibling.classList.toggle('open')" aria-label="Toggle menu">&#9776;</button>
-    <ul class="nav-links">
-      <li><a href="#paket">Paket</a></li>
-      <li><a href="#fitur">Fitur</a></li>
-      <li><a href="#protokol">Protokol</a></li>
-      <li><a href="#faq">FAQ</a></li>
-      <li><a href="#kontak">Kontak</a></li>
-      <li><a href="#order" class="nav-cta">Order Sekarang</a></li>
-    </ul>
-  </div>
-</nav>
-
-<!-- Hero -->
-<section class="hero" id="home">
-  <div class="container">
-    <div class="hero-content">
-      <div class="hero-badge">
-        <span class="dot"></span>
-        Server Online 24/7
-      </div>
-      <h1>Internet Cepat &amp; Aman<br>dengan <span>VPN Premium</span></h1>
-      <p>Nikmati koneksi internet tanpa batas dengan teknologi Xray-core terbaru. Multi-protokol, anti-blokir, dan siap digunakan di semua perangkat.</p>
-      <div class="hero-cta">
-        <a href="#paket" class="btn btn-primary">&#x1F48E; Lihat Paket</a>
-        <a href="#kontak" class="btn btn-secondary">&#x1F4AC; Hubungi Kami</a>
-      </div>
-      <div class="hero-stats">
-        <div class="hero-stat">
-          <div class="hero-stat-value">99.9%</div>
-          <div class="hero-stat-label">Uptime</div>
+    <!-- Navigation -->
+    <nav class="navbar" id="navbar">
+        <div class="nav-inner">
+            <a href="#home" class="nav-logo">
+                <div class="logo-icon">⚡</div>
+                <span>Youzin Crabz</span>
+            </a>
+            <ul class="nav-links" id="navLinks">
+                <li><a href="#home">Beranda</a></li>
+                <li><a href="#server">Server</a></li>
+                <li><a href="#fitur">Fitur</a></li>
+                <li><a href="#harga">Harga</a></li>
+                <li><a href="#faq">FAQ</a></li>
+                <li><a href="https://t.me/youzin_crabz" class="nav-cta" target="_blank" rel="noopener">
+                    <i class="fab fa-telegram-plane"></i> Order
+                </a></li>
+            </ul>
+            <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
+                <span></span><span></span><span></span>
+            </button>
         </div>
-        <div class="hero-stat">
-          <div class="hero-stat-value">5+</div>
-          <div class="hero-stat-label">Protokol</div>
+    </nav>
+
+    <!-- Hero -->
+    <section class="hero" id="home">
+        <div class="container">
+            <div class="hero-badge">
+                <span class="dot"></span> Server Online 99.9% Uptime
+            </div>
+            <h1>Internet <span class="highlight">Cepat & Aman</span><br>Tanpa Batas</h1>
+            <p>
+                Layanan tunneling premium dengan berbagai protokol — SSH, VMess, VLess, Trojan, 
+                dan UDP Custom. Nikmati kebebasan internet dengan performa terbaik.
+            </p>
+            <div class="hero-buttons">
+                <a href="#server" class="btn btn-primary"><i class="fas fa-rocket"></i> Mulai Sekarang</a>
+                <a href="#fitur" class="btn btn-outline"><i class="fas fa-info-circle"></i> Pelajari</a>
+            </div>
+            <div class="hero-stats">
+                <div class="hero-stat">
+                    <div class="stat-number">50+</div>
+                    <div class="stat-label">Server Aktif</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="stat-number">10Gbps</div>
+                    <div class="stat-label">Kecepatan</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="stat-number">24/7</div>
+                    <div class="stat-label">Support</div>
+                </div>
+                <div class="hero-stat">
+                    <div class="stat-number">99.9%</div>
+                    <div class="stat-label">Uptime</div>
+                </div>
+            </div>
         </div>
-        <div class="hero-stat">
-          <div class="hero-stat-value">24/7</div>
-          <div class="hero-stat-label">Support</div>
+    </section>
+
+    <!-- Server Locations -->
+    <section class="section" id="server">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Server</span>
+                <h2>Pilih Server Terbaik Untukmu</h2>
+                <p>Tersedia di berbagai lokasi strategis dengan latency rendah dan kecepatan maksimal.</p>
+            </div>
+            <div class="server-grid">
+                <!-- Singapore -->
+                <div class="server-card featured">
+                    <div class="server-flag">🇸🇬</div>
+                    <h3>Server Singapore</h3>
+                    <p class="server-location">Singapore · Low Latency</p>
+                    <ul class="server-features">
+                        <li><i class="fas fa-check-circle"></i> SSH & UDP Custom</li>
+                        <li><i class="fas fa-check-circle"></i> VMess / VLess / Trojan</li>
+                        <li><i class="fas fa-check-circle"></i> WebSocket & gRPC</li>
+                        <li><i class="fas fa-check-circle"></i> Dynamic Path & Wildcard</li>
+                        <li><i class="fas fa-check-circle"></i> Anti Blocking</li>
+                    </ul>
+                    <div class="server-price">
+                        <span class="amount">Rp 10.000</span>
+                        <span class="period">/Bulan</span>
+                    </div>
+                    <p class="server-price-alt">Rp 15,62 /Jam (Pay As Go)</p>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-primary" target="_blank" rel="noopener">
+                        <i class="fab fa-telegram-plane"></i> Order Sekarang
+                    </a>
+                </div>
+
+                <!-- Indonesia -->
+                <div class="server-card">
+                    <div class="server-flag">🇮🇩</div>
+                    <h3>Server Indonesia</h3>
+                    <p class="server-location">Jakarta · Ultra Low Latency</p>
+                    <ul class="server-features">
+                        <li><i class="fas fa-check-circle"></i> SSH & UDP Custom</li>
+                        <li><i class="fas fa-check-circle"></i> VMess / VLess / Trojan</li>
+                        <li><i class="fas fa-check-circle"></i> WebSocket & gRPC</li>
+                        <li><i class="fas fa-check-circle"></i> Dynamic Path & Wildcard</li>
+                        <li><i class="fas fa-check-circle"></i> Anti Blocking</li>
+                    </ul>
+                    <div class="server-price">
+                        <span class="amount">Rp 10.000</span>
+                        <span class="period">/Bulan</span>
+                    </div>
+                    <p class="server-price-alt">Rp 15,62 /Jam (Pay As Go)</p>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline" target="_blank" rel="noopener">
+                        <i class="fab fa-telegram-plane"></i> Order Sekarang
+                    </a>
+                </div>
+
+                <!-- Always On -->
+                <div class="server-card">
+                    <div class="server-flag">🌐</div>
+                    <h3>Always On</h3>
+                    <p class="server-location">Multi Location · High Quota</p>
+                    <ul class="server-features">
+                        <li><i class="fas fa-check-circle"></i> SSH & UDP Custom</li>
+                        <li><i class="fas fa-check-circle"></i> VMess / VLess / Trojan</li>
+                        <li><i class="fas fa-check-circle"></i> WebSocket & gRPC</li>
+                        <li><i class="fas fa-check-circle"></i> Dynamic Path & Wildcard</li>
+                        <li><i class="fas fa-check-circle"></i> 135 GB Quota</li>
+                    </ul>
+                    <div class="server-price">
+                        <span class="amount">Rp 15.000</span>
+                        <span class="period">/135 GB</span>
+                    </div>
+                    <p class="server-price-alt">Kuota besar untuk kebutuhan tinggi</p>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline" target="_blank" rel="noopener">
+                        <i class="fab fa-telegram-plane"></i> Order Sekarang
+                    </a>
+                </div>
+            </div>
         </div>
-        <div class="hero-stat">
-          <div class="hero-stat-value">1Gbps</div>
-          <div class="hero-stat-label">Speed</div>
+    </section>
+
+    <!-- Features -->
+    <section class="section" id="fitur">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Fitur</span>
+                <h2>Mengapa Memilih Kami?</h2>
+                <p>Dibangun dengan teknologi terkini untuk memberikan performa dan keamanan maksimal.</p>
+            </div>
+            <div class="features-grid">
+                <div class="feature-card">
+                    <div class="feature-icon teal"><i class="fas fa-bolt"></i></div>
+                    <h3>Kecepatan Maksimal</h3>
+                    <p>Server 10 Gbps dengan optimasi BBR dan jaringan tier-1 untuk latency minimal.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon blue"><i class="fas fa-shield-halved"></i></div>
+                    <h3>Enkripsi Kuat</h3>
+                    <p>TLS 1.3 dengan Xray-core, melindungi koneksi Anda dari sniffing dan pemblokiran.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon purple"><i class="fas fa-globe"></i></div>
+                    <h3>Multi Protokol</h3>
+                    <p>SSH, VMess, VLess, Trojan, UDP Custom, ZIVPN — semua dalam satu layanan.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon green"><i class="fas fa-credit-card"></i></div>
+                    <h3>Pembayaran Mudah</h3>
+                    <p>Sistem otomatis dengan berbagai metode: transfer bank, e-wallet, dan QRIS.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon teal"><i class="fas fa-sync-alt"></i></div>
+                    <h3>Auto Renew</h3>
+                    <p>Aktifkan perpanjangan otomatis dan tidak perlu khawatir akun expired.</p>
+                </div>
+                <div class="feature-card">
+                    <div class="feature-icon blue"><i class="fas fa-headset"></i></div>
+                    <h3>Support 24/7</h3>
+                    <p>Tim support siap membantu kapan saja melalui Telegram dan WhatsApp.</p>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- Pricing -->
-<section class="section" id="paket">
-  <div class="container section-center">
-    <div class="section-label">&#x1F4B0; Harga</div>
-    <h2 class="section-title">Pilih Paket Sesuai Kebutuhan</h2>
-    <p class="section-desc">Semua paket sudah termasuk dukungan multi-protokol, server stabil, dan garansi 24/7.</p>
-  </div>
-  <div class="container">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:24px;margin-top:40px;">
-      <div class="pricing-card">
-        <div class="pricing-name">&#x1F331; Starter</div>
-        <div class="pricing-price">Rp25K <span>/bulan</span></div>
-        <div class="pricing-desc">Cocok untuk pemula yang ingin mencoba VPN premium.</div>
-        <ul class="pricing-features">
-          <li>1 Akun SSH/VPN</li>
-          <li>Semua Protokol</li>
-          <li>Kuota 50GB</li>
-          <li>Speed 100Mbps</li>
-          <li>Support Standar</li>
-        </ul>
-        <a href="#kontak" class="btn btn-secondary pricing-btn">Pilih Paket</a>
-      </div>
-      <div class="pricing-card featured">
-        <div class="pricing-badge">Terpopuler</div>
-        <div class="pricing-name">&#x1F680; Pro</div>
-        <div class="pricing-price">Rp50K <span>/bulan</span></div>
-        <div class="pricing-desc">Untuk pengguna yang membutuhkan koneksi lebih stabil dan cepat.</div>
-        <ul class="pricing-features">
-          <li>3 Akun SSH/VPN</li>
-          <li>Semua Protokol</li>
-          <li>Kuota 150GB</li>
-          <li>Speed 500Mbps</li>
-          <li>Support Prioritas</li>
-        </ul>
-        <a href="#kontak" class="btn btn-primary pricing-btn">Pilih Paket</a>
-      </div>
-      <div class="pricing-card">
-        <div class="pricing-name">&#x1F451; Enterprise</div>
-        <div class="pricing-price">Rp100K <span>/bulan</span></div>
-        <div class="pricing-desc">Solusi maksimal untuk power user dan tim.</div>
-        <ul class="pricing-features">
-          <li>5+ Akun SSH/VPN</li>
-          <li>Semua Protokol</li>
-          <li>Kuota Unlimited</li>
-          <li>Speed 1Gbps</li>
-          <li>Support VIP 24/7</li>
-        </ul>
-        <a href="#kontak" class="btn btn-secondary pricing-btn">Pilih Paket</a>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- Pricing -->
+    <section class="section" id="harga">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Harga</span>
+                <h2>Paket Berlangganan</h2>
+                <p>Pilih paket sesuai kebutuhan. Bayar sesuai pemakaian atau berlangganan bulanan.</p>
+            </div>
 
-<!-- Features -->
-<section class="section" id="fitur">
-  <div class="container section-center">
-    <div class="section-label">&#x2728; Fitur</div>
-    <h2 class="section-title">Mengapa Memilih Kami?</h2>
-    <p class="section-desc">Kami menyediakan layanan VPN terbaik dengan fitur-fitur unggulan untuk kenyamanan Anda.</p>
-  </div>
-  <div class="container">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(250px,1fr));gap:20px;">
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F6E1;</div>
-        <h3>Keamanan Maksimal</h3>
-        <p>Dilindungi dengan enkripsi TLS 1.3, teknologi Xray-core, dan firewall otomatis anti-DDoS.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">&#x26A1;</div>
-        <h3>Kecepatan Tinggi</h3>
-        <p>Server dengan koneksi 1Gbps, optimasi TCP, dan dukungan WebSocket + gRPC untuk latency rendah.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F504;</div>
-        <h3>Multi Protokol</h3>
-        <p>Dukung SSH, VMess, VLess, Trojan dengan transport WebSocket, gRPC, dan TLS/HTTPS.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F4E1;</div>
-        <h3>Server Stabil</h3>
-        <p>Uptime 99.9% dengan monitoring otomatis, auto-restart, dan backup konfigurasi berkala.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F4AC;</div>
-        <h3>Support 24/7</h3>
-        <p>Tim support siap membantu via Telegram kapan saja. Garansi server aktif dan respons cepat.</p>
-      </div>
-      <div class="feature-card">
-        <div class="feature-icon">&#x1F310;</div>
-        <h3>Anti Blokir</h3>
-        <p>Teknologi WebSocket dan HTTP CONNECT memungkinan bypass Internet Positif dengan mudah.</p>
-      </div>
-    </div>
-  </div>
-</section>
+            <div class="pricing-toggle">
+                <span id="monthlyLabel" class="active">Bulanan</span>
+                <div class="toggle-switch" id="pricingToggle" onclick="togglePricing()"></div>
+                <span id="paygoLabel">Pay As Go</span>
+                <span class="toggle-badge">HEMAT</span>
+            </div>
 
-<!-- Protocols -->
-<section class="section" id="protokol">
-  <div class="container section-center">
-    <div class="section-label">&#x1F4F6; Protokol</div>
-    <h2 class="section-title">Protokol yang Didukung</h2>
-    <p class="section-desc">Berbagai pilihan protokol VPN untuk menunjang kebutuhan koneksi Anda.</p>
-  </div>
-  <div class="container">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:16px;">
-      <div class="protocol-card">
-        <div class="protocol-icon">&#x1F4BB;</div>
-        <h3>SSH</h3>
-        <p style="font-size:11px;color:var(--text-dim);margin-top:6px;">Port 22, 222</p>
-      </div>
-      <div class="protocol-card">
-        <div class="protocol-icon">&#x1F310;</div>
-        <h3>VMess</h3>
-        <p style="font-size:11px;color:var(--text-dim);margin-top:6px;">WS:8080, gRPC:8444</p>
-      </div>
-      <div class="protocol-card">
-        <div class="protocol-icon">&#x1F30D;</div>
-        <h3>VLess</h3>
-        <p style="font-size:11px;color:var(--text-dim);margin-top:6px;">WS:8081, gRPC:8445</p>
-      </div>
-      <div class="protocol-card">
-        <div class="protocol-icon">&#x1F6E1;</div>
-        <h3>Trojan</h3>
-        <p style="font-size:11px;color:var(--text-dim);margin-top:6px;">WS:8082, gRPC:8446</p>
-      </div>
-      <div class="protocol-card">
-        <div class="protocol-icon">&#x1F4F6;</div>
-        <h3>WebSocket</h3>
-        <p style="font-size:11px;color:var(--text-dim);margin-top:6px;">TLS:443, NonTLS:80</p>
-      </div>
-      <div class="protocol-card">
-        <div class="protocol-icon">&#x1F4C8;</div>
-        <h3>gRPC</h3>
-        <p style="font-size:11px;color:var(--text-dim);margin-top:6px;">TLS:443, NonTLS:80</p>
-      </div>
-    </div>
-  </div>
-</section>
+            <div class="pricing-grid">
+                <!-- Starter -->
+                <div class="pricing-card">
+                    <div class="pricing-name">Starter</div>
+                    <div class="pricing-desc">Untuk pemakaian ringan</div>
+                    <div class="pricing-amount monthly">Rp 10K</div>
+                    <div class="pricing-amount paygo" style="display:none">Rp 15,62</div>
+                    <div class="pricing-period monthly">/Bulan</div>
+                    <div class="pricing-period paygo" style="display:none">/Jam</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> 1 Akun SSH</li>
+                        <li><i class="fas fa-check"></i> UDP Custom</li>
+                        <li><i class="fas fa-check"></i> Unlimited Bandwidth</li>
+                        <li><i class="fas fa-check"></i> 2 Device</li>
+                        <li><i class="fas fa-times"></i> VMess / VLess / Trojan</li>
+                        <li><i class="fas fa-times"></i> gRPC Support</li>
+                    </ul>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline" target="_blank" rel="noopener">Pilih Paket</a>
+                </div>
 
-<!-- Testimonials -->
-<section class="section" id="testimonial">
-  <div class="container section-center">
-    <div class="section-label">&#x2B50; Testimonial</div>
-    <h2 class="section-title">Apa Kata Pelanggan</h2>
-    <p class="section-desc">Pengalaman nyata dari pengguna setia Youzin Crabz Tunnel.</p>
-  </div>
-  <div class="container">
-    <div style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:20px;">
-      <div class="testimonial-card">
-        <div class="testimonial-stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
-        <div class="testimonial-text">"Koneksi sangat stabil dan cepat. Setelah pakai sini, saya gak pindah-pindah lagi. Recommended!"</div>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">A</div>
-          <div>
-            <div class="testimonial-name">Andi Pratama</div>
-            <div class="testimonial-role">Pelanggan Pro (6 bulan)</div>
-          </div>
+                <!-- Pro (Popular) -->
+                <div class="pricing-card popular">
+                    <div class="popular-badge">★ PALING POPULER</div>
+                    <div class="pricing-name">Pro</div>
+                    <div class="pricing-desc">Untuk pengguna harian</div>
+                    <div class="pricing-amount monthly">Rp 25K</div>
+                    <div class="pricing-amount paygo" style="display:none">Rp 35</div>
+                    <div class="pricing-period monthly">/Bulan</div>
+                    <div class="pricing-period paygo" style="display:none">/Jam</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> 3 Akun SSH</li>
+                        <li><i class="fas fa-check"></i> UDP Custom</li>
+                        <li><i class="fas fa-check"></i> VMess / VLess / Trojan</li>
+                        <li><i class="fas fa-check"></i> WebSocket & gRPC</li>
+                        <li><i class="fas fa-check"></i> Unlimited Bandwidth</li>
+                        <li><i class="fas fa-check"></i> 3 Device</li>
+                    </ul>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-primary" target="_blank" rel="noopener">Pilih Paket</a>
+                </div>
+
+                <!-- Enterprise -->
+                <div class="pricing-card">
+                    <div class="pricing-name">Enterprise</div>
+                    <div class="pricing-desc">Untuk kebutuhan maksimal</div>
+                    <div class="pricing-amount monthly">Rp 50K</div>
+                    <div class="pricing-amount paygo" style="display:none">Rp 70</div>
+                    <div class="pricing-period monthly">/Bulan</div>
+                    <div class="pricing-period paygo" style="display:none">/Jam</div>
+                    <ul class="pricing-features">
+                        <li><i class="fas fa-check"></i> 10 Akun SSH</li>
+                        <li><i class="fas fa-check"></i> UDP Custom + ZIVPN</li>
+                        <li><i class="fas fa-check"></i> VMess / VLess / Trojan</li>
+                        <li><i class="fas fa-check"></i> WebSocket & gRPC</li>
+                        <li><i class="fas fa-check"></i> Unlimited Bandwidth</li>
+                        <li><i class="fas fa-check"></i> Unlimited Device</li>
+                    </ul>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline" target="_blank" rel="noopener">Pilih Paket</a>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
-        <div class="testimonial-text">"Supportnya fast respon banget. Ada masalah langsung dibantu. Server juga jarang down."</div>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">S</div>
-          <div>
-            <div class="testimonial-name">Siti Rahma</div>
-            <div class="testimonial-role">Pelanggan Enterprise</div>
-          </div>
+    </section>
+
+    <!-- FAQ -->
+    <section class="section" id="faq">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">FAQ</span>
+                <h2>Pertanyaan Umum</h2>
+                <p>Belum menemukan jawaban? Hubungi support kami langsung.</p>
+            </div>
+            <div class="faq-list">
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Apakah akun langsung aktif setelah order?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Ya! Akun tunnel akan langsung aktif tanpa harus menunggu persetujuan. Anda bisa langsung menikmati layanan setelah pembayaran dikonfirmasi.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Apakah bisa pindah server?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Server dapat diubah dengan interval 15 menit setiap kali pemindahan. Perpindahan protokol dapat dilakukan untuk layanan Trojan, VMess, dan VLess.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Berapa maksimal perangkat per akun?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Tergantung paket: Starter 2 device, Pro 3 device, Enterprise unlimited. Dengan ketentuan STB maksimal 1 perangkat per akun.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Apakah ada fitur auto renew?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Ya, Anda dapat mengaktifkan auto renew pada pengaturan akun. Pastikan saldo cukup sebelum masa aktif berakhir.</p>
+                    </div>
+                </div>
+                <div class="faq-item">
+                    <div class="faq-question">
+                        Metode pembayaran apa yang tersedia?
+                        <i class="fas fa-chevron-down"></i>
+                    </div>
+                    <div class="faq-answer">
+                        <p>Kami menerima transfer bank (BCA, Mandiri, BRI), e-wallet (Dana, GoPay, ShopeePay), dan QRIS.</p>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-      <div class="testimonial-card">
-        <div class="testimonial-stars">&#9733; &#9733; &#9733; &#9733; &#9733;</div>
-        <div class="testimonial-text">"Harganya worth it banget dengan kualitas yang didapat. Multi protokol bikin fleksibel."</div>
-        <div class="testimonial-author">
-          <div class="testimonial-avatar">R</div>
-          <div>
-            <div class="testimonial-name">Rudi Hermawan</div>
-            <div class="testimonial-role">Pelanggan Starter</div>
-          </div>
+    </section>
+
+    <!-- Server Status -->
+    <section class="section" id="status">
+        <div class="container">
+            <div class="section-header">
+                <span class="section-tag">Status</span>
+                <h2>Status Server</h2>
+                <p>Pantau status server secara real-time.</p>
+            </div>
+            <div class="status-grid">
+                <div class="status-item">
+                    <div class="status-dot online" id="status-xray"></div>
+                    <div class="status-info">
+                        <div class="status-name">XRAY Core</div>
+                        <div class="status-label" id="status-xray-label">Online</div>
+                    </div>
+                </div>
+                <div class="status-item">
+                    <div class="status-dot online" id="status-nginx"></div>
+                    <div class="status-info">
+                        <div class="status-name">NGINX</div>
+                        <div class="status-label" id="status-nginx-label">Online</div>
+                    </div>
+                </div>
+                <div class="status-item">
+                    <div class="status-dot online" id="status-ssh"></div>
+                    <div class="status-info">
+                        <div class="status-name">SSH</div>
+                        <div class="status-label" id="status-ssh-label">Online</div>
+                    </div>
+                </div>
+                <div class="status-item">
+                    <div class="status-dot online" id="status-dropbear"></div>
+                    <div class="status-info">
+                        <div class="status-name">Dropbear</div>
+                        <div class="status-label" id="status-dropbear-label">Online</div>
+                    </div>
+                </div>
+            </div>
         </div>
-      </div>
-    </div>
-  </div>
-</section>
+    </section>
 
-<!-- FAQ -->
-<section class="section" id="faq">
-  <div class="container section-center">
-    <div class="section-label">&#x2753; FAQ</div>
-    <h2 class="section-title">Pertanyaan Umum</h2>
-    <p class="section-desc">Temukan jawaban untuk pertanyaan yang sering diajukan.</p>
-  </div>
-  <div class="container">
-    <div class="faq-list">
-      <div class="faq-item">
-        <div class="faq-question">Apa itu Youzin Crabz Tunnel?</div>
-        <div class="faq-answer">Layanan VPN premium berbasis Xray-core yang mendukung berbagai protokol seperti VMess, VLess, Trojan, dan SSH dengan koneksi WebSocket dan gRPC.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-question">Bagaimana cara melakukan order?</div>
-        <div class="faq-answer">Hubungi admin melalui Telegram, pilih paket yang diinginkan, lakukan pembayaran, dan akun akan dibuat dalam waktu singkat setelah konfirmasi.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-question">Apakah bisa digunakan di HP dan PC?</div>
-        <div class="faq-answer">Ya, layanan kami mendukung semua perangkat dan platform. Tersedia panduan konfigurasi untuk berbagai aplikasi seperti V2Ray, HTTP Custom, KPN Tunnel, dan lainnya.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-question">Apakah ada garansi server?</div>
-        <div class="faq-answer">Kami menyediakan garansi server online 24/7 dengan monitoring otomatis. Jika ada masalah, tim support siap membantu melalui Telegram.</div>
-      </div>
-      <div class="faq-item">
-        <div class="faq-question">Metode pembayaran apa saja?</div>
-        <div class="faq-answer">Kami menerima berbagai metode pembayaran seperti transfer bank (BCA, Mandiri, BRI), e-wallet (GoPay, OVO, DANA), dan pulsa XL/Telkomsel.</div>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- CTA -->
+    <section class="cta-section" id="order">
+        <div class="container">
+            <div class="cta-card">
+                <h2>Siap Untuk Internet Tanpa Batas?</h2>
+                <p>Dapatkan akses internet cepat, aman, dan bebas sekarang juga. Proses order mudah dan instan.</p>
+                <div class="cta-buttons">
+                    <a href="https://t.me/youzin_crabz" class="btn btn-primary" target="_blank" rel="noopener">
+                        <i class="fab fa-telegram-plane"></i> Order via Telegram
+                    </a>
+                    <a href="#harga" class="btn btn-outline">
+                        <i class="fas fa-tags"></i> Lihat Harga
+                    </a>
+                </div>
+            </div>
+        </div>
+    </section>
 
-<!-- Server Status -->
-<section class="section" id="status">
-  <div class="container section-center">
-    <div class="section-label">&#x1F4CA; Status</div>
-    <h2 class="section-title">Status Server</h2>
-    <p class="section-desc">Pantau kondisi layanan kami secara real-time.</p>
-  </div>
-  <div class="container">
-    <div class="status-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(140px,1fr));gap:12px;">
-      <div class="protocol-card" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div style="font-size:24px;">&#x1F4E1;</div>
-        <h3 style="font-size:13px;margin:0;">XRAY</h3>
-        <div class="status-dot on" id="status-xray"></div>
-        <span style="font-size:12px;color:var(--text-dim);">Online</span>
-      </div>
-      <div class="protocol-card" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div style="font-size:24px;">&#x1F5A5;</div>
-        <h3 style="font-size:13px;margin:0;">NGINX</h3>
-        <div class="status-dot on" id="status-nginx"></div>
-        <span style="font-size:12px;color:var(--text-dim);">Online</span>
-      </div>
-      <div class="protocol-card" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div style="font-size:24px;">&#x1F4E6;</div>
-        <h3 style="font-size:13px;margin:0;">HAPROXY</h3>
-        <div class="status-dot on" id="status-haproxy"></div>
-        <span style="font-size:12px;color:var(--text-dim);">Online</span>
-      </div>
-      <div class="protocol-card" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div style="font-size:24px;">&#x1F4F1;</div>
-        <h3 style="font-size:13px;margin:0;">DROPBEAR</h3>
-        <div class="status-dot on" id="status-dropbear"></div>
-        <span style="font-size:12px;color:var(--text-dim);">Online</span>
-      </div>
-      <div class="protocol-card" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div style="font-size:24px;">&#x1F4BB;</div>
-        <h3 style="font-size:13px;margin:0;">SSH</h3>
-        <div class="status-dot on" id="status-ssh"></div>
-        <span style="font-size:12px;color:var(--text-dim);">Online</span>
-      </div>
-      <div class="protocol-card" style="display:flex;flex-direction:column;align-items:center;gap:8px;">
-        <div style="font-size:24px;">&#x1F30D;</div>
-        <h3 style="font-size:13px;margin:0;">UDP CUSTOM</h3>
-        <div class="status-dot on" id="status-udp"></div>
-        <span style="font-size:12px;color:var(--text-dim);">Online</span>
-      </div>
-    </div>
-  </div>
-</section>
+    <!-- Footer -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-links">
+                <a href="#home">Beranda</a>
+                <a href="#server">Server</a>
+                <a href="#fitur">Fitur</a>
+                <a href="#harga">Harga</a>
+                <a href="#faq">FAQ</a>
+                <a href="https://t.me/youzin_crabz" target="_blank" rel="noopener">Telegram</a>
+            </div>
+            <p>&copy; 2026 Youzin Crabz Tunel — The Professor. All rights reserved.</p>
+        </div>
+    </footer>
 
-<style>
-.status-dot {
-  width: 12px;
-  height: 12px;
-  border-radius: 50%;
-  display: inline-block;
-}
-.status-dot.on {
-  background: var(--accent);
-  box-shadow: 0 0 8px rgba(16,185,129,0.5);
-  animation: pulse 2s infinite;
-}
-.status-dot.off {
-  background: #ef4444;
-  box-shadow: 0 0 8px rgba(239,68,68,0.5);
-}
-</style>
+    <script>
+        // FAQ Toggle
+        document.querySelectorAll('.faq-item').forEach(function(item) {
+            item.addEventListener('click', function() {
+                this.classList.toggle('active');
+            });
+        });
 
-<!-- Contact -->
-<section class="section" id="kontak">
-  <div class="container section-center">
-    <div class="section-label">&#x1F4E9; Kontak</div>
-    <h2 class="section-title">Hubungi Kami</h2>
-    <p class="section-desc">Silakan hubungi kami melalui kontak di bawah ini untuk order, pertanyaan, atau bantuan teknis.</p>
-  </div>
-  <div class="container">
-    <div style="max-width:600px;margin:0 auto;">
-      <div style="display:flex;flex-direction:column;gap:12px;">
-        <a href="https://t.me/youzin_crabz" class="contact-link" target="_blank" rel="noopener">
-          <span class="contact-link-icon">&#x2709;</span>
-          <span><strong>Telegram:</strong> @youzin_crabz</span>
-        </a>
-        <a href="mailto:support@youzin-crabz.com" class="contact-link">
-          <span class="contact-link-icon">&#x1F4E7;</span>
-          <span><strong>Email:</strong> support@youzin-crabz.com</span>
-        </a>
-        <a href="#" class="contact-link" onclick="return false;">
-          <span class="contact-link-icon">&#x1F4DE;</span>
-          <span><strong>WhatsApp:</strong> +62-xxx-xxxx-xxxx</span>
-        </a>
-      </div>
-    </div>
-  </div>
-</section>
+        // Pricing Toggle
+        function togglePricing() {
+            var toggle = document.getElementById('pricingToggle');
+            var monthlyEls = document.querySelectorAll('.monthly');
+            var paygoEls = document.querySelectorAll('.paygo');
+            var monthlyLabel = document.getElementById('monthlyLabel');
+            var paygoLabel = document.getElementById('paygoLabel');
 
-<!-- Order CTA -->
-<section class="section" id="order" style="padding:60px 0;">
-  <div class="container section-center">
-    <div style="background:linear-gradient(135deg,var(--primary-dim),var(--secondary-dim));border-radius:var(--radius);padding:48px;border:1px solid rgba(0,212,255,0.2);">
-      <h2 style="font-size:28px;font-weight:700;color:var(--text-bright);margin-bottom:12px;">Siap Memulai?</h2>
-      <p style="font-size:16px;color:var(--text-dim);max-width:500px;margin:0 auto 28px;">Jangan tunggu lagi! Dapatkan akses internet cepat, aman, dan tanpa batas sekarang juga.</p>
-      <a href="https://t.me/youzin_crabz" class="btn btn-primary" target="_blank" rel="noopener">&#x1F4AC; Order via Telegram</a>
-    </div>
-  </div>
-</section>
+            toggle.classList.toggle('yearly');
+            var showPaygo = toggle.classList.contains('yearly');
 
-<!-- Footer -->
-<footer class="footer">
-  <div class="container">
-    <div class="footer-content">
-      <div class="footer-copy">&copy; 2026 PAGE_TITLE. All rights reserved.</div>
-      <div class="footer-links">
-        <a href="#home">Home</a>
-        <a href="#paket">Paket</a>
-        <a href="#fitur">Fitur</a>
-        <a href="#faq">FAQ</a>
-        <a href="#kontak">Kontak</a>
-      </div>
-    </div>
-  </div>
-</footer>
-
-<!-- Status checker -->
-<script>
-// FAQ Toggle
-var faqItems = document.querySelectorAll(".faq-item");
-faqItems.forEach(function(item) {
-  item.addEventListener("click", function() {
-    this.classList.toggle("active");
-  });
-});
-
-// Service status auto-refresh
-function checkStatus() {
-  var statusDiv = document.querySelector(".status-grid");
-  if (!statusDiv) return;
-  fetch('/status.json?' + new Date().getTime())
-    .then(function(r) { return r.json(); })
-    .then(function(data) {
-      for (var key in data) {
-        var el = document.getElementById('status-' + key.toLowerCase());
-        if (el) {
-          el.className = data[key] === 'active' ? 'status-dot on' : 'status-dot off';
-          el.nextElementSibling.textContent = data[key] === 'active' ? 'Online' : 'Offline';
+            monthlyEls.forEach(function(el) { el.style.display = showPaygo ? 'none' : ''; });
+            paygoEls.forEach(function(el) { el.style.display = showPaygo ? '' : 'none'; });
+            monthlyLabel.classList.toggle('active', !showPaygo);
+            paygoLabel.classList.toggle('active', showPaygo);
         }
-      }
-    })
-    .catch(function() {});
-}
-setInterval(checkStatus, 30000);
-checkStatus();
 
-// Nav scroll effect
-window.addEventListener("scroll", function() {
-  var nav = document.querySelector(".nav");
-  if (window.scrollY > 50) {
-    nav.style.background = "rgba(8,8,26,0.95)";
-  } else {
-    nav.style.background = "rgba(8,8,26,0.8)";
-  }
-});
+        // Server Status - check every 30s
+        function checkStatus() {
+            fetch('/status.json')
+                .then(function(r) { return r.json(); })
+                .then(function(data) {
+                    var services = ['xray','nginx','ssh','dropbear'];
+                    services.forEach(function(svc) {
+                        var dot = document.getElementById('status-' + svc);
+                        var label = document.getElementById('status-' + svc + '-label');
+                        if (dot && label) {
+                            if (data[svc]) {
+                                dot.className = 'status-dot online';
+                                label.textContent = 'Online';
+                            } else {
+                                dot.className = 'status-dot offline';
+                                label.textContent = 'Offline';
+                            }
+                        }
+                    });
+                })
+                .catch(function() {});
+        }
 
-// Close mobile menu on link click
-document.querySelectorAll(".nav-links a").forEach(function(link) {
-  link.addEventListener("click", function() {
-    document.querySelector(".nav-links").classList.remove("open");
-  });
-});
-</script>
+        checkStatus();
+        setInterval(checkStatus, 30000);
+
+        // Navbar scroll effect
+        window.addEventListener('scroll', function() {
+            var navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('scrolled');
+            } else {
+                navbar.classList.remove('scrolled');
+            }
+        });
+
+        // Mobile menu
+        var toggle = document.getElementById('mobileToggle');
+        var navLinks = document.getElementById('navLinks');
+
+        toggle.addEventListener('click', function() {
+            toggle.classList.toggle('active');
+            navLinks.classList.toggle('active');
+        });
+
+        // Close mobile menu on link click
+        navLinks.querySelectorAll('a').forEach(function(link) {
+            link.addEventListener('click', function() {
+                toggle.classList.remove('active');
+                navLinks.classList.remove('active');
+            });
+        });
+    </script>
 </body>
 </html>
+
 WEBEOF
     # Sedang untuk mengganti placeholder
     sed -i "s|PAGE_TITLE|${PAGE_TITLE}|g" "$PUBLIC_HTML/index.html"
