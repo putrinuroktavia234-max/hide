@@ -5688,7 +5688,7 @@ SITEMAPEOF
             <h3 id="popupTitle">Promo Spesial!</h3>
             <span class="popup-highlight" id="popupHighlight">Diskon 20%</span>
             <p id="popupDesc">Dapatkan diskon spesial untuk pembelian pertama Anda. Jangan sampai ketinggalan!</p>
-            <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener" id="popupCta">
+            <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener" id="popupCta" class="tg-link">
                 <i class="fab fa-telegram-plane"></i> Klaim Sekarang
             </a>
         </div>
@@ -5698,8 +5698,8 @@ SITEMAPEOF
     <nav class="navbar" id="navbar">
         <div class="nav-inner">
             <a href="#home" class="nav-logo">
-                <div class="logo-icon">⚡</div>
-                <span>Youzin Crabz</span>
+                <div class="logo-icon" id="siteLogo">⚡</div>
+                <span id="siteName">Youzin Crabz</span>
             </a>
             <ul class="nav-links" id="navLinks">
                 <li><a href="#home">Beranda</a></li>
@@ -5707,7 +5707,7 @@ SITEMAPEOF
                 <li><a href="#fitur">Fitur</a></li>
                 <li><a href="#harga">Harga</a></li>
                 <li><a href="#faq">FAQ</a></li>
-                <li><a href="https://t.me/youzin_crabz" class="nav-cta ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order</a></li>
+                <li><a href="https://t.me/youzin_crabz" class="nav-cta ripple" target="_blank" rel="noopener" class="tg-link"><i class="fab fa-telegram-plane"></i> Order</a></li>
             </ul>
             <button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
                 <span></span><span></span><span></span>
@@ -5773,7 +5773,7 @@ SITEMAPEOF
                     </ul>
                     <div class="server-price"><span class="amount">Rp 10.000</span><span class="period">/Bulan</span></div>
                     <p class="server-price-alt">Rp 15,62 /Jam (Pay As Go)</p>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order Sekarang</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener" class="tg-link"><i class="fab fa-telegram-plane"></i> Order Sekarang</a>
                 </div>
                 <div class="server-card animate scale-in" data-animate>
                     <div class="server-flag">🇮🇩</div>
@@ -5788,7 +5788,7 @@ SITEMAPEOF
                     </ul>
                     <div class="server-price"><span class="amount">Rp 10.000</span><span class="period">/Bulan</span></div>
                     <p class="server-price-alt">Rp 15,62 /Jam (Pay As Go)</p>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order Sekarang</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener" class="tg-link"><i class="fab fa-telegram-plane"></i> Order Sekarang</a>
                 </div>
                 <div class="server-card animate fade-right" data-animate>
                     <div class="server-flag">🌐</div>
@@ -5803,7 +5803,7 @@ SITEMAPEOF
                     </ul>
                     <div class="server-price"><span class="amount">Rp 15.000</span><span class="period">/135 GB</span></div>
                     <p class="server-price-alt">Kuota besar untuk kebutuhan tinggi</p>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order Sekarang</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener" class="tg-link"><i class="fab fa-telegram-plane"></i> Order Sekarang</a>
                 </div>
             </div>
         </div>
@@ -5852,7 +5852,7 @@ SITEMAPEOF
                         <li><i class="fas fa-check"></i> Unlimited Bandwidth</li><li><i class="fas fa-check"></i> 2 Device</li>
                         <li><i class="fas fa-times"></i> VMess / VLess / Trojan</li><li><i class="fas fa-times"></i> gRPC Support</li>
                     </ul>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener">Pilih Paket</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener" class="tg-link">Pilih Paket</a>
                 </div>
                 <div class="pricing-card popular animate scale-in" data-animate>
                     <div class="popular-badge">★ PALING POPULER</div>
@@ -5864,7 +5864,7 @@ SITEMAPEOF
                         <li><i class="fas fa-check"></i> VMess / VLess / Trojan</li><li><i class="fas fa-check"></i> WebSocket & gRPC</li>
                         <li><i class="fas fa-check"></i> Unlimited Bandwidth</li><li><i class="fas fa-check"></i> 3 Device</li>
                     </ul>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener">Pilih Paket</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener" class="tg-link">Pilih Paket</a>
                 </div>
                 <div class="pricing-card animate fade-right" data-animate>
                     <div class="pricing-name">Enterprise</div><div class="pricing-desc">Untuk kebutuhan maksimal</div>
@@ -5875,7 +5875,7 @@ SITEMAPEOF
                         <li><i class="fas fa-check"></i> VMess / VLess / Trojan</li><li><i class="fas fa-check"></i> WebSocket & gRPC</li>
                         <li><i class="fas fa-check"></i> Unlimited Bandwidth</li><li><i class="fas fa-check"></i> Unlimited Device</li>
                     </ul>
-                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener">Pilih Paket</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-outline ripple" target="_blank" rel="noopener" class="tg-link">Pilih Paket</a>
                 </div>
             </div>
         </div>
@@ -5950,7 +5950,7 @@ SITEMAPEOF
                 <h2>Siap Untuk Internet Tanpa Batas?</h2>
                 <p>Dapatkan akses internet cepat, aman, dan bebas sekarang juga. Proses order mudah dan instan.</p>
                 <div class="cta-buttons">
-                    <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener"><i class="fab fa-telegram-plane"></i> Order via Telegram</a>
+                    <a href="https://t.me/youzin_crabz" class="btn btn-primary ripple" target="_blank" rel="noopener" class="tg-link"><i class="fab fa-telegram-plane"></i> Order via Telegram</a>
                     <a href="#harga" class="btn btn-outline ripple"><i class="fas fa-tags"></i> Lihat Harga</a>
                 </div>
             </div>
@@ -5963,9 +5963,9 @@ SITEMAPEOF
             <div class="footer-links">
                 <a href="#home">Beranda</a><a href="#server">Server</a><a href="#fitur">Fitur</a>
                 <a href="#harga">Harga</a><a href="#faq">FAQ</a>
-                <a href="https://t.me/youzin_crabz" target="_blank" rel="noopener">Telegram</a>
+                <a href="https://t.me/youzin_crabz" target="_blank" rel="noopener" class="tg-link">Telegram</a>
             </div>
-            <p>&copy; 2026 Youzin Crabz Tunel — The Professor. All rights reserved.</p>
+            <p id="footerText">&copy; 2026 Youzin Crabz Tunel — The Professor. All rights reserved.</p>
         </div>
     </footer>
 
@@ -6113,6 +6113,32 @@ SITEMAPEOF
                 document.body.classList.remove('menu-open');
             });
         });
+    
+        // ─── LOAD SITE SETTINGS ───
+        function loadSiteSettings() {
+            fetch('/ordervpn/api/get_settings.php')
+                .then(function(r) { return r.json(); })
+                .then(function(s) {
+                    if (s.site_name) {
+                        document.getElementById('siteName').textContent = s.site_name;
+                        document.title = s.site_name;
+                        var metaDesc = document.querySelector('meta[name="description"]');
+                        if (metaDesc) metaDesc.content = 'Layanan tunneling premium — ' + s.site_name;
+                    }
+                    if (s.site_logo) {
+                        document.getElementById('siteLogo').textContent = s.site_logo;
+                    }
+                    if (s.footer_text) {
+                        document.getElementById('footerText').innerHTML = '&copy; ' + new Date().getFullYear() + ' ' + s.site_name + ' — ' + s.footer_text + '. All rights reserved.';
+                    }
+                    if (s.telegram_link) {
+                        document.querySelectorAll('.tg-link').forEach(function(el) {
+                            el.href = s.telegram_link;
+                        });
+                    }
+                }).catch(function() {});
+        }
+        loadSiteSettings();
     </script>
 </body>
 </html>
