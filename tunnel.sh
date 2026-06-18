@@ -7084,8 +7084,13 @@ CREDEOF
     printf "  ${GREEN}╚══════════════════════════════════════════════╝${NC}\n"
     echo ""
     echo -e "  ${RED}⚠ PENTING! Ganti password admin via menu [9] atau web panel /change_password.php${NC}"
-    printf "  ${WHITE}URL Panel   :${NC} ${CYAN}http://%s${NC}\n" "$SUBDOMAIN"
-    [[ -z "$SUBDOMAIN" ]] && printf "  ${WHITE}URL Panel   :${NC} ${CYAN}http://%s:8888${NC}\n" "$IP_VPS"
+    if [[ -n "$SUBDOMAIN" ]]; then
+        printf "  ${WHITE}URL Panel   :${NC} ${CYAN}http://%s${NC}\n" "$SUBDOMAIN"
+        printf "  ${DIM}Akses via subdomain, port 8888 tidak digunakan.${NC}\n"
+    else
+        printf "  ${WHITE}URL Panel   :${NC} ${CYAN}http://%s:8888${NC}\n" "$IP_VPS"
+        printf "  ${YELLOW}⚠ Disarankan setup subdomain untuk akses tanpa port.${NC}\n"
+    fi
     if [[ -f /root/.ordervpn_admin ]]; then
         local ap; ap=$(cat /root/.ordervpn_admin)
         printf "  ${WHITE}Admin Login :${NC} admin / ${GREEN}%s${NC}\n" "$ap"
