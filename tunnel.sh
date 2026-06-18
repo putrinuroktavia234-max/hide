@@ -5027,7 +5027,7 @@ _show_help() {
 # DEPLOY WEB PAGE (dipanggil saat install & update)
 #================================================
 
-deploy_web_page() {
+deploy_web_page() {  # Arg1: optional subdomain for API_BASE
     mkdir -p "$PUBLIC_HTML"
     rm -f "$PUBLIC_HTML/index.nginx-debian.html" "$PUBLIC_HTML/50x.html" "$PUBLIC_HTML/index.htm"
     [[ -f "$DOMAIN_FILE" ]] && DOMAIN=$(tr -d '\n\r' < "$DOMAIN_FILE" | xargs)
@@ -5082,6 +5082,7 @@ SITEMAPEOF
     <title>PAGE_TITLE</title>
     <meta name="description" content="PAGE_DESC">
     <meta name="theme-color" content="#0f172a">
+    <meta name="api-base" content="API_BASE">
     <meta property="og:title" content="PAGE_TITLE">
     <meta property="og:description" content="PAGE_DESC">
     <meta property="og:type" content="website">
@@ -6043,7 +6044,7 @@ SITEMAPEOF
 
         // --- ANNOUNCEMENT BAR ───
         function loadAnnouncements() {
-            fetch('/ordervpn/api/get_announcements.php')
+            fetch(apiUrl('/ordervpn/api/get_announcements.php'))
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (data.active && data.text) {
@@ -6067,7 +6068,7 @@ SITEMAPEOF
 
         // --- POPUP PROMO ───
         function loadPromo() {
-            fetch('/ordervpn/api/get_promo.php')
+            fetch(apiUrl('/ordervpn/api/get_promo.php'))
                 .then(function(r) { return r.json(); })
                 .then(function(data) {
                     if (!data.active) return;
@@ -6115,8 +6116,18 @@ SITEMAPEOF
         });
     
         // --- LOAD SITE SETTINGS ───
+        // Helper: use API base URL (subdomain) when on main domain
+        function apiUrl(path) {
+            var meta = document.querySelector('meta[name="api-base"]');
+            var base = meta ? meta.content : '';
+            if (base && window.location.hostname === new URL(base, window.location.origin).hostname) {
+                // Already on the API subdomain, use relative
+                return path;
+            }
+            return base ? base + path : path;
+        }
         function loadSiteSettings() {
-            fetch('/ordervpn/api/get_settings.php')
+            fetch(apiUrl('/ordervpn/api/get_settings.php'))
                 .then(function(r) { return r.json(); })
                 .then(function(s) {
                     if (s.site_name) {
@@ -6145,7 +6156,14 @@ SITEMAPEOF
 
 WEBEOF
     # Sedang untuk mengganti placeholder
+    # Compute API base URL for landing page JS
+    local API_BASE=""
+    if [[ -n "${1:-}" ]]; then
+        # Subdomain provided -> use protocol-relative URL
+        [[ -f "/etc/letsencrypt/live/${1}/fullchain.pem" ]] && API_BASE="https://${1}" || API_BASE="http://${1}"
+    fi
     sed -i "s|PAGE_TITLE|${PAGE_TITLE}|g" "$PUBLIC_HTML/index.html"
+    sed -i "s|API_BASE|${API_BASE}|g" "$PUBLIC_HTML/index.html"
     sed -i "s|PAGE_DESC|${PAGE_DESC}|g" "$PUBLIC_HTML/index.html"
     sed -i "s|SITE_URL|${SITE_URL}|g" "$PUBLIC_HTML/index.html"
     sed -i "s|GA_ID||g" "$PUBLIC_HTML/index.html"
@@ -6535,7 +6553,7 @@ DBEOF
 
     # Deploy web page DULU sebelum nginx start
     # Agar saat nginx up, index.html sudah ada
-    deploy_web_page >> "$LOG" 2>&1
+    deploy_web_page "$SUBDOMAIN" >> "$LOG" 2>&1
 
     # ── Setup cron auto-delete expired (tiap jam) ──
     (crontab -l 2>/dev/null | grep -v "delete_expired_cron";      echo "0 * * * * bash /root/tunnel.sh delete_expired_cron 2>/dev/null") | crontab - 2>/dev/null
