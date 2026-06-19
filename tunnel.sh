@@ -2702,19 +2702,10 @@ show_menu() {
 
 
 
-    _mrow $col "13" "Restart Service"  "18" "Advanced Mode"
+    _mrow $col "13" "Restart Service"  "18" "Advanced Mode"    _mrow $col "19" "Port Info"        "20" "ZI VPN UDP"
+    _mrow $col "21" "OrderVPN Web"     "22" "DDoS Protect"
+    _mrow $col "23" "Traffic Monitor"  "24" "Health Check"
 
-
-
-    _mrow $col "19" "Port Info"        "20" "ZI VPN UDP"
-
-
-
-    _mrow $col "21" "OrderVPN Web"    "22" "DDoS Protect"
-
-
-
-    _mrow1 $col "23" "Traffic Monitor"
 
 
 
@@ -3155,6 +3146,14 @@ _gen_self_signed() {
 
 
 setup_menu_command() {
+
+    # Deploy quick-test.sh health checker (dari folder yang sama dgn tunnel.sh)
+    local qs_src="$(dirname "$SCRIPT_PATH")/quick-test.sh"
+    if [[ -f "$qs_src" ]]; then
+        cp "$qs_src" /root/quick-test.sh 2>/dev/null && chmod +x /root/quick-test.sh 2>/dev/null
+    elif [[ -f ./quick-test.sh ]]; then
+        cp ./quick-test.sh /root/quick-test.sh 2>/dev/null && chmod +x /root/quick-test.sh 2>/dev/null
+    fi
 
 
 
@@ -31213,6 +31212,31 @@ traffic_monitor_menu() {
 
 }
 
+#================================================
+# HEALTH CHECK — Quick Test Semua Service
+#================================================
+
+_health_check() {
+    clear
+    if [[ -f /root/quick-test.sh ]]; then
+        bash /root/quick-test.sh
+    elif [[ -f ./quick-test.sh ]]; then
+        bash ./quick-test.sh
+    else
+        # Download dari GitHub
+        if curl -sL --max-time 10 https://raw.githubusercontent.com/${GITHUB_USER}/hide/main/quick-test.sh -o /root/quick-test.sh 2>/dev/null; then
+            chmod +x /root/quick-test.sh
+            bash /root/quick-test.sh
+        else
+            echo -e "  ${RED}✘ Gagal download quick-test.sh!${NC}"
+            echo -e "  ${DIM}Manual: wget https://raw.githubusercontent.com/${GITHUB_USER}/hide/main/quick-test.sh${NC}"
+        fi
+    fi
+    echo ""
+    read -rp "  Tekan ENTER untuk kembali..."
+}
+
+
 
 
 
@@ -32204,6 +32228,7 @@ main_menu() {
 
 
             23) traffic_monitor_menu ;;
+            24) _health_check ;;
 
 
 
