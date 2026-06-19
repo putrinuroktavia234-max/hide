@@ -6821,7 +6821,7 @@ server {
     listen 81;
     server_name _;
     root /var/www/html;
-    autoindex on;
+    autoindex off;  # Security: disable directory listing
     location / { try_files \$uri \$uri/ =404; add_header Content-Type text/plain; }
 }
 NGXEOF
@@ -7018,9 +7018,16 @@ server {
     index index.php;
     charset utf-8;
     client_max_body_size 5M;
+    # Security: block sensitive files
     location ~ /includes/ { deny all; }
     location ~ /cron/     { deny all; }
     location ~ /\.ht      { deny all; }
+    location ~ \.(bak|old|save|sw[op]|backup|sql|log|git|env)$ { deny all; }
+    location ~ /\.         { deny all; }
+    # Security headers
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer" always;
     location / { try_files \$uri \$uri/ /index.php?\$query_string; }
     location ~ \.php$ {
         try_files \$uri =404;
@@ -7030,6 +7037,9 @@ server {
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
         include fastcgi_params;
         fastcgi_read_timeout 120;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "no-referrer" always;
     }
 }
 NGINXEOF
@@ -7043,9 +7053,16 @@ server {
     index index.php;
     charset utf-8;
     client_max_body_size 5M;
+    # Security: block sensitive files
     location ~ /includes/ { deny all; }
     location ~ /cron/     { deny all; }
     location ~ /\.ht      { deny all; }
+    location ~ \.(bak|old|save|sw[op]|backup|sql|log|git|env)$ { deny all; }
+    location ~ /\.         { deny all; }
+    # Security headers
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer" always;
     location / { try_files \$uri \$uri/ /index.php?\$query_string; }
     location ~ \.php$ {
         try_files \$uri =404;
@@ -7055,6 +7072,9 @@ server {
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
         include fastcgi_params;
         fastcgi_read_timeout 120;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "no-referrer" always;
     }
 }
 server {
@@ -7072,9 +7092,16 @@ server {
     index index.php;
     charset utf-8;
     client_max_body_size 5M;
+    # Security: block sensitive files
     location ~ /includes/ { deny all; }
     location ~ /cron/     { deny all; }
     location ~ /\.ht      { deny all; }
+    location ~ \.(bak|old|save|sw[op]|backup|sql|log|git|env)$ { deny all; }
+    location ~ /\.         { deny all; }
+    # Security headers
+    add_header X-Frame-Options "DENY" always;
+    add_header X-Content-Type-Options "nosniff" always;
+    add_header Referrer-Policy "no-referrer" always;
     location / { try_files \$uri \$uri/ /index.php?\$query_string; }
     location ~ \.php$ {
         try_files \$uri =404;
@@ -7084,6 +7111,9 @@ server {
         fastcgi_param SCRIPT_FILENAME \$realpath_root\$fastcgi_script_name;
         include fastcgi_params;
         fastcgi_read_timeout 120;
+        add_header X-Frame-Options "DENY" always;
+        add_header X-Content-Type-Options "nosniff" always;
+        add_header Referrer-Policy "no-referrer" always;
     }
 }
 NGINXEOF2
