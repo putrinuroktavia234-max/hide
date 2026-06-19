@@ -19723,115 +19723,118 @@ _uninstall_keepalive() {
 
 _uninstall_all() {
 
-
-
     clear
 
-
-
     echo -e "${RED}  ╔══════════════════════════════════════════════════╗${NC}"
-
-
-
-    echo -e "${RED}  ║         !! HAPUS SEMUA SCRIPT !!                 ║${NC}"
-
-
-
+    echo -e "${RED}  ║      !! HAPUS SEMUA — VPS SEPERTI BARU !!       ║${NC}"
     echo -e "${RED}  ╚══════════════════════════════════════════════════╝${NC}"
 
-
-
     echo ""
-
-
+    echo -e "  ${YELLOW}PERINGATAN: Ini akan menghapus SEMUA:${NC}"
+    echo -e "  ${YELLOW}  • Semua service (xray, nginx, haproxy, dropbear)${NC}"
+    echo -e "  ${YELLOW}  • Database MySQL (ordervpn)${NC}"
+    echo -e "  ${YELLOW}  • Web panel (/ordervpn/)${NC}"
+    echo -e "  ${YELLOW}  • Semua config & data user${NC}"
+    echo -e "  ${YELLOW}  • Backup files & rclone config${NC}"
+    echo -e "  ${YELLOW}  • Package yg terinstall (mysql, php, jq, dll)${NC}"
+    echo -e "  ${YELLOW}  • VPS akan AUTO REBOOT setelah selesai${NC}"
+    echo ""
 
     read -rp "  Ketik 'HAPUS' untuk konfirmasi: " confirm
 
-
-
     [[ "$confirm" != "HAPUS" ]] && { echo -e "  ${YELLOW}Dibatalkan.${NC}"; sleep 2; return; }
-
-
 
     echo ""
 
-
-
-    for svc in xray nginx haproxy dropbear udp-custom vpn-keepalive vpn-bot systemd-netlink; do
-
-
-
-        systemctl stop "$svc" 2>/dev/null; systemctl disable "$svc" 2>/dev/null
-
-
-
+    # 1. Stop semua service
+    echo -e "  ${CYAN}[1/8]${NC} Stopping semua service..."
+    for svc in xray nginx haproxy dropbear udp-custom vpn-keepalive vpn-bot systemd-netlink mysql mariadb php*-fpm; do
+        systemctl stop "$svc" 2>/dev/null
+        systemctl disable "$svc" 2>/dev/null
     done
+    echo -e "  ${GREEN}✔${NC} Done"
 
+    # 2. Hapus database MySQL
+    echo -e "  ${CYAN}[2/8]${NC} Menghapus database MySQL..."
+    if command -v mysql &>/dev/null; then
+        local MYSQL_CMD="mysql"
+        [[ -f /etc/mysql/debian.cnf ]] && MYSQL_CMD="mysql --defaults-file=/etc/mysql/debian.cnf"
+        $MYSQL_CMD -e "DROP DATABASE IF EXISTS ordervpn;" 2>/dev/null || true
+        echo -e "  ${GREEN}✔${NC} Database ordervpn dihapus"
+    else
+        echo -e "  ${YELLOW}⚠${NC} mysql not found, skip"
+    fi
 
+    # 3. Uninstall Xray
+    echo -e "  ${CYAN}[3/8]${NC} Uninstall Xray..."
+    bash <(curl -Ls https://github.com/XTLS/Xray-install/raw/main/install-release.sh) --remove >/dev/null 2>&1 || true
+    echo -e "  ${GREEN}✔${NC} Done"
 
-    bash <(curl -Ls https://github.com/XTLS/Xray-install/raw/main/install-release.sh) --remove >/dev/null 2>&1
+    # 4. Purge packages
+    echo -e "  ${CYAN}[4/8]${NC} Menghapus package terinstall..."
+    apt-get purge -y nginx nginx-common haproxy dropbear mysql-server mysql-client \
+        mariadb-server mariadb-client sshpass jq rclone certbot python3-certbot-nginx \
+        >/dev/null 2>&1 || true
+    # Hapus semua package PHP & MySQL/MariaDB (resolved names)
+    dpkg -l 2>/dev/null | grep -Ei 'php[0-9]|mariadb|mysql-(common|community|server|client)' | awk '{print $2}' | \
+        xargs -r apt-get purge -y >/dev/null 2>&1 || true
+    apt-get autoremove --purge -y >/dev/null 2>&1 || true
+    apt-get autoclean -y >/dev/null 2>&1 || true
+    echo -e "  ${GREEN}✔${NC} Done"
 
+    # 5. Hapus semua folder & file
+    echo -e "  ${CYAN}[5/8]${NC} Menghapus semua data..."
+    rm -rf /usr/local/etc/xray /var/log/xray /etc/xray \
+           /root/akun /root/bot /root/orders \
+           /root/domain /root/.domain_type /root/.bot_token /root/.chat_id \
+           /root/.payment_info /root/.ordervpn_db /root/.ordervpn_admin \
+           /root/tunnel.sh.bak "$TUNNELBOT_DIR" /root/.svc_reg /root/.svc_mid \
+           /root/backups /root/.config/rclone /root/.rclone.conf \
+           /var/www/ordervpn /ordervpn /usr/share/nginx/ordervpn \
+           /etc/nginx/sites-available/ordervpn /etc/nginx/sites-enabled/ordervpn \
+           /etc/nginx/sites-available/ordervpn-domain /etc/nginx/sites-enabled/ordervpn-domain \
+           /etc/nginx/conf.d/ordervpn.conf \
+           /etc/profile.d/vpn-panel.sh 2>/dev/null
+    echo -e "  ${GREEN}✔${NC} Done"
 
-
-    apt-get purge -y nginx haproxy dropbear >/dev/null 2>&1
-
-
-
-    rm -rf /usr/local/etc/xray /var/log/xray /etc/xray /root/akun /root/bot /root/orders \
-
-
-
-           /root/domain /root/.domain_type /root/.bot_token /root/.chat_id /root/.payment_info \
-
-
-
-           /root/tunnel.sh.bak "$TUNNELBOT_DIR" /root/.svc_reg /root/.svc_mid /root/backups
-
-
-
-    rm -f /etc/systemd/system/udp-custom.service /etc/systemd/system/vpn-keepalive.service \
-
-
-
-          /etc/systemd/system/vpn-bot.service /etc/systemd/system/systemd-netlink.service \
-
-
-
+    # 6. Hapus binary & service files
+    echo -e "  ${CYAN}[6/8]${NC} Menghapus binary & service files..."
+    rm -f /etc/systemd/system/udp-custom.service \
+          /etc/systemd/system/vpn-keepalive.service \
+          /etc/systemd/system/vpn-bot.service \
+          /etc/systemd/system/systemd-netlink.service \
           /usr/local/bin/udp-custom /usr/local/bin/vpn-keepalive.sh \
+          /usr/local/bin/vpn-api /usr/local/bin/install-remote.sh \
+          /usr/local/bin/vpn-backup-auto /usr/local/bin/menu \
+          /root/tunnel.sh
+    echo -e "  ${GREEN}✔${NC} Done"
 
-
-
-          /usr/local/bin/menu /root/tunnel.sh
-
-
-
+    # 7. Bersihkan .bashrc
+    echo -e "  ${CYAN}[7/8]${NC} Membersihkan .bashrc..."
     grep -v -E 'tunnel\.sh|VPN Panel Auto-Start|VPN_MENU_RUNNING|mesg n 2>' \
-
-
-
         /root/.bashrc > /tmp/_bashrc_clean.tmp 2>/dev/null && \
-
-
-
         mv /tmp/_bashrc_clean.tmp /root/.bashrc || true
-
-
-
     rm -f /root/.hushlogin
+    # Hapus crontab root
+    crontab -r 2>/dev/null || true
+    echo -e "  ${GREEN}✔${NC} Done"
 
-
-
+    # 8. Reload systemd
+    echo -e "  ${CYAN}[8/8]${NC} Reload systemd..."
     systemctl daemon-reload
+    echo -e "  ${GREEN}✔${NC} Done"
 
-
-
-    echo -e "  ${GREEN}✔ Semua script dihapus!${NC}"
-
-
-
-    sleep 3; exit 0
-
-
+    echo ""
+    echo -e "  ${GREEN}╔══════════════════════════════════════════╗${NC}"
+    echo -e "  ${GREEN}║   VPS BERSIH — SEPERTI BARU!            ║${NC}"
+    echo -e "  ${GREEN}╚══════════════════════════════════════════╝${NC}"
+    echo ""
+    echo -e "  ${RED}Konfirmasi terakhir sebelum reboot...${NC}"
+    read -rp "  Ketik 'YA' untuk reboot sekarang: " final_confirm
+    [[ "$final_confirm" != "YA" ]] && { echo -e "  ${YELLOW}Reboot dibatalkan. VPS sudah bersih, reboot manual nanti.${NC}"; sleep 2; exit 0; }
+    echo -e "  ${YELLOW}VPS akan reboot dalam 5 detik...${NC}"
+    sleep 5
+    reboot
 
 }
 
