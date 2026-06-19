@@ -673,7 +673,7 @@ show_menu() {
     _box_divider $W
     _mrow $col " 9" "Telegram Bot"     "14" "Speedtest VPS"
     _mrow $col "10" "Change Domain"    "15" "Backup Config"
-    _mrow $col "11" "Fix SSL / Cert"   "16" "Restore Config"
+    _mrow $col "11" "SSL Manager"      "16" "Restore Config"
     _mrow $col "12" "Optimize VPS"     "17" "Uninstall Panel"
     _mrow $col "13" "Restart Service"  "18" "Advanced Mode"
     _mrow $col "19" "Port Info"        "20" "ZI VPN UDP"
@@ -1042,6 +1042,195 @@ fix_certificate() {
     restart_service_safe "xray" "xray -test -config $XRAY_CONFIG"
     echo -e "  ${GREEN}✔ Done!${NC}"
     sleep 3
+}
+
+#================================================
+# SSL AUTO RENEW — Cronjob-based Let's Encrypt renewal
+#================================================
+
+_ssl_auto_renew_setup() {
+    clear
+    print_menu_header "SETUP SSL AUTO-RENEW"
+    [[ -f "$DOMAIN_FILE" ]] && DOMAIN=$(tr -d '\n\r' < "$DOMAIN_FILE" | xargs)
+    [[ -z "$DOMAIN" ]] && { echo -e "  ${RED}✘ Domain belum diset! Setup domain dulu [menu 10].${NC}"; sleep 3; return; }
+
+    local domain_type="custom"
+    [[ -f "$DOMAIN_TYPE_FILE" ]] && domain_type=$(cat "$DOMAIN_TYPE_FILE")
+    if [[ "$domain_type" != "custom" ]]; then
+        echo -e "  ${YELLOW}⚠ Domain auto-generated (nip.io) — tidak perlu SSL renew.${NC}"
+        echo -e "  ${DIM}SSL self-signed tidak expired selama 10 tahun.${NC}"
+        sleep 3; return
+    fi
+
+    # Cek apakah certbot tersedia
+    if ! command -v certbot >/dev/null 2>&1; then
+        echo -e "  ${CYAN}Installing certbot dulu...${NC}"
+        install_certbot_compat "custom"
+        if ! command -v certbot >/dev/null 2>&1; then
+            echo -e "  ${RED}✘ certbot gagal diinstall!${NC}"
+            sleep 3; return
+        fi
+    fi
+
+    echo -e "  Domain : ${GREEN}${DOMAIN}${NC}"
+    echo -e "  ${DIM}Auto-renew akan berjalan tanggal 1 & 15 setiap bulan jam 3 pagi${NC}"
+    echo ""
+
+    # Buat script auto-renew
+    cat > /usr/local/bin/ssl-auto-renew.sh << 'SSLAUTORENEW'
+#!/bin/bash
+# SSL Auto-Renew Script — Youzin Crabz Tunel
+# Dijalankan via cron: 0 3 1,15 * *
+PATH=/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+DOMAIN_FILE="/root/domain"
+LOG="/var/log/ssl-renew.log"
+
+exec >> "$LOG" 2>&1
+echo "========================================"
+echo "SSL Auto-Renew: $(date)"
+
+[[ -f "$DOMAIN_FILE" ]] && DOMAIN=$(tr -d '\n\r' < "$DOMAIN_FILE" | xargs) || { echo "ERROR: Domain file not found"; exit 1; }
+[[ -z "$DOMAIN" ]] && { echo "ERROR: Domain not set"; exit 1; }
+
+# Stop services yang pakai port 80
+systemctl stop nginx 2>/dev/null
+systemctl stop haproxy 2>/dev/null
+sleep 2
+
+# Renew via certbot standalone
+if certbot renew --standalone --non-interactive --agree-tos --no-random-sleep-on-renew --quiet 2>/dev/null; then
+    echo "certbot renew: SUCCESS"
+    if [[ -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]]; then
+        cp "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" /etc/xray/xray.crt
+        cp "/etc/letsencrypt/live/$DOMAIN/privkey.pem" /etc/xray/xray.key
+        chmod 644 /etc/xray/xray.*
+        echo "Cert copied to /etc/xray/: OK"
+    fi
+else
+    echo "certbot renew: FAILED — trying certonly fallback..."
+    # Fallback: certonly
+    if certbot certonly --standalone -d "$DOMAIN" --non-interactive --agree-tos --register-unsafely-without-email --quiet 2>/dev/null; then
+        echo "certbot certonly: SUCCESS"
+        if [[ -f "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" ]]; then
+            cp "/etc/letsencrypt/live/$DOMAIN/fullchain.pem" /etc/xray/xray.crt
+            cp "/etc/letsencrypt/live/$DOMAIN/privkey.pem" /etc/xray/xray.key
+            chmod 644 /etc/xray/xray.*
+            echo "Cert copied to /etc/xray/: OK"
+        fi
+    else
+        echo "certbot certonly: FAILED"
+    fi
+fi
+
+# Restart services
+systemctl start nginx 2>/dev/null
+systemctl start haproxy 2>/dev/null
+
+# Reload nginx & restart xray if config valid
+nginx -t 2>/dev/null && systemctl reload nginx 2>/dev/null
+xray -test -config /usr/local/etc/xray/config.json >/dev/null 2>&1 && systemctl restart xray 2>/dev/null
+
+echo "SSL Auto-Renew: DONE — $(date)"
+SSLAUTORENEW
+    chmod +x /usr/local/bin/ssl-auto-renew.sh
+
+    # Pasang cronjob: tgl 1 dan 15 setiap bulan jam 3 pagi
+    (crontab -l 2>/dev/null | grep -v "ssl-auto-renew"; echo "0 3 1,15 * * /usr/local/bin/ssl-auto-renew.sh") | crontab -
+
+    echo -e "  ${GREEN}✔ SSL Auto-Renew AKTIF!${NC}"
+    echo -e "  ${DIM}Script : /usr/local/bin/ssl-auto-renew.sh${NC}"
+    echo -e "  ${DIM}Log    : /var/log/ssl-renew.log${NC}"
+    echo -e "  ${DIM}Jadwal : Tanggal 1 & 15, jam 3 pagi${NC}"
+    echo ""
+    echo -e "  ${YELLOW}Tips: Cek log dengan: tail -f /var/log/ssl-renew.log${NC}"
+    sleep 3
+}
+
+_ssl_auto_renew_disable() {
+    clear
+    print_menu_header "DISABLE SSL AUTO-RENEW"
+    if crontab -l 2>/dev/null | grep -q "ssl-auto-renew"; then
+        echo -e "  ${YELLOW}Cronjob SSL Auto-Renew terdeteksi:${NC}"
+        crontab -l 2>/dev/null | grep "ssl-auto-renew" | sed "s/^/    /"
+        echo ""
+        read -rp "  Yakin nonaktifkan? [y/N]: " yn
+        if [[ "${yn,,}" == "y" ]]; then
+            crontab -l 2>/dev/null | grep -v "ssl-auto-renew" | crontab -
+            rm -f /usr/local/bin/ssl-auto-renew.sh
+            echo -e "  ${GREEN}✔ SSL Auto-Renew dinonaktifkan!${NC}"
+        else
+            echo -e "  ${DIM}Dibatalkan.${NC}"
+        fi
+    else
+        echo -e "  ${YELLOW}SSL Auto-Renew memang belum aktif.${NC}"
+    fi
+    sleep 2
+}
+
+_ssl_auto_renew_status() {
+    if crontab -l 2>/dev/null | grep -q "ssl-auto-renew"; then
+        echo -e "  ${GREEN}● SSL Auto-Renew: AKTIF${NC}"
+        crontab -l 2>/dev/null | grep "ssl-auto-renew" | sed 's/^/    /'
+    else
+        echo -e "  ${YELLOW}○ SSL Auto-Renew: NON-AKTIF${NC}"
+    fi
+}
+
+menu_ssl() {
+    while true; do
+        clear
+        print_menu_header "SSL CERTIFICATE MANAGER"
+        [[ -f "$DOMAIN_FILE" ]] && DOMAIN=$(tr -d '\n\r' < "$DOMAIN_FILE" | xargs)
+        echo -e "  Domain : ${GREEN}${DOMAIN:-Not Set}${NC}"
+        echo ""
+        _ssl_auto_renew_status
+        echo ""
+        printf "  ${WHITE}[1]${NC} Fix / Renew Certificate (manual)
+"
+        printf "  ${WHITE}[2]${NC} Setup SSL Auto-Renew (cronjob)
+"
+        printf "  ${WHITE}[3]${NC} Disable SSL Auto-Renew
+"
+        printf "  ${WHITE}[4]${NC} Test Auto-Renew sekarang
+"
+        printf "  ${WHITE}[5]${NC} Lihat log SSL renew
+"
+        printf "  ${RED}[0]${NC} Kembali
+"
+        echo ""
+        read -rp "  Select: " ssl_choice
+        case $ssl_choice in
+            1) fix_certificate ;;
+            2) _ssl_auto_renew_setup ;;
+            3) _ssl_auto_renew_disable ;;
+            4)
+                clear
+                print_menu_header "TEST SSL AUTO-RENEW"
+                if [[ -x /usr/local/bin/ssl-auto-renew.sh ]]; then
+                    echo -e "  ${CYAN}Menjalankan auto-renew...${NC}"
+                    /usr/local/bin/ssl-auto-renew.sh
+                    echo ""
+                    echo -e "  ${GREEN}✔ Selesai! Cek log: tail /var/log/ssl-renew.log${NC}"
+                else
+                    echo -e "  ${RED}✘ Script auto-renew belum terinstall. Setup dulu [menu 2].${NC}"
+                fi
+                echo ""; read -rp "  Tekan ENTER..." ;;
+            5)
+                clear
+                print_menu_header "LOG SSL AUTO-RENEW"
+                if [[ -f /var/log/ssl-renew.log ]]; then
+                    tail -50 /var/log/ssl-renew.log
+                    echo ""
+                    printf "  ${DIM}Log lengkap: /var/log/ssl-renew.log${NC}
+"
+                else
+                    echo -e "  ${DIM}Log belum tersedia.${NC}"
+                fi
+                echo ""; read -rp "  Tekan ENTER..." ;;
+            0) break ;;
+            *) echo -e "  ${RED}✘ Invalid!${NC}"; sleep 1 ;;
+        esac
+    done
 }
 
 #================================================
@@ -7764,7 +7953,7 @@ main_menu() {
             8|08) delete_expired ;;
             9|09) menu_telegram_bot ;;
             10) change_domain ;;
-            11) fix_certificate ;;
+            11) menu_ssl ;;
             12) clear; optimize_vpn; echo -e "  ${GREEN}\u2714 Optimization done!${NC}"; sleep 2 ;;
             13)
                 clear; print_menu_header "RESTART ALL SERVICES"
