@@ -12346,7 +12346,7 @@ def run_remote(ip, cmd):
 
 
 
-    ssh = ("ssh -o StrictHostKeyChecking=no -o ConnectTimeout=10 "
+    ssh = ("ssh -o StrictHostKeyChecking=accept-new -o ConnectTimeout=10 "
 
 
 
