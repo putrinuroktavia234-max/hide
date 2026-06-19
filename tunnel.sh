@@ -1978,7 +1978,7 @@ show_system_info() {
 
 
 
-            source /dev/stdin <<< "$cached_data" 2>/dev/null || true
+            source <(echo "$cached_data") 2>/dev/null || true
 
 
 
