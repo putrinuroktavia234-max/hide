@@ -16254,7 +16254,7 @@ _adv_auto_backup() {
 
 
 
-    crontab -l 2>/dev/null | grep -q "vpn-backup" && cron_status="${GREEN}AKTIF${NC}"
+    crontab -l 2>/dev/null | grep -q "vpn-backup" && cron_status="${GREEN}AKTIF (jam 02:00)${NC}"
 
 
 
@@ -16300,13 +16300,60 @@ _adv_auto_backup() {
 
             mkdir -p /root/backups
 
+            # Create vpn-backup-auto wrapper for cron
+            cat > /usr/local/bin/vpn-backup-auto << 'BACKUPEOF'
+#!/bin/bash
+# Auto backup wrapper for cron
+BACKUP_DIR="/root/backups"
+BACKUP_DATE="$(date +%Y%m%d-%H%M%S)"
+BACKUP_FILE="vpn-fullbackup-${BACKUP_DATE}.tar.gz"
+TMP_DIR="/tmp/vpn-backup-${BACKUP_DATE}"
+
+mkdir -p "$BACKUP_DIR" "$TMP_DIR"
+
+# MySQL dump
+# Detect MySQL auth
+MYSQLDUMP_CMD="mysqldump"
+if [[ -f /etc/mysql/debian.cnf ]]; then
+    MYSQLDUMP_CMD="mysqldump --defaults-file=/etc/mysql/debian.cnf"
+elif mysql -u root -e "SELECT 1" &>/dev/null; then
+    MYSQLDUMP_CMD="mysqldump -u root"
+fi
+if command -v mysqldump &>/dev/null; then
+    $MYSQLDUMP_CMD --single-transaction --routines --triggers --events ordervpn 2>/dev/null > "$TMP_DIR/ordervpn.sql"
+fi
+
+# Config files
+for f in /root/domain /root/.domain_type /root/akun \
+         /root/.bot_token /root/.chat_id /root/.payment_info \
+         /etc/xray/xray.crt /etc/xray/xray.key \
+         /usr/local/etc/xray/config.json; do
+    [[ -f "$f" ]] && cp "$f" "$TMP_DIR/" 2>/dev/null
+done
+
+# Compress
+tar -czf "$BACKUP_DIR/$BACKUP_FILE" -C "$TMP_DIR" . 2>/dev/null
+rm -rf "$TMP_DIR"
+
+# Upload to GDrive
+if command -v rclone &>/dev/null && rclone listremotes 2>/dev/null | grep -q "gdrive:"; then
+    rclone copy "$BACKUP_DIR/$BACKUP_FILE" "gdrive:/vpn-backups/" 2>/dev/null
+    # Cleanup old GDrive backups
+    rclone delete --min-age 7d --include "vpn-fullbackup-*.tar.gz" "gdrive:/vpn-backups/" 2>/dev/null || true
+fi
+
+# Cleanup old local backups
+find "$BACKUP_DIR" -name "vpn-fullbackup-*.tar.gz" -mtime +7 -delete 2>/dev/null
+BACKUPEOF
+            chmod +x /usr/local/bin/vpn-backup-auto
+
 
 
             (crontab -l 2>/dev/null | grep -v "vpn-autobackup"
 
 
 
-             echo "0 2 * * * tar -czf /root/backups/vpn-backup-\$(date +\%Y\%m\%d).tar.gz /root/akun /root/domain /usr/local/etc/xray/config.json /etc/xray 2>/dev/null") | crontab -
+             echo "0 2 * * * /usr/local/bin/vpn-backup-auto 2>/dev/null") | crontab -
 
 
 
@@ -20529,6 +20576,123 @@ _menu_list_all() {
 
 
 
+
+
+_restore_backup() {
+    clear; print_menu_header "RESTORE BACKUP"
+
+    local backup_dir="/root/backups"
+
+    echo -e "  ${YELLOW}Available backups:${NC}\n"
+
+    # List local backups
+    local local_backups=()
+    if [[ -d "$backup_dir" ]]; then
+        mapfile -t local_backups < <(ls -1t "$backup_dir"/vpn-fullbackup-*.tar.gz 2>/dev/null)
+    fi
+
+    if [[ ${#local_backups[@]} -eq 0 ]]; then
+        echo -e "  ${YELLOW}No local backups found.${NC}"
+    else
+        local i=1
+        for bf in "${local_backups[@]:0:10}"; do
+            local bn=$(basename "$bf")
+            local sz=$(du -h "$bf" | awk '{print $1}')
+            echo -e "  ${WHITE}[${i}]${NC} ${bn} (${sz})"
+            ((i++))
+        done
+    fi
+
+    # Check GDrive
+    if command -v rclone &>/dev/null && rclone listremotes 2>/dev/null | grep -q "gdrive:"; then
+        echo -e "\n  ${CYAN}Google Drive backups:${NC}"
+        rclone ls "gdrive:/vpn-backups/" 2>/dev/null | head -10 | while read -r sz fn; do
+            echo -e "  ${YELLOW}GDrive:${NC} ${fn} ($(numfmt --to=iec $sz 2>/dev/null || echo ${sz}))"
+        done
+        echo -e "\n  ${WHITE}[D]${NC} Download latest from Google Drive"
+    fi
+
+    echo -e "\n  ${WHITE}[0]${NC} Back"
+    echo ""
+    read -rp "  Pilih backup untuk restore (atau 0): " rb_choice
+
+    local selected=""
+    if [[ "$rb_choice" == "0" ]]; then
+        return
+    elif [[ "$rb_choice" == "D" || "$rb_choice" == "d" ]]; then
+        # Download from GDrive
+        if ! command -v rclone &>/dev/null; then
+            echo -e "  ${RED}rclone tidak terinstall!${NC}"; sleep 2; return
+        fi
+        echo -e "  ${YELLOW}Downloading latest backup from Google Drive...${NC}"
+        mkdir -p "$backup_dir"
+        local latest_gd=$(rclone lsf "gdrive:/vpn-backups/" --include "vpn-fullbackup-*.tar.gz" --format "p" 2>/dev/null | sort -r | head -1)
+        if [[ -n "$latest_gd" ]]; then
+            rclone copyto "gdrive:/vpn-backups/$latest_gd" "$backup_dir/$latest_gd" 2>/dev/null
+            selected="$backup_dir/$latest_gd"
+        fi
+    elif [[ "$rb_choice" =~ ^[0-9]+$ ]] && [[ ${local_backups[$((rb_choice-1))]+_} ]]; then
+        selected="${local_backups[$((rb_choice-1))]}"
+    fi
+
+    if [[ -z "$selected" || ! -f "$selected" ]]; then
+        echo -e "  ${RED}Backup tidak ditemukan!${NC}"; sleep 2; return
+    fi
+
+    echo -e "\n  ${YELLOW}Restoring from: $(basename "$selected")${NC}"
+    echo -e "  ${RED}PERINGATAN: Ini akan menimpa database & config saat ini!${NC}"
+    read -rp "  Lanjutkan? [y/N]: " rb_confirm
+    if [[ "$rb_confirm" != "y" && "$rb_confirm" != "Y" ]]; then
+        echo -e "  ${YELLOW}Restore dibatalkan.${NC}"; sleep 2; return
+    fi
+
+    local tmp_restore="/tmp/vpn-restore-$$"
+    mkdir -p "$tmp_restore"
+    tar -xzf "$selected" -C "$tmp_restore" 2>/dev/null
+
+    # Restore MySQL
+    if [[ -f "$tmp_restore/ordervpn.sql" ]]; then
+        echo -e "  ${CYAN}→${NC} Restoring MySQL database..."
+        if ! command -v mysql &>/dev/null; then
+            echo -e "  ${RED}✘${NC} mysql CLI not found! Install mysql-client dulu."
+        else
+            local RMYSQL_CMD="mysql"
+            [[ -f /etc/mysql/debian.cnf ]] && RMYSQL_CMD="mysql --defaults-file=/etc/mysql/debian.cnf"
+            $RMYSQL_CMD ordervpn < "$tmp_restore/ordervpn.sql" 2>/dev/null && \
+                echo -e "  ${GREEN}✔${NC} Database restored!" || \
+                echo -e "  ${RED}✘${NC} Database restore failed!"
+        fi
+    fi
+
+    # Restore config files
+    echo -e "  ${CYAN}→${NC} Restoring config files..."
+    for f in domain .domain_type akun .bot_token .chat_id .payment_info xray.crt xray.key config.json; do
+        if [[ -f "$tmp_restore/$f" ]]; then
+            case "$f" in
+                domain|.domain_type|akun|.bot_token|.chat_id|.payment_info)
+                    cp "$tmp_restore/$f" "/root/$f" 2>/dev/null ;;
+                xray.crt|xray.key)
+                    cp "$tmp_restore/$f" "/etc/xray/$f" 2>/dev/null ;;
+                config.json)
+                    cp "$tmp_restore/$f" "/usr/local/etc/xray/config.json" 2>/dev/null ;;
+            esac
+        fi
+    done
+    echo -e "  ${GREEN}✔${NC} Config files restored!"
+
+    # Restart services
+    echo -e "  ${CYAN}→${NC} Restarting services..."
+    systemctl restart xray 2>/dev/null || true
+    systemctl restart nginx 2>/dev/null || true
+    echo -e "  ${GREEN}✔${NC} Services restarted!"
+
+    rm -rf "$tmp_restore"
+    echo -e "\n  ${GREEN}╔════════════════════════════════╗${NC}"
+    echo -e "  ${GREEN}║   RESTORE BERHASIL!          ║${NC}"
+    echo -e "  ${GREEN}╚════════════════════════════════╝${NC}"
+    echo -e "  ${YELLOW}Semua data & config telah dikembalikan.${NC}"
+    echo ""; read -rp "  Press any key to back..."
+}
 
 _menu_backup() {
 
