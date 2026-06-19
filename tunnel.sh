@@ -9308,11 +9308,11 @@ PAYEOF
 
     chmod 600 "$PAYMENT_FILE"
 
-
-
-
-
-
+    # Pastikan Python3 tersedia sebelum install bot service
+    command -v python3 >/dev/null 2>&1 || {
+        echo -e "  ${CYAN}Installing Python3...${NC}"
+        apt-get install -y python3 python3-pip >/dev/null 2>&1 || true
+    }
 
     _install_bot_service
 
@@ -27697,7 +27697,7 @@ DBEOF
 
 
 
-        systemctl restart "$svc" >> "$LOG" 2>&1
+        systemctl restart "$svc" >> "$LOG" 2>&1 || true
 
 
 
@@ -30593,7 +30593,10 @@ DDOSEOF
 
     systemctl daemon-reload 2>/dev/null
 
-
+    # Pastikan iptables tersedia (Ubuntu 22+ default nftables)
+    command -v iptables >/dev/null 2>&1 || {
+        apt-get install -y iptables >/dev/null 2>&1 || true
+    }
 
     systemctl enable ddos-protection 2>/dev/null || true
 
