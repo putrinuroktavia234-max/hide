@@ -26621,35 +26621,47 @@ auto_install() {
 
 
 
-    for attempt in 1 2 3; do
+        echo -e "  ${YELLOW}Menginstall Xray-Core...${NC}"
 
-
-
-        echo -e "  ${YELLOW}Menginstall Xray-Core (percobaan $attempt)...${NC}"
-
-
-
-        if bash <(curl -Ls --max-time 90 --retry 3 https://github.com/XTLS/Xray-install/raw/main/install-release.sh) >> "$LOG" 2>&1; then
-
-
-
-            xray_installed=1; break
-
-
-
+        if bash <(curl -Ls --max-time 120 --retry 2 https://github.com/XTLS/Xray-install/raw/main/install-release.sh) >> "$LOG" 2>&1; then
+            xray_installed=1
+        else
+            # Fallback: direct binary download dari GitHub releases
+            echo -e "  ${YELLOW}Install script gagal, mencoba direct binary download...${NC}"
+            command -v unzip >/dev/null 2>&1 || apt-get install -y unzip >/dev/null 2>&1 || true
+            local xray_latest=$(curl -sL --max-time 30 https://api.github.com/repos/XTLS/Xray-core/releases/latest 2>/dev/null | grep '"tag_name"' | head -1 | sed 's/.*"\([^"]*\)".*/\1/')
+            if [[ -n "$xray_latest" ]]; then
+                local xray_url="https://github.com/XTLS/Xray-core/releases/download/${xray_latest}/Xray-linux-64.zip"
+                if curl -L --max-time 120 --retry 2 -o /tmp/xray.zip "$xray_url" 2>/dev/null; then
+                    unzip -o /tmp/xray.zip -d /tmp/xray-tmp >/dev/null 2>&1
+                    if [[ -f /tmp/xray-tmp/xray ]]; then
+                        cp /tmp/xray-tmp/xray /usr/local/bin/xray
+                        chmod +x /usr/local/bin/xray
+                        mkdir -p /var/log/xray /usr/local/etc/xray
+                        # Install systemd service
+                        if [[ -f /tmp/xray-tmp/systemd/system/xray.service ]]; then
+                            cp /tmp/xray-tmp/systemd/system/xray.service /etc/systemd/system/
+                        else
+                            cat > /etc/systemd/system/xray.service << 'XRAYUNIT'
+[Unit]
+Description=Xray Service
+After=network.target
+[Service]
+Type=simple
+ExecStart=/usr/local/bin/xray run -config /usr/local/etc/xray/config.json
+Restart=on-failure
+[Install]
+WantedBy=multi-user.target
+XRAYUNIT
+                        fi
+                        systemctl daemon-reload
+                        xray_installed=1
+                        echo -e "  ${GREEN}✔${NC} Xray direct binary installed" >> "$LOG"
+                    fi
+                    rm -rf /tmp/xray.zip /tmp/xray-tmp
+                fi
+            fi
         fi
-
-
-
-        echo -e "  ${YELLOW}Xray install attempt $attempt gagal, retry...${NC}"
-
-
-
-        sleep 5
-
-
-
-    done
 
 
 
