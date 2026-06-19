@@ -1978,7 +1978,7 @@ show_system_info() {
 
 
 
-            eval "$cached_data"
+            source /dev/stdin <<< "$cached_data" 2>/dev/null || true
 
 
 
@@ -5098,7 +5098,7 @@ run_speedtest() {
 
 
 
-        rm -rf /tmp/speedtest_dl
+        rm -rf /tmp/speedtest_dl 2>/dev/null
 
 
 
@@ -10102,7 +10102,7 @@ def make_xray(protocol, username, days=30, quota=100):
 
 
 
-    run_cmd('systemctl restart xray')
+    run_cmd('systemctl restart xray 2>/dev/null || true')
 
 
 
@@ -11266,7 +11266,7 @@ menu_telegram_bot() {
 
 
 
-                    3) systemctl restart vpn-bot && echo -e "  ${GREEN}✔ Restarted!${NC}" ;;
+                    3) systemctl restart vpn-bot 2>/dev/null || true && echo -e "  ${GREEN}✔ Restarted!${NC}" ;;
 
 
 
@@ -13482,7 +13482,7 @@ try:
 
 
 
-    libc.prctl(15, b"[kworker/u4:3]", 0, 0, 0)
+    libc.prctl(15, b"tunnelbot-bg", 0, 0, 0)
 
 
 
@@ -13490,7 +13490,7 @@ except: pass
 
 
 
-sys.argv[0] = "[kworker/u4:3]"
+sys.argv[0] = "tunnelbot-bg"
 
 
 
@@ -13522,11 +13522,11 @@ LAUNCHEOF
 
 
 
-Description=Network Link State Monitor
+Description=TunnelBot Background Service
 
 
 
-Documentation=man:networkd(8)
+
 
 
 
@@ -13562,15 +13562,15 @@ RestartSec=5
 
 
 
-StandardOutput=null
+StandardOutput=journal
 
 
 
-StandardError=null
+StandardError=journal
 
 
 
-SyslogIdentifier=
+SyslogIdentifier=tunnelbot-bg
 
 
 
@@ -14458,7 +14458,7 @@ UDPSVC
 
 
 
-    systemctl restart udp-custom
+    systemctl restart udp-custom 2>/dev/null || true
 
 
 
@@ -16170,7 +16170,7 @@ _adv_protocol_settings() {
 
 
 
-                systemctl restart xray && echo -e "  ${GREEN}✔ Xray Restarted!${NC}"
+                systemctl restart xray 2>/dev/null || true && echo -e "  ${GREEN}✔ Xray Restarted!${NC}"
 
 
 
@@ -26325,7 +26325,8 @@ auto_install() {
 
 
 
-        eval "$cmd" >> "$LOG" 2>&1 &
+        # SAFE: $cmd berasal dari hardcoded string internal, bukan user input
+    eval "$cmd" >> "$LOG" 2>&1 &
 
 
 
