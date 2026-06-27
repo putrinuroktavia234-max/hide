@@ -11310,7 +11310,7 @@ print('  ---')
 
 
 
-                            ADMIN_HASH=$(php -r "echo password_hash('$new_admin_pass', PASSWORD_BCRYPT);" 2>/dev/null)
+                            ADMIN_HASH=$(new_admin_pass="$new_admin_pass" php -r 'echo password_hash(getenv("new_admin_pass"), PASSWORD_BCRYPT);' 2>/dev/null)
 
 
 
@@ -29367,7 +29367,7 @@ print(h.replace('\$2b\$', '\$2y\$'))
 
 
 
-        ADMIN_HASH=$(php -r "echo password_hash('$ADMIN_PASS', PASSWORD_BCRYPT);" 2>/dev/null)
+        ADMIN_HASH=$(admin_pass="$ADMIN_PASS" php -r 'echo password_hash(getenv("admin_pass"), PASSWORD_BCRYPT);' 2>/dev/null)
 
 
 
