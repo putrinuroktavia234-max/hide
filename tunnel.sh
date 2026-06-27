@@ -29083,6 +29083,45 @@ menu_ordervpn() {
 
 
 
+            9)
+
+                clear; print_menu_header "GANTI PASSWORD ADMIN"
+
+                if [[ ! -f /root/.ordervpn_db ]]; then
+                    echo -e "  ${RED}OrderVPN belum diinstall!${NC}"
+                    echo ""; read -rp "  Tekan ENTER..."
+                    continue
+                fi
+
+                source /root/.ordervpn_db
+
+                echo -e "  ${YELLOW}Password minimal 6 karakter${NC}"
+                echo ""
+
+                while true; do
+                    read -rsp "  Password baru untuk admin: " new_admin_pass
+                    echo ""
+                    [[ -z "$new_admin_pass" ]] && { echo -e "  ${RED}Password tidak boleh kosong!${NC}"; sleep 2; continue; }
+                    if [[ ${#new_admin_pass} -lt 6 ]]; then
+                        echo -e "  ${RED}Password minimal 6 karakter!${NC}"
+                        sleep 2
+                        continue
+                    fi
+                    break
+                done
+
+                ADMIN_HASH=$(new_admin_pass="$new_admin_pass" php -r 'echo password_hash(getenv("new_admin_pass"), PASSWORD_BCRYPT);' 2>/dev/null)
+
+                if [[ -n "$ADMIN_HASH" ]]; then
+                    mysql -u "$DB_USER" -p"$DB_PASS" "$DB_NAME" -e "UPDATE users SET password='$ADMIN_HASH' WHERE username='admin';" 2>/dev/null
+                    echo "$new_admin_pass" > /root/.ordervpn_admin
+                    chmod 600 /root/.ordervpn_admin
+                    echo -e "  ${GREEN}✔ Password admin berhasil diubah!${NC}"
+                else
+                    echo -e "  ${RED}✘ Gagal mengenkripsi password! Pastikan PHP tersedia.${NC}"
+                fi
+
+                echo ""; read -rp "  Tekan ENTER..." ;;
             0) return ;;
 
 
