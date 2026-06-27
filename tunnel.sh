@@ -27892,6 +27892,21 @@ SUDOEOF
 
 }
 
+    # Override view files dari folder decoded/ jika ada
+    local DECODED_DIR="$(dirname "$(readlink -f "$0")")/decoded"
+    if [[ -d "$DECODED_DIR" ]]; then
+        echo -e "  ${CYAN}Menggunakan file view dari decoded/...${NC}"
+        local OV_DIR="/var/www/html/ordervpn"
+        # Pastikan subdirektori admin ada
+        mkdir -p "$OV_DIR/admin"
+        [[ -f "$DECODED_DIR/index.php" ]]         && cp "$DECODED_DIR/index.php" "$OV_DIR/index.php"         && echo -e "  ${GREEN}✔${NC} index.php"
+        [[ -f "$DECODED_DIR/dashboard.php" ]]      && cp "$DECODED_DIR/dashboard.php" "$OV_DIR/dashboard.php" && echo -e "  ${GREEN}✔${NC} dashboard.php"
+        [[ -f "$DECODED_DIR/admin_index.php" ]]    && cp "$DECODED_DIR/admin_index.php" "$OV_DIR/admin/index.php" && echo -e "  ${GREEN}✔${NC} admin/index.php"
+        [[ -f "$DECODED_DIR/change_password.php" ]] && cp "$DECODED_DIR/change_password.php" "$OV_DIR/change_password.php" && echo -e "  ${GREEN}✔${NC} change_password.php"
+        echo -e "  ${GREEN}✔ File view dari decoded/ berhasil di-copy${NC}"
+    fi
+
+
 
 
 
