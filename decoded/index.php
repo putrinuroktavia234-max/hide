@@ -1,7 +1,7 @@
 <?php
 require_once __DIR__.'/includes/config.php';
 if (session_status()===PHP_SESSION_NONE) session_start();
-if (isset($_SESSION['user_id'])) { header('Location: /ordervpn/dashboard.php'); exit; }
+if (isset($_SESSION['user_id'])) { header('Location: /dashboard.php'); exit; }
 
 $appName = getSetting('app_name','OrderVPN');
 $error = ''; $success = '';
@@ -27,7 +27,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
                     $_SESSION['saldo']=$user['saldo'];
                     $ip=$_SERVER['HTTP_X_FORWARDED_FOR']??$_SERVER['REMOTE_ADDR'];
                     $db->prepare("UPDATE users SET ip_address=? WHERE id=?")->execute([$ip,$user['id']]);
-                    header('Location: /ordervpn/dashboard.php'); exit;
+                    header('Location: /dashboard.php'); exit;
                 }
             } else { $error='Username atau password salah!'; }
         }

@@ -574,7 +574,7 @@ label {
   <?php if($role==='admin'):?>
   <div class="sidebar-section">Admin</div>
   <div class="sidebar-nav">
-    <a class="nav-item" href="/ordervpn/admin/">
+    <a class="nav-item" href="/admin/">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
       Admin Panel
     </a>
@@ -589,7 +589,7 @@ label {
         <div class="user-role"><?=$role==='admin'?'Admin':'User'?></div>
       </div>
     </div>
-    <a href="/ordervpn/api/logout.php" class="logout-link">
+    <a href="/api/logout.php" class="logout-link">
       <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
       Logout
     </a>
@@ -1132,7 +1132,7 @@ function doOrder() {
   const fd=new FormData();
   fd.append('server_id',serverId); fd.append('tipe',currentProto);
   fd.append('username',username); fd.append('days',currentDays);
-  fetch('/ordervpn/api/create_order.php',{method:'POST',body:fd})
+  fetch('/api/create_order.php',{method:'POST',body:fd})
   .then(r=>r.json()).then(res=>{
     btn.innerHTML='Order Sekarang';
     const box=document.getElementById('orderResult');
@@ -1160,7 +1160,7 @@ function doTrial() {
   const fd=new FormData();
   fd.append('server_id',serverId); fd.append('tipe',currentTrialProto);
   fd.append('username',username); fd.append('days',1); fd.append('is_trial',1);
-  fetch('/ordervpn/api/create_order.php',{method:'POST',body:fd})
+  fetch('/api/create_order.php',{method:'POST',body:fd})
   .then(r=>r.json()).then(res=>{
     const box=document.getElementById('trialResult');
     box.classList.add('show');
@@ -1217,7 +1217,7 @@ function confirmDelete(id,name){deleteAkunId=id;document.getElementById('deleteU
 function doDelete(){
   if(!deleteAkunId) return;
   document.getElementById('deleteBtn').innerHTML='Memproses...';
-  fetch('/ordervpn/api/delete_account.php',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'akun_id='+deleteAkunId})
+  fetch('/api/delete_account.php',{method:'POST',headers:{'Content-Type':'application/x-www-form-urlencoded'},body:'akun_id='+deleteAkunId})
   .then(r=>r.json()).then(res=>{
     closeModal('modalDelete');
     if(res.success){showAlert('pageAlert','Akun berhasil dihapus dari server!','success');setTimeout(()=>location.reload(),1500);}
@@ -1233,7 +1233,7 @@ function doTopup(){
   fd.append('amount',amount); fd.append('payment_method',method);
   const file=document.getElementById('buktiFile').files[0];
   if(file) fd.append('bukti',file);
-  fetch('/ordervpn/api/topup.php',{method:'POST',body:fd})
+  fetch('/api/topup.php',{method:'POST',body:fd})
   .then(r=>r.json()).then(res=>{
     document.getElementById('topupResult').innerHTML=res.success
       ?'<div class="alert alert-success">'+escHtml(res.message)+'</div>'
@@ -1250,7 +1250,7 @@ function saveProfile(){
   const fd=new FormData();
   fd.append('email',email); fd.append('whatsapp',wa);
   if(pass) fd.append('password',pass);
-  fetch('/ordervpn/api/update_profile.php',{method:'POST',body:fd})
+  fetch('/api/update_profile.php',{method:'POST',body:fd})
   .then(r=>r.json()).then(res=>{
     showAlert('settingAlert',res.success?'Profil berhasil disimpan!':escHtml(res.message),res.success?'success':'error');
   });

@@ -90,14 +90,14 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             $u=$db->prepare("SELECT username FROM users WHERE id=?");$u->execute([$req['user_id']]);$uname=$u->fetchColumn();
             sendTelegramNotif("Active Topup <b>{$uname}</b> ".formatRupiah($req['amount'])." disetujui");
         }
-        header('Location: /ordervpn/admin/'); exit;
+        header('Location: /admin/'); exit;
     }
 
     if ($act==='reject_topup') {
         $tid=(int)$_POST['topup_id'];
         $db->prepare("UPDATE topup_requests SET status='rejected', admin_note=?, processed_at=NOW() WHERE id=?")
            ->execute([sanitize($_POST['note']??''),$tid]);
-        header('Location: /ordervpn/admin/'); exit;
+        header('Location: /admin/'); exit;
     }
 
     if ($act==='auto_detect_server') {
@@ -109,11 +109,11 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         $authType = $_POST['auth_type'] ?? 'password';
         
         if ($authType === 'key' && empty($sshKey)) {
-            header('Location: /ordervpn/admin/?auto_error=' . urlencode('SSH Key path wajib diisi'));
+            header('Location: /admin/?auto_error=' . urlencode('SSH Key path wajib diisi'));
             exit;
         }
         if ($authType === 'password' && empty($pass)) {
-            header('Location: /ordervpn/admin/?auto_error=' . urlencode('Password wajib diisi'));
+            header('Location: /admin/?auto_error=' . urlencode('Password wajib diisi'));
             exit;
         }
         
@@ -124,7 +124,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         $nama    = sanitize($_POST['nama_server'] ?? '');
         
         if (empty($ip) || empty($pass) || empty($code)) {
-            header('Location: /ordervpn/admin/?auto_error=' . urlencode('IP, Password, dan Kode Server wajib diisi'));
+            header('Location: /admin/?auto_error=' . urlencode('IP, Password, dan Kode Server wajib diisi'));
             exit;
         }
         
@@ -134,7 +134,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
         
         if (!$result || empty($result['success'])) {
             $msg = $result['message'] ?? 'Gagal koneksi ke server remote';
-            header('Location: /ordervpn/admin/?auto_error=' . urlencode($msg));
+            header('Location: /admin/?auto_error=' . urlencode($msg));
             exit;
         }
         
@@ -163,7 +163,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
                $domain,
            ]);
         
-        header('Location: /ordervpn/admin/?auto_success=' . urlencode("Server $code ($ip) berhasil ditambahkan! Region: $lokasi"));
+        header('Location: /admin/?auto_success=' . urlencode("Server $code ($ip) berhasil ditambahkan! Region: $lokasi"));
         exit;
     }
     
@@ -177,12 +177,12 @@ if ($act==='add_server') {
                sanitize($_POST['ssh_user']??'root'), sanitize($_POST['ssh_password']??''),
                sanitize($_POST['ssh_key']??''), sanitize($_POST['domain']??''),
            ]);
-        header('Location: /ordervpn/admin/'); exit;
+        header('Location: /admin/'); exit;
     }
 
     if ($act==='delete_server') {
         $db->prepare("DELETE FROM servers WHERE id=?")->execute([(int)$_POST['server_id']]);
-        header('Location: /ordervpn/admin/'); exit;
+        header('Location: /admin/'); exit;
     }
 
     if ($act==='save_settings') {
@@ -203,22 +203,22 @@ if ($act==='add_server') {
             $fname='qris.'.$ext;
             if(move_uploaded_file($_FILES['qris_image']['tmp_name'],$uploadDir.$fname)){
                 $db->prepare("INSERT INTO app_settings (setting_key,setting_value) VALUES ('qris_image',?) ON DUPLICATE KEY UPDATE setting_value=?")
-                   ->execute(['/ordervpn/uploads/'.$fname,'/ordervpn/uploads/'.$fname]);
+                   ->execute(['/uploads/'.$fname,'/uploads/'.$fname]);
             }
         }
-        header('Location: /ordervpn/admin/?saved=1'); exit;
+        header('Location: /admin/?saved=1'); exit;
     }
 
     if ($act==='toggle_server') {
         $sid=(int)$_POST['server_id']; $s=sanitize($_POST['status']);
         $db->prepare("UPDATE servers SET status=? WHERE id=?")->execute([$s,$sid]);
-        header('Location: /ordervpn/admin/'); exit;
+        header('Location: /admin/'); exit;
     }
 
     if ($act==='delete_user') {
         $uid=(int)$_POST['user_id'];
         if($uid!==$session['user_id']) $db->prepare("DELETE FROM users WHERE id=?")->execute([$uid]);
-        header('Location: /ordervpn/admin/'); exit;
+        header('Location: /admin/'); exit;
     }
 }
 
@@ -426,8 +426,8 @@ textarea{resize:vertical;min-height:80px}
   </div>
   <div style="display:flex;gap:.5rem;align-items:center">
     <div style="display:flex;gap:.3rem">
-      <a href="/ordervpn/dashboard.php" style="padding:6px 12px;border-radius:8px;font-size:.78rem;color:var(--text-dim);transition:var(--transition);text-decoration:none" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-dim)'">User Panel</a>
-      <a href="/ordervpn/api/logout.php" style="padding:6px 12px;border-radius:8px;font-size:.78rem;color:var(--danger);transition:var(--transition);text-decoration:none" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Logout</a>
+      <a href="/dashboard.php" style="padding:6px 12px;border-radius:8px;font-size:.78rem;color:var(--text-dim);transition:var(--transition);text-decoration:none" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-dim)'">User Panel</a>
+      <a href="/api/logout.php" style="padding:6px 12px;border-radius:8px;font-size:.78rem;color:var(--danger);transition:var(--transition);text-decoration:none" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Logout</a>
     </div>
   </div>
 </div>
@@ -856,11 +856,11 @@ function startMonitorRefresh() {
 }
 
 function fetchMonitorData() {
-    fetch('/ordervpn/admin/?ajax_monitor_list&t=' + Date.now())
+    fetch('/admin/?ajax_monitor_list&t=' + Date.now())
         .then(r => r.json())
         .then(servers => {
             servers.forEach(s => {
-                fetch('/ordervpn/admin/?ajax_monitor_single=' + encodeURIComponent(s.code) + '&t=' + Date.now())
+                fetch('/admin/?ajax_monitor_single=' + encodeURIComponent(s.code) + '&t=' + Date.now())
                     .then(r => r.json())
                     .then(data => updateServerRow(s.code, data))
                     .catch(() => updateServerRow(s.code, null));
