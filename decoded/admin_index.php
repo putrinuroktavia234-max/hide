@@ -23,20 +23,16 @@ $db = getDB();
 
 // === SERVER MONITORING ===
 function fetchServerMonitor($server_id, $code, $host, $port, $ssh_user, $ssh_pass, $ssh_key) {
-    // Return JSON stats for a single server
     $cmd = "timeout 5 vpn-api monitor none none 0 0 0 --server " . escapeshellarg($code) . " 2>/dev/null";
     $out = shell_exec($cmd);
     $data = json_decode($out, true);
     if ($data && !empty($data['success'])) {
         return $data;
     }
-    // Fallback: return offline status
-    return ['success' => false, 'ping_ms' => null, 'uptime' => null, 'cpu' => null, 'ram' => null, 'disk' => null, 'ssh_count' => 0, 'vmess_count' => 0, 'vless_count' => 0, 'trojan_count' => 0, 'xray' => 'OFF', 'nginx' => 'OFF', 'ssh' => 'OFF', 'ssh_count' => 0, 'vmess_count' => 0, 'vless_count' => 0, 'trojan_count' => 0, 'xray' => 'OFF', 'nginx' => 'OFF', 'ssh' => 'OFF'];
+    return ['success' => false, 'ping_ms' => null, 'uptime' => null, 'cpu' => null, 'ram' => null, 'disk' => null, 'ssh_count' => 0, 'vmess_count' => 0, 'vless_count' => 0, 'trojan_count' => 0, 'xray' => 'OFF', 'nginx' => 'OFF', 'ssh' => 'OFF'];
 }
 
-// Endpoint: return JSON for all servers (called by AJAX)
 if (isset($_GET['ajax_monitor_single'])) {
-    // Monitor single server (called by JS per-server, parallel in browser)
     header('Content-Type: application/json');
     $code = sanitize($_GET['ajax_monitor_single'] ?? '');
     if ($code === 'local') {
@@ -67,7 +63,6 @@ if (isset($_GET['ajax_monitor_single'])) {
 }
 
 if (isset($_GET['ajax_monitor_list'])) {
-    // Return list of server codes for JS to fetch individually
     header('Content-Type: application/json');
     $codes = [['code' => 'local', 'name' => 'VPS Lokal (Master)']];
     $servers = $db->query("SELECT code_server, nama_server FROM servers WHERE status='ready' ORDER BY nama_server")->fetchAll();
@@ -122,9 +117,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             exit;
         }
         
-        // Build probe command based on auth type
         if ($authType === 'key') {
-            // For SSH key, use empty password (bridge will use key)
             $pass = '';
         }
         $code    = sanitize($_POST['code_server'] ?? '');
@@ -135,7 +128,6 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             exit;
         }
         
-        // Panggil vpn-api probe
         $cmd = "timeout 30 vpn-api probe " . escapeshellarg($ip) . " " . escapeshellarg($user) . " " . escapeshellarg($pass) . " " . $port . " 2>/dev/null";
         $output = shell_exec($cmd);
         $result = json_decode($output, true);
@@ -146,7 +138,6 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             exit;
         }
         
-        // Auto-fill dari hasil probe
         $lokasi = $result['region'] ?? 'Unknown';
         $domain = $result['domain'] ?? '';
         $flag   = detectFlag($lokasi);
@@ -155,7 +146,6 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             $nama = $result['region'] ? explode(',', $result['region'])[0] : $ip;
         }
         
-        // Simpan ke database
         $db->prepare("INSERT INTO servers (nama_server,code_server,lokasi,flag,harga_hari,harga_bulan,host,port,ssh_user,ssh_password,domain,status)
             VALUES (?,?,?,?,?,?,?,?,?,?,?,'ready')")
            ->execute([
@@ -207,7 +197,6 @@ if ($act==='add_server') {
                    ->execute([$k,sanitize($_POST[$k]),sanitize($_POST[$k])]);
             }
         }
-        // QRIS image upload
         if (!empty($_FILES['qris_image']['tmp_name'])) {
             $uploadDir=__DIR__.'/../uploads/'; if(!is_dir($uploadDir)) mkdir($uploadDir,0755,true);
             $ext=pathinfo($_FILES['qris_image']['name'],PATHINFO_EXTENSION);
@@ -256,21 +245,24 @@ $saved   = isset($_GET['saved']);
 <html lang="id">
 <head>
 <meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Admin — <?=$appName?></title>
+<title>Admin &mdash; <?=$appName?></title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #080c14;
-  --bg-alt: #0c111b;
-  --card: #111827;
-  --card-hover: #1a2235;
-  --border: #1e293b;
-  --border-light: #263348;
-  --text: #e2e8f0;
-  --text-dim: #94a3b8;
-  --muted: #64748b;
-  --primary: #6366f1;
-  --primary-dim: #4f46e5;
-  --accent: #818cf8;
+  --bg: #03050a;
+  --bg-alt: #060913;
+  --card: #0c1120;
+  --card-hover: #111830;
+  --border: rgba(20, 40, 70, 0.35);
+  --border-light: rgba(25, 45, 75, 0.5);
+  --text: #e8edf5;
+  --text-dim: #8b97b5;
+  --muted: #3d4a6a;
+  --primary: #059669;
+  --primary-dim: #047857;
+  --accent: #34d399;
   --success: #10b981;
   --success-bg: rgba(16,185,129,0.1);
   --warning: #f59e0b;
@@ -278,12 +270,12 @@ $saved   = isset($_GET['saved']);
   --danger-bg: rgba(239,68,68,0.08);
   --info: #3b82f6;
   --purple: #8b5cf6;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 16px;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 18px;
   --shadow: 0 1px 3px rgba(0,0,0,.3);
-  --shadow-lg: 0 8px 25px rgba(0,0,0,.4);
-  --shadow-glow: 0 4px 12px rgba(99,102,241,0.3);
+  --shadow-lg: 0 8px 25px rgba(0,0,0,.5);
+  --shadow-glow: 0 4px 12px rgba(5,150,105,0.25);
   --transition: 0.2s cubic-bezier(.4,0,.2,1);
 }
 *{box-sizing:border-box;margin:0;padding:0}
@@ -296,16 +288,20 @@ body{
 a{color:var(--accent);text-decoration:none;transition:var(--transition)}
 a:hover{color:var(--primary)}
 
+/* Grain overlay */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px 256px}
+
 .topbar{
   position:sticky;top:0;z-index:100;
   display:flex;align-items:center;justify-content:space-between;
   padding:0 24px;height:60px;
-  background:rgba(12,17,27,.85);
-  backdrop-filter:blur(16px) saturate(180%);
+  background:rgba(8,13,25,.85);
+  backdrop-filter:blur(16px) saturate(180%);-webkit-backdrop-filter:blur(16px) saturate(180%);
   border-bottom:1px solid var(--border);gap:16px;
 }
-.topbar-brand{font-size:1.1em;font-weight:700;background:linear-gradient(135deg,var(--primary),var(--accent));-webkit-background-clip:text;background-clip:text;color:transparent;letter-spacing:-.3px}
-.admin-badge{font-size:.75em;font-weight:600;text-transform:uppercase;letter-spacing:.8px;background:rgba(99,102,241,.15);color:var(--primary);padding:4px 10px;border-radius:20px;margin-left:6px}
+.topbar-brand{font-family:'Space Grotesk',sans-serif;font-size:1.15em;font-weight:700;letter-spacing:-.3px}
+.topbar-brand span{color:var(--accent)}
+.admin-badge{font-size:.72em;font-weight:600;text-transform:uppercase;letter-spacing:.6px;background:rgba(5,150,105,.12);color:var(--accent);padding:4px 12px;border-radius:20px;margin-left:8px}
 
 .tabs-bar{
   display:flex;flex-wrap:wrap;gap:4px;
@@ -319,10 +315,10 @@ a:hover{color:var(--primary)}
   background:transparent;border:none;color:var(--text-dim);
   font-size:.82em;font-weight:500;cursor:pointer;
   transition:var(--transition);letter-spacing:.1px;
-  white-space:nowrap;
+  white-space:nowrap;font-family:inherit;
 }
-.tabs-bar .tab-btn:hover{background:rgba(99,102,241,.08);color:var(--text)}
-.tabs-bar .tab-btn.active{background:rgba(99,102,241,.12);color:var(--primary);font-weight:600}
+.tabs-bar .tab-btn:hover{background:rgba(5,150,105,.06);color:var(--text)}
+.tabs-bar .tab-btn.active{background:rgba(5,150,105,.1);color:var(--accent);font-weight:600}
 .tabs-bar .tab-btn .badge-count{
   display:inline-flex;align-items:center;justify-content:center;
   background:var(--danger);color:#fff;
@@ -330,7 +326,7 @@ a:hover{color:var(--primary)}
   border-radius:99px;margin-left:4px;vertical-align:middle;
 }
 
-.content-wrap{padding:24px 28px;max-width:1280px}
+.content-wrap{padding:24px 28px;max-width:1280px;position:relative;z-index:1}
 
 .page{display:none}
 .page.active{display:block;animation:fadeIn .25s ease}
@@ -353,7 +349,7 @@ a:hover{color:var(--primary)}
 .si-orders::after{background:linear-gradient(90deg,var(--warning),#fbbf24)}
 .si-revenue::after{background:linear-gradient(90deg,var(--purple),#a78bfa)}
 .stat-icon{width:44px;height:44px;border-radius:var(--radius-sm);display:flex;align-items:center;justify-content:center;font-weight:700;font-size:.9em;flex-shrink:0}
-.si-users .stat-icon{background:rgba(99,102,241,.15);color:var(--primary)}
+.si-users .stat-icon{background:rgba(5,150,105,.12);color:var(--primary)}
 .si-vpn .stat-icon{background:rgba(16,185,129,.12);color:var(--success)}
 .si-orders .stat-icon{background:rgba(245,158,11,.12);color:var(--warning)}
 .si-revenue .stat-icon{background:rgba(139,92,246,.12);color:var(--purple)}
@@ -364,7 +360,7 @@ a:hover{color:var(--primary)}
 table{width:100%;border-collapse:collapse;font-size:.86em}
 th{text-align:left;padding:12px 14px;font-size:.72em;font-weight:600;text-transform:uppercase;letter-spacing:.6px;color:var(--muted);border-bottom:2px solid var(--border);white-space:nowrap}
 td{padding:11px 14px;border-bottom:1px solid var(--border);color:var(--text-dim)}
-tr:hover td{background:rgba(99,102,241,.03)}
+tr:hover td{background:rgba(5,150,105,.03)}
 .text-mono{font-family:'SF Mono','Fira Code','Consolas',monospace;font-size:.82em}
 
 .badge{display:inline-block;padding:3px 10px;border-radius:20px;font-size:.72em;font-weight:600;letter-spacing:.4px;text-transform:uppercase;white-space:nowrap}
@@ -377,9 +373,10 @@ tr:hover td{background:rgba(99,102,241,.03)}
 .b-online,.b-yes{background:var(--success-bg);color:var(--success)}
 .b-warning{background:rgba(245,158,11,.1);color:var(--warning)}
 
-.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:var(--radius-sm);font-size:.84em;font-weight:600;letter-spacing:.2px;border:none;cursor:pointer;transition:var(--transition);white-space:nowrap}
-.btn-primary{background:linear-gradient(135deg,var(--primary),#7c3aed);color:#fff}
+.btn{display:inline-flex;align-items:center;justify-content:center;gap:6px;padding:9px 18px;border-radius:var(--radius-sm);font-size:.84em;font-weight:600;letter-spacing:.2px;border:none;cursor:pointer;transition:var(--transition);white-space:nowrap;font-family:inherit}
+.btn-primary{background:linear-gradient(135deg,var(--primary),var(--primary-dim));color:#fff}
 .btn-primary:hover{box-shadow:var(--shadow-glow);transform:translateY(-1px)}
+.btn-primary:active{transform:translateY(0)}
 .btn-green{background:var(--success-bg);color:var(--success);border:1px solid rgba(16,185,129,.25)}
 .btn-green:hover{background:rgba(16,185,129,.25)}
 .btn-red{background:var(--danger-bg);color:var(--danger);border:1px solid rgba(239,68,68,.2)}
@@ -392,8 +389,8 @@ tr:hover td{background:rgba(99,102,241,.03)}
 .btn-xs{padding:3px 8px;font-size:.7em;border-radius:6px}
 
 label{display:block;margin-bottom:6px;font-size:.78em;font-weight:600;text-transform:uppercase;letter-spacing:.5px;color:var(--muted)}
-input,select,textarea{width:100%;padding:10px 14px;background:var(--bg-alt);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.9em;font-family:inherit;transition:var(--transition);outline:none}
-input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+input,select,textarea{width:100%;padding:10px 14px;background:rgba(3,5,10,.5);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text);font-size:.9em;font-family:inherit;transition:var(--transition);outline:none}
+input:focus,select:focus,textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(5,150,105,.1)}
 select{cursor:pointer}
 textarea{resize:vertical;min-height:80px}
 .form-group{margin-bottom:14px}
@@ -415,21 +412,23 @@ textarea{resize:vertical;min-height:80px}
   .stats{grid-template-columns:1fr 1fr}
   .form-row{flex-direction:column}
   .topbar{padding:0 16px}
+  .content-wrap{padding:16px}
 }
 @media(max-width:480px){.stats{grid-template-columns:1fr}}
 </style>
 </head>
 <body>
+<div class="grain"></div>
 <div class="topbar">
   <div class="topbar-brand">
     <span><?=getSetting('app_logo','OVPN')?></span>
     <?=$appName?> <span class="admin-badge">Admin</span>
   </div>
   <div style="display:flex;gap:.5rem;align-items:center">
-    <div class="sidebar-links">
-                    <a href="/ordervpn/dashboard.php" class="sidebar-link">User Panel</a>
-    <a href="/ordervpn/api/logout.php" class="sidebar-link danger">Logout</a>
-                </div>
+    <div style="display:flex;gap:.3rem">
+      <a href="/ordervpn/dashboard.php" style="padding:6px 12px;border-radius:8px;font-size:.78rem;color:var(--text-dim);transition:var(--transition);text-decoration:none" onmouseover="this.style.color='var(--text)'" onmouseout="this.style.color='var(--text-dim)'">User Panel</a>
+      <a href="/ordervpn/api/logout.php" style="padding:6px 12px;border-radius:8px;font-size:.78rem;color:var(--danger);transition:var(--transition);text-decoration:none" onmouseover="this.style.opacity='.7'" onmouseout="this.style.opacity='1'">Logout</a>
+    </div>
   </div>
 </div>
 
@@ -445,117 +444,115 @@ textarea{resize:vertical;min-height:80px}
 </div>
 
 <div class="content-wrap">
-  <?php if($saved):?><div class="alert alert-success">Settings saved successfully.</div><?php endif;?>
+  <?php if($saved):?><div class="alert alert-success"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg> Settings saved successfully.</div><?php endif;?>
 
   <!-- DASHBOARD -->
   <div class="page active" id="tab-dashboard">
     <div class="stats">
-      <div class="stat-card si-users"><div class="stat-icon">U</div><div class="stat-val"><?=$stats['users']?></div><div class="stat-label">Total Users</div></div>
-      <div class="stat-card si-vpn"><div class="stat-icon">V</div><div class="stat-val"><?=$stats['akun']?></div><div class="stat-label">Akun Aktif</div></div>
-      <div class="stat-card si-orders"><div class="stat-icon">O</div><div class="stat-val"><?=$stats['orders']?></div><div class="stat-label">Total Order</div></div>
-      <div class="stat-card si-revenue"><div class="stat-icon">Rp</div><div class="stat-val"><?=formatRupiah($stats['revenue'])?></div><div class="stat-label">Total Revenue</div></div>
-      <div class="stat-card"><div class="stat-icon">!</div><div class="stat-val" style="color:var(--warning)"><?=$stats['topup_p']?></div><div class="stat-label">Topup Pending</div></div>
+      <div class="stat-card si-users"><div class="stat-icon">U</div><div><div class="stat-val"><?=$stats['users']?></div><div class="stat-label">Total Users</div></div></div>
+      <div class="stat-card si-vpn"><div class="stat-icon">V</div><div><div class="stat-val"><?=$stats['akun']?></div><div class="stat-label">Akun Aktif</div></div></div>
+      <div class="stat-card si-orders"><div class="stat-icon">O</div><div><div class="stat-val"><?=$stats['orders']?></div><div class="stat-label">Total Order</div></div></div>
+      <div class="stat-card si-revenue"><div class="stat-icon">Rp</div><div><div class="stat-val"><?=formatRupiah($stats['revenue'])?></div><div class="stat-label">Total Revenue</div></div></div>
+      <div class="stat-card"><div class="stat-icon" style="background:rgba(245,158,11,.12);color:var(--warning)">!</div><div><div class="stat-val" style="color:var(--warning)"><?=$stats['topup_p']?></div><div class="stat-label">Topup Pending</div></div></div>
     </div>
     <div class="card">
       <div class="card-header"><div class="card-title">Pending Topup</div></div>
       <div class="card-body">
         <?php if(empty($pendingTopups)):?><p style="color:var(--muted);font-size:.875rem">Tidak ada topup pending.</p>
         <?php else: foreach($pendingTopups as $t):?>
-        <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem;background:var(--card2);border-radius:10px;margin-bottom:.5rem;border:1px solid #92400e44;gap:1rem;flex-wrap:wrap">
+        <div style="display:flex;align-items:center;justify-content:space-between;padding:.75rem;background:rgba(245,158,11,.03);border-radius:10px;margin-bottom:.5rem;border:1px solid rgba(245,158,11,.15);gap:1rem;flex-wrap:wrap">
           <div>
             <div style="font-weight:600;font-size:.875rem"><?=htmlspecialchars($t['username'])?></div>
-            <div style="font-size:.75rem;color:var(--muted)"><?=htmlspecialchars($t['payment_method'])?> · <?=date('d M Y H:i',strtotime($t['created_at']))?></div>
-            <?php if($t['bukti_transfer']):?><a href="<?=htmlspecialchars($t['bukti_transfer'])?>" target="_blank" class="btn btn-outline" style="margin-top:.35rem;font-size:.7rem">View Bukti</a><?php endif;?>
+            <div style="font-size:.75rem;color:var(--muted)"><?=htmlspecialchars($t['payment_method'])?> &middot; <?=date('d M Y H:i',strtotime($t['created_at']))?></div>
+            <?php if($t['bukti_transfer']):?><a href="<?=htmlspecialchars($t['bukti_transfer'])?>" target="_blank" class="btn btn-outline btn-sm" style="margin-top:.35rem;font-size:.7rem">View Bukti</a><?php endif;?>
           </div>
-          <div style="font-size:1rem;font-weight:800;color:var(--yellow)"><?=formatRupiah($t['amount'])?></div>
-              <hr style="border-color:#1e3a5f;margin:1.5rem 0 1rem">
-              <h3 style="font-size:1rem;font-weight:700;color:#f1f5f9;margin-bottom:1rem;">[ Pengumuman / Promo di Halaman Login ]</h3>
-              <p style="font-size:.78rem;color:#64748b;margin-bottom:1rem;">
-                Format: <code style="background:#0a1628;padding:2px 6px;border-radius:4px;">BADGE|TEKS</code> — BADGE: BARU, PROMO, atau INFO. Kosongkan untuk menyembunyikan.
-              </p>
+          <div style="font-size:1rem;font-weight:800;color:var(--warning)"><?=formatRupiah($t['amount'])?></div>
+          <hr style="border-color:rgba(20,40,70,.6);margin:1.5rem 0 1rem">
+          <h3 style="font-size:1rem;font-weight:700;color:var(--text);margin-bottom:1rem;">Pengumuman / Promo di Halaman Login</h3>
+          <p style="font-size:.78rem;color:var(--muted);margin-bottom:1rem;">
+            Format: <code style="background:rgba(3,5,10,.5);padding:2px 6px;border-radius:4px;">BADGE|TEKS</code> &mdash; BADGE: BARU, PROMO, atau INFO. Kosongkan untuk menyembunyikan.
+          </p>
 
-              <div class="form-group">
-                <label class="lbl">Pengumuman 1</label>
-                <div style="display:flex;gap:.5rem;">
-                  <select name="announce_1_badge" style="width:100px;padding:.7rem .6rem;background:#0a1628;border:1px solid #1e3a5f;border-radius:8px;color:#f1f5f9;font-size:.85rem;font-family:inherit;">
-                    <option value="BARU">BARU</option>
-                    <option value="PROMO">PROMO</option>
-                    <option value="INFO">INFO</option>
-                  </select>
-                  <input type="text" name="announce_1_text" placeholder="Teks pengumuman 1..."
-                         style="flex:1" value="">
-                </div>
-                <input type="hidden" name="announce_1" id="announce_1_final" value="<?=htmlspecialchars(getSetting('announce_1',''))?>">
-              </div>
+          <div class="form-group">
+            <label>Pengumuman 1</label>
+            <div style="display:flex;gap:.5rem;">
+              <select name="announce_1_badge" style="width:100px;padding:.7rem .6rem;background:rgba(3,5,10,.5);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;font-family:inherit;">
+                <option value="BARU">BARU</option>
+                <option value="PROMO">PROMO</option>
+                <option value="INFO">INFO</option>
+              </select>
+              <input type="text" name="announce_1_text" placeholder="Teks pengumuman 1..."
+                     style="flex:1" value="">
+            </div>
+            <input type="hidden" name="announce_1" id="announce_1_final" value="<?=htmlspecialchars(getSetting('announce_1',''))?>">
+          </div>
 
-              <div class="form-group">
-                <label class="lbl">Pengumuman 2</label>
-                <div style="display:flex;gap:.5rem;">
-                  <select name="announce_2_badge" style="width:100px;padding:.7rem .6rem;background:#0a1628;border:1px solid #1e3a5f;border-radius:8px;color:#f1f5f9;font-size:.85rem;font-family:inherit;">
-                    <option value="BARU">BARU</option>
-                    <option value="PROMO">PROMO</option>
-                    <option value="INFO">INFO</option>
-                  </select>
-                  <input type="text" name="announce_2_text" placeholder="Teks pengumuman 2..."
-                         style="flex:1" value="">
-                </div>
-                <input type="hidden" name="announce_2" id="announce_2_final" value="<?=htmlspecialchars(getSetting('announce_2',''))?>">
-              </div>
+          <div class="form-group">
+            <label>Pengumuman 2</label>
+            <div style="display:flex;gap:.5rem;">
+              <select name="announce_2_badge" style="width:100px;padding:.7rem .6rem;background:rgba(3,5,10,.5);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;font-family:inherit;">
+                <option value="BARU">BARU</option>
+                <option value="PROMO">PROMO</option>
+                <option value="INFO">INFO</option>
+              </select>
+              <input type="text" name="announce_2_text" placeholder="Teks pengumuman 2..."
+                     style="flex:1" value="">
+            </div>
+            <input type="hidden" name="announce_2" id="announce_2_final" value="<?=htmlspecialchars(getSetting('announce_2',''))?>">
+          </div>
 
-              <div class="form-group">
-                <label class="lbl">Pengumuman 3</label>
-                <div style="display:flex;gap:.5rem;">
-                  <select name="announce_3_badge" style="width:100px;padding:.7rem .6rem;background:#0a1628;border:1px solid #1e3a5f;border-radius:8px;color:#f1f5f9;font-size:.85rem;font-family:inherit;">
-                    <option value="BARU">BARU</option>
-                    <option value="PROMO">PROMO</option>
-                    <option value="INFO">INFO</option>
-                  </select>
-                  <input type="text" name="announce_3_text" placeholder="Teks pengumuman 3..."
-                         style="flex:1" value="">
-                </div>
-                <input type="hidden" name="announce_3" id="announce_3_final" value="<?=htmlspecialchars(getSetting('announce_3',''))?>">
-              </div>
+          <div class="form-group">
+            <label>Pengumuman 3</label>
+            <div style="display:flex;gap:.5rem;">
+              <select name="announce_3_badge" style="width:100px;padding:.7rem .6rem;background:rgba(3,5,10,.5);border:1px solid var(--border);border-radius:8px;color:var(--text);font-size:.85rem;font-family:inherit;">
+                <option value="BARU">BARU</option>
+                <option value="PROMO">PROMO</option>
+                <option value="INFO">INFO</option>
+              </select>
+              <input type="text" name="announce_3_text" placeholder="Teks pengumuman 3..."
+                     style="flex:1" value="">
+            </div>
+            <input type="hidden" name="announce_3" id="announce_3_final" value="<?=htmlspecialchars(getSetting('announce_3',''))?>">
+          </div>
 
-              <script>
-              // Combine badge + text into final hidden fields before submit
-              (function(){
-                var form = document.querySelector('form[action*="save_settings"]') || 
-                           Array.from(document.querySelectorAll('form')).find(function(f){ return f.querySelector('[name="action"][value="save_settings"]'); });
-                if(form){
-                  form.addEventListener('submit', function(){
-                    for(var i=1;i<=3;i++){
-                      var badge = form.querySelector('[name="announce_'+i+'_badge"]');
-                      var text = form.querySelector('[name="announce_'+i+'_text"]');
-                      var final = form.querySelector('#announce_'+i+'_final');
-                      if(badge && text && final){
-                        final.value = text.value.trim() ? (badge.value + '|' + text.value.trim()) : '';
-                      }
-                    }
-                  });
-                  // Pre-fill badge selects from saved values
-                  if(form){
-                    (function prefill(){
-                      for(var i=1;i<=3;i++){
-                        var final = form.querySelector('#announce_'+i+'_final');
-                        var badge = form.querySelector('[name="announce_'+i+'_badge"]');
-                        var text = form.querySelector('[name="announce_'+i+'_text"]');
-                        if(final && badge && final.value){
-                          var parts = final.value.split('|');
-                          if(parts.length >= 2){
-                            badge.value = parts[0];
-                            if(!text.value) text.value = parts.slice(1).join('|');
-                          }
-                        }
-                      }
-                    })();
+          <script>
+          (function(){
+            var form = document.querySelector('form[action*="save_settings"]') || 
+                       Array.from(document.querySelectorAll('form')).find(function(f){ return f.querySelector('[name="action"][value="save_settings"]'); });
+            if(form){
+              form.addEventListener('submit', function(){
+                for(var i=1;i<=3;i++){
+                  var badge = form.querySelector('[name="announce_'+i+'_badge"]');
+                  var text = form.querySelector('[name="announce_'+i+'_text"]');
+                  var final = form.querySelector('#announce_'+i+'_final');
+                  if(badge && text && final){
+                    final.value = text.value.trim() ? (badge.value + '|' + text.value.trim()) : '';
                   }
                 }
-              })();
-              </script>
+              });
+              if(form){
+                (function prefill(){
+                  for(var i=1;i<=3;i++){
+                    var final = form.querySelector('#announce_'+i+'_final');
+                    var badge = form.querySelector('[name="announce_'+i+'_badge"]');
+                    var text = form.querySelector('[name="announce_'+i+'_text"]');
+                    if(final && badge && final.value){
+                      var parts = final.value.split('|');
+                      if(parts.length >= 2){
+                        badge.value = parts[0];
+                        if(!text.value) text.value = parts.slice(1).join('|');
+                      }
+                    }
+                  }
+                })();
+              }
+            }
+          })();
+          </script>
 
           <div style="display:flex;gap:.4rem;flex-wrap:wrap">
-            <form method="POST" style="display:inline"><input type="hidden" name="action" value="approve_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><button type="submit" class="btn btn-green">Active Approve</button></form>
-            <form method="POST" style="display:inline"><input type="hidden" name="action" value="reject_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><input type="hidden" name="note" value="Ditolak admin"><button type="submit" class="btn btn-red">Tolak</button></form>
+            <form method="POST" style="display:inline"><input type="hidden" name="action" value="approve_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><button type="submit" class="btn btn-green btn-sm">Active Approve</button></form>
+            <form method="POST" style="display:inline"><input type="hidden" name="action" value="reject_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><input type="hidden" name="note" value="Ditolak admin"><button type="submit" class="btn btn-red btn-sm">Tolak</button></form>
           </div>
         </div>
         <?php endforeach; endif;?>
@@ -567,7 +564,7 @@ textarea{resize:vertical;min-height:80px}
   <div class="page" id="tab-topup">
     <div class="card">
       <div class="card-header"><div class="card-title"> Topup History</div></div>
-      <div class="card-body overflow-x">
+      <div class="card-body table-wrap">
         <table>
           <thead><tr><th>User</th><th>Nominal</th><th>Metode</th><th>Status</th><th>Tanggal</th><th>Server</th><th>Aksi</th></tr></thead>
           <tbody>
@@ -580,10 +577,10 @@ textarea{resize:vertical;min-height:80px}
             <td><?=date('d M Y H:i',strtotime($t['created_at']))?></td>
             <td>
               <?php if($t['status']==='pending'):?>
-              <form method="POST" style="display:inline"><input type="hidden" name="action" value="approve_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><button class="btn btn-green">Active</button></form>
-              <form method="POST" style="display:inline"><input type="hidden" name="action" value="reject_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><input type="hidden" name="note" value="Ditolak"><button class="btn btn-red">Reject</button></form>
+              <form method="POST" style="display:inline"><input type="hidden" name="action" value="approve_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><button class="btn btn-green btn-sm">Active</button></form>
+              <form method="POST" style="display:inline"><input type="hidden" name="action" value="reject_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><input type="hidden" name="note" value="Ditolak"><button class="btn btn-red btn-sm">Reject</button></form>
               <?php endif;?>
-              <?php if($t['bukti_transfer']):?><a href="<?=htmlspecialchars($t['bukti_transfer'])?>" target="_blank" class="btn btn-outline">View</a><?php endif;?>
+              <?php if($t['bukti_transfer']):?><a href="<?=htmlspecialchars($t['bukti_transfer'])?>" target="_blank" class="btn btn-outline btn-sm">View</a><?php endif;?>
             </td>
           </tr>
           <?php endforeach;?>
@@ -597,15 +594,9 @@ textarea{resize:vertical;min-height:80px}
   <div class="page" id="tab-servers">
     <div class="card">
       <div class="card-header"><div class="card-title">Server List</div><button class="btn btn-primary" onclick="document.getElementById('addServerForm').style.display=document.getElementById('addServerForm').style.display==='none'?'block':'none'">+ Tambah Server</button></div>
-      <div id="autoDetectForm" style="padding:1.25rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg, rgba(99,102,241,.05), rgba(139,92,246,.05))">
-        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
-            <div>
-                <strong style="font-size:.9rem;color:var(--primary)">⚡ Auto-Detect & Add Server</strong>
-                <p style="font-size:.72rem;color:var(--muted);margin-top:2px">Deteksi otomatis: region, domain, port, OS — tinggal isi IP & password</p>
-            </div>
-        </div>
+      <div id="addServerForm" style="display:none;padding:1.25rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(5,150,105,.04),rgba(13,148,136,.04))">
         <form method="POST">
-            <input type="hidden" name="action" value="auto_detect_server">
+            <input type="hidden" name="action" value="add_server">
             <?php echo csrfField(); ?>
             <div class="grid2">
             <div><label>Nama Server</label><input name="nama_server" placeholder="BIZNET IDC" required></div>
@@ -615,21 +606,41 @@ textarea{resize:vertical;min-height:80px}
             <div><label>IP/Host VPS</label><input name="host" placeholder="103.x.x.x" required></div>
             <div><label>Port SSH</label><input name="port" type="number" value="22"></div>
             <div><label>SSH User</label><input name="ssh_user" value="root"></div>
-            <div><label>SSH Password (opsional)</label><input name="ssh_password" type="password" placeholder="Jika tidak pakai key"></div>
-            <div><label>Path SSH Key (opsional)</label><input name="ssh_key" placeholder="/root/.ssh/id_rsa"></div>
-            <div><label>Domain VPS</label><input name="domain" placeholder="domain.com (opsional)"></div>
+            <div><label>SSH Password</label><input name="ssh_password" type="password" placeholder="Jika tidak pakai key"></div>
+            <div><label>SSH Key Path</label><input name="ssh_key" placeholder="/root/.ssh/id_rsa"></div>
+            <div><label>Domain</label><input name="domain" placeholder="domain.com (opsional)"></div>
             <div><label>Harga/Hari (Rp)</label><input name="harga_hari" type="number" value="300" required></div>
             <div><label>Harga/Bulan (Rp)</label><input name="harga_bulan" type="number" value="9000" required></div>
           </div>
-          <p style="font-size:.75rem;color:var(--muted);margin-bottom:.75rem">Ensure <code>vpn-api</code> sudah terpasang di VPS target dengan <code>install-ordervpn.sh</code></p>
-          <div class="grid2" style="margin-top:.75rem">
-                <div><label>Harga/Hari (Rp)</label><input name="harga_hari" type="number" value="300"></div>
-                <div><label>Harga/Bulan (Rp)</label><input name="harga_bulan" type="number" value="9000"></div>
-            </div>
-            <button type="submit" class="btn btn-primary">Save Server</button>
+          <button type="submit" class="btn btn-primary" style="margin-top:.75rem">Save Server</button>
         </form>
       </div>
-      <div class="card-body overflow-x">
+
+      <div id="autoDetectForm" style="padding:1.25rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(5,150,105,.04),rgba(13,148,136,.04))">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:1rem">
+            <div>
+                <strong style="font-size:.9rem;color:var(--primary)">Auto-Detect &amp; Add Server</strong>
+                <p style="font-size:.72rem;color:var(--muted);margin-top:2px">Deteksi otomatis: region, domain, port, OS &mdash; tinggal isi IP &amp; password</p>
+            </div>
+        </div>
+        <form method="POST">
+            <input type="hidden" name="action" value="auto_detect_server">
+            <?php echo csrfField(); ?>
+            <div class="grid2">
+            <div><label>Nama Server <span style="color:var(--muted);font-weight:400">(otomatis)</span></label><input name="nama_server" placeholder="BIZNET IDC"></div>
+            <div><label>Kode Server <span style="color:var(--danger)">*</span></label><input name="code_server" placeholder="sgp1" required></div>
+            <div><label>IP/Host VPS <span style="color:var(--danger)">*</span></label><input name="host" placeholder="103.x.x.x" required></div>
+            <div><label>Port SSH</label><input name="port" type="number" value="22"></div>
+            <div><label>SSH User</label><input name="ssh_user" value="root"></div>
+            <div><label>SSH Password <span style="color:var(--danger)">*</span></label><input name="ssh_password" type="password" required></div>
+            <div><label>Harga/Hari (Rp)</label><input name="harga_hari" type="number" value="300"></div>
+            <div><label>Harga/Bulan (Rp)</label><input name="harga_bulan" type="number" value="9000"></div>
+          </div>
+          <p style="font-size:.75rem;color:var(--muted);margin-bottom:.75rem">Pastikan <code style="background:rgba(3,5,10,.5);padding:2px 6px;border-radius:4px">vpn-api</code> sudah terpasang di VPS target</p>
+          <button type="submit" class="btn btn-primary"><svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg> Auto-Detect &amp; Save</button>
+        </form>
+      </div>
+      <div class="card-body table-wrap">
         <table>
           <thead><tr><th>Server</th><th>Ping</th><th>Uptime</th><th>CPU</th><th>RAM</th><th>Akun</th><th>Lokasi</th><th>Harga/Hari</th><th>Status</th><th>Aksi</th></tr></thead>
           <tbody>
@@ -649,7 +660,7 @@ textarea{resize:vertical;min-height:80px}
                 <input type="hidden" name="action" value="toggle_server">
                 <input type="hidden" name="server_id" value="<?=$s['id']?>">
                 <input type="hidden" name="status" value="<?=$s['status']==='ready'?'maintenance':'ready'?>">
-                <button class="btn btn-yellow btn-sm"><?=$s['status']==='ready'?'MNT':'▶ ON'?></button>
+                <button class="btn btn-yellow btn-sm"><?=$s['status']==='ready'?'MNT':'ON'?></button>
               </form>
               <form method="POST" style="display:inline" onsubmit="return confirm('Hapus server ini?')">
                 <input type="hidden" name="action" value="delete_server"><?php echo csrfField(); ?>
@@ -668,8 +679,8 @@ textarea{resize:vertical;min-height:80px}
   <!-- USERS -->
   <div class="page" id="tab-users">
     <div class="card">
-      <div class="card-header"><div class="card-title"> Daftar User (<?=count($users)?>)</div></div>
-      <div class="card-body overflow-x">
+      <div class="card-header"><div class="card-title">Daftar User (<?=count($users)?>)</div></div>
+      <div class="card-body table-wrap">
         <table>
           <thead><tr><th>Username</th><th>Email</th><th>Saldo</th><th>Verified</th><th>Role</th><th>Daftar</th><th>Aksi</th></tr></thead>
           <tbody>
@@ -677,16 +688,16 @@ textarea{resize:vertical;min-height:80px}
           <tr>
             <td><strong><?=htmlspecialchars($u['username'])?></strong></td>
             <td><?=htmlspecialchars($u['email'])?></td>
-            <td style="color:var(--green);font-weight:600"><?=formatRupiah($u['saldo'])?></td>
+            <td style="color:var(--success);font-weight:600"><?=formatRupiah($u['saldo'])?></td>
             <td><?=$u['is_verified']?'Active':'Pending'?></td>
-            <td><span class="badge" style="<?=$u['role']==='admin'?'background:#4c1d9522;color:#a78bfa':'background:#0a1628;color:var(--muted)'?>"><?=$u['role']?></span></td>
+            <td><span class="badge" style="<?=$u['role']==='admin'?'background:rgba(139,92,246,.15);color:#a78bfa':'background:rgba(3,5,10,.5);color:var(--muted)'?>"><?=$u['role']?></span></td>
             <td style="font-size:.75rem"><?=date('d M Y',strtotime($u['created_at']))?></td>
             <td>
               <?php if($u['role']!=='admin'):?>
               <form method="POST" style="display:inline" onsubmit="return confirm('Hapus user <?=htmlspecialchars($u['username'])?>?')">
                 <input type="hidden" name="action" value="delete_user"><?php echo csrfField(); ?>
                 <input type="hidden" name="user_id" value="<?=$u['id']?>">
-                <button class="btn btn-red btn-sm"></button>
+                <button class="btn btn-red btn-sm">Hapus</button>
               </form>
               <?php endif;?>
             </td>
@@ -701,8 +712,8 @@ textarea{resize:vertical;min-height:80px}
   <!-- ORDERS / LAPORAN -->
   <div class="page" id="tab-orders">
     <div class="card">
-      <div class="card-header"><div class="card-title"> Laporan Pembelian</div></div>
-      <div class="card-body overflow-x">
+      <div class="card-header"><div class="card-title">Laporan Pembelian</div></div>
+      <div class="card-body table-wrap">
         <table>
           <thead><tr><th>User</th><th>Keterangan</th><th>Nominal</th><th>Status</th><th>Tanggal</th></tr></thead>
           <tbody>
@@ -710,7 +721,7 @@ textarea{resize:vertical;min-height:80px}
           <tr>
             <td><?=htmlspecialchars($o['username'])?></td>
             <td><?=htmlspecialchars($o['keterangan']??'')?></td>
-            <td style="font-weight:700;color:var(--blue)"><?=formatRupiah($o['amount'])?></td>
+            <td style="font-weight:700;color:var(--info)"><?=formatRupiah($o['amount'])?></td>
             <td><span class="badge b-<?=$o['status']?>"><?=$o['status']?></span></td>
             <td style="font-size:.75rem"><?=date('d M Y H:i',strtotime($o['created_at']))?></td>
           </tr>
@@ -725,7 +736,7 @@ textarea{resize:vertical;min-height:80px}
   <div class="page" id="tab-akuns">
     <div class="card">
       <div class="card-header"><div class="card-title">All VPN Accounts</div></div>
-      <div class="card-body overflow-x">
+      <div class="card-body table-wrap">
         <table>
           <thead><tr><th>User</th><th>Username</th><th>Tipe</th><th>Server</th><th>Expired</th><th>Status</th></tr></thead>
           <tbody>
@@ -748,7 +759,7 @@ textarea{resize:vertical;min-height:80px}
   <!-- SETTINGS -->
   <div class="page" id="tab-settings">
     <form method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="action" value="save_settings"><?php echo csrfField(); ?>>
+    <input type="hidden" name="action" value="save_settings"><?php echo csrfField(); ?>
     <div class="card">
       <div class="card-header"><div class="card-title">Application Info</div></div>
       <div class="card-body">
@@ -784,14 +795,14 @@ textarea{resize:vertical;min-height:80px}
           <div><label>ShopeePay (nomor HP)</label><input name="shopee_number" placeholder="08xxxxxxxxxx" value="<?=htmlspecialchars(getSetting('shopee_number'))?>"></div>
         </div>
         <div class="section-title">QRIS</div>
-        <div><label>Upload Gambar QRIS</label><input type="file" name="qris_image" accept="image/*" style="margin-bottom:.5rem"></div>
+        <div><label>Upload Gambar QRIS</label><input type="file" name="qris_image" accept="image/*" style="margin-bottom:.5rem;padding:8px"></div>
         <?php if(getSetting('qris_image')):?><img src="<?=htmlspecialchars(getSetting('qris_image'))?>" style="max-width:150px;border-radius:8px;margin-bottom:.75rem"><?php endif;?>
       </div>
     </div>
     <div class="card">
       <div class="card-header"><div class="card-title">Email SMTP (Gmail)</div></div>
       <div class="card-body">
-        <p style="font-size:.78rem;color:var(--muted);margin-bottom:.75rem">Untuk OTP verifikasi. Gmail: aktifkan 2FA → buat App Password di myaccount.google.com/security</p>
+        <p style="font-size:.78rem;color:var(--muted);margin-bottom:.75rem">Untuk OTP verifikasi. Gmail: aktifkan 2FA &rarr; buat App Password di myaccount.google.com/security</p>
         <div class="grid3">
           <div><label>SMTP Host</label><input name="smtp_host" value="<?=htmlspecialchars(getSetting('smtp_host','smtp.gmail.com'))?>"></div>
           <div><label>Port</label><input name="smtp_port" value="<?=htmlspecialchars(getSetting('smtp_port','587'))?>"></div>
@@ -823,7 +834,8 @@ textarea{resize:vertical;min-height:80px}
     </form>
   </div>
 
-</div><!-- .content -->
+</div>
+
 <script>
 function showTab(t){
   document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
@@ -834,7 +846,6 @@ function showTab(t){
 </script>
 
 <script>
-// === SERVER MONITORING - Auto-refresh every 30s ===
 let monitorTimer = null;
 let monitorInterval = 30000;
 
@@ -845,7 +856,6 @@ function startMonitorRefresh() {
 }
 
 function fetchMonitorData() {
-    // Fetch server list, then monitor each individually (parallel in browser)
     fetch('/ordervpn/admin/?ajax_monitor_list&t=' + Date.now())
         .then(r => r.json())
         .then(servers => {
@@ -859,7 +869,7 @@ function fetchMonitorData() {
 }
 
 function updateServerRow(code, data) {
-    const safeCode = encodeURIComponent(code); // used in DOM lookup
+    const safeCode = encodeURIComponent(code);
     if (!data || !data.success) {
         updateCell('ping', code, '<span style="color:var(--danger)">OFF</span>');
         updateCell('uptime', code, '<span style="color:var(--danger)">-</span>');
@@ -888,7 +898,6 @@ function updateCell(cls, code, html) {
             el.innerHTML = html;
         });
     } catch(e) {
-        // Fallback for browsers without CSS.escape
         document.querySelectorAll('[data-code="' + code + '"].mon-' + cls).forEach(function(el) {
             el.innerHTML = html;
         });
@@ -909,9 +918,7 @@ function colorByLoad(val, type) {
     return '<span style="color:' + color + ';font-weight:600">' + val + '</span>';
 }
 
-// Start monitoring when servers tab is shown
 document.addEventListener('DOMContentLoaded', () => {
-    // Watch for tab switches
     const observer = new MutationObserver(() => {
         const serversTab = document.getElementById('tab-servers');
         if (serversTab && serversTab.classList.contains('active')) {
@@ -920,7 +927,6 @@ document.addEventListener('DOMContentLoaded', () => {
     });
     const tab = document.getElementById('tab-servers');
     if (tab) observer.observe(tab, {attributes: true, attributeFilter: ['class']});
-    // Also check on load
     if (tab && tab.classList.contains('active')) startMonitorRefresh();
 });
 </script>

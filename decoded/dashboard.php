@@ -47,24 +47,24 @@ $trialUsed->execute([$userId]); $trialUsed = (int)$trialUsed->fetchColumn();
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title><?=$appName?> — Dashboard</title>
+<title><?=$appName?> &mdash; Dashboard</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 :root {
-  --bg: #070b14;
-  --bg-alt: #0c111b;
-  --card: #111827;
-  --card-hover: #1a2235;
-  --border: #1e293b;
-  --border-light: #263348;
-  --text: #e2e8f0;
-  --text-dim: #94a3b8;
-  --muted: #64748b;
-  --primary: #6366f1;
-  --primary-dim: #4f46e5;
-  --accent: #818cf8;
+  --bg: #03050a;
+  --bg-alt: #060913;
+  --card: #0c1120;
+  --card-hover: #111830;
+  --border: rgba(20, 40, 70, 0.35);
+  --border-light: rgba(25, 45, 75, 0.5);
+  --text: #e8edf5;
+  --text-dim: #8b97b5;
+  --muted: #3d4a6a;
+  --primary: #059669;
+  --primary-dim: #047857;
+  --accent: #34d399;
   --success: #10b981;
   --success-bg: rgba(16,185,129,0.1);
   --warning: #f59e0b;
@@ -72,12 +72,12 @@ $trialUsed->execute([$userId]); $trialUsed = (int)$trialUsed->fetchColumn();
   --danger-bg: rgba(239,68,68,0.08);
   --info: #3b82f6;
   --purple: #8b5cf6;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 16px;
+  --radius: 14px;
+  --radius-sm: 10px;
+  --radius-lg: 18px;
   --shadow: 0 1px 3px rgba(0,0,0,.3);
-  --shadow-lg: 0 8px 25px rgba(0,0,0,.4);
-  --shadow-glow: 0 4px 20px rgba(99,102,241,0.25);
+  --shadow-lg: 0 8px 25px rgba(0,0,0,.5);
+  --shadow-glow: 0 4px 20px rgba(5,150,105,0.2);
   --transition: 0.25s cubic-bezier(0.16,1,0.3,1);
 }
 * { box-sizing:border-box; margin:0; padding:0; }
@@ -92,15 +92,18 @@ body {
 a { color: var(--accent); text-decoration:none; transition: var(--transition); }
 a:hover { color: var(--primary); }
 
+/* Grain overlay */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:0;opacity:0.025;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px 256px}
+
 /* Layout */
-.layout { display:flex; min-height: 100vh; }
+.layout { display:flex; min-height: 100vh; position:relative; z-index:1; }
 .sidebar {
   width: 260px; min-width: 260px;
-  background: linear-gradient(180deg, #0f1420 0%, #0a0f1a 100%);
+  background: linear-gradient(180deg, #080d19 0%, #060913 100%);
   border-right: 1px solid var(--border);
   display:flex; flex-direction:column;
   position: sticky; top:0; height: 100vh;
-  overflow-y: auto;
+  overflow-y: auto; z-index:10;
 }
 .main { flex:1; padding: 28px 32px; overflow-y: auto; max-width: 1200px; }
 
@@ -111,9 +114,10 @@ a:hover { color: var(--primary); }
   border-bottom: 1px solid var(--border);
   margin-bottom: 8px;
 }
-.sidebar-brand svg { flex-shrink:0; filter: drop-shadow(0 0 8px rgba(99,102,241,0.3)); }
+.sidebar-brand svg { flex-shrink:0; filter: drop-shadow(0 0 8px var(--shadow-glow)); }
 .sidebar-brand-text { line-height:1.3; }
-.sidebar-brand-name { font-size:1.05em; font-weight:700; color:var(--text); letter-spacing:-.2px; }
+.sidebar-brand-name { font-family:'Space Grotesk',sans-serif; font-size:1.05em; font-weight:700; color:var(--text); letter-spacing:-.2px; }
+.sidebar-brand-name em { font-style:normal; color:var(--accent); }
 .sidebar-brand-ver { font-size:.65em; color:var(--muted); font-weight:500; }
 
 .sidebar-section {
@@ -136,13 +140,13 @@ a:hover { color: var(--primary); }
   background: var(--primary); transition: var(--transition);
 }
 .sidebar-nav a.active::before, .nav-item.active::before { height: 60%; }
-.sidebar-nav a:hover, .nav-item:hover { background: rgba(99,102,241,.08); color: var(--text); }
-.sidebar-nav a.active, .nav-item.active { background: rgba(99,102,241,.12); color: var(--primary); font-weight: 600; }
+.sidebar-nav a:hover, .nav-item:hover { background: rgba(5,150,105,.06); color: var(--text); }
+.sidebar-nav a.active, .nav-item.active { background: rgba(5,150,105,.1); color: var(--primary); font-weight: 600; }
 .sidebar-nav a svg, .nav-item svg { flex-shrink:0; opacity: .7; transition: var(--transition); }
 .sidebar-nav a.active svg, .nav-item.active svg { opacity: 1; }
 .nav-badge {
   margin-left: auto;
-  background: rgba(99,102,241,.15); color: var(--primary);
+  background: rgba(5,150,105,.15); color: var(--primary);
   font-size: .65em; font-weight: 700; padding: 1px 7px;
   border-radius: 20px; min-width: 20px; text-align: center;
 }
@@ -155,15 +159,15 @@ a:hover { color: var(--primary); }
 .user-card {
   display:flex; align-items:center; gap: 10px;
   padding: 8px 10px; border-radius: var(--radius-sm);
-  background: rgba(99,102,241,.06);
-  margin-bottom: 4px; border: 1px solid rgba(99,102,241,.08);
+  background: rgba(5,150,105,.06);
+  margin-bottom: 4px; border: 1px solid rgba(5,150,105,.08);
 }
 .user-avatar {
   width: 36px; height: 36px; border-radius: 10px;
-  background: linear-gradient(135deg, var(--primary), var(--purple));
+  background: linear-gradient(135deg, var(--primary), var(--primary-dim));
   display:flex; align-items:center; justify-content:center;
   font-size: .8em; font-weight: 700; color: #fff;
-  flex-shrink:0; box-shadow: 0 2px 8px rgba(99,102,241,0.3);
+  flex-shrink:0; box-shadow: 0 2px 8px var(--shadow-glow);
 }
 .user-name { font-size: .82em; font-weight:600; color: var(--text); }
 .user-role { font-size: .65em; color: var(--muted); font-weight:500; }
@@ -173,9 +177,9 @@ a:hover { color: var(--primary); }
   font-size: .8em; font-weight: 500; color: var(--text-dim);
   transition: var(--transition);
 }
-.sidebar-footer a:hover { background: rgba(99,102,241,.08); color: var(--text); }
+.sidebar-footer a:hover { background: rgba(5,150,105,.06); color: var(--text); }
 .sidebar-footer .logout-link { color: var(--danger); }
-.sidebar-footer .logout-link:hover { background: rgba(239,68,68,.1); }
+.sidebar-footer .logout-link:hover { background: rgba(239,68,68,.08); }
 
 /* Topbar */
 .topbar {
@@ -183,7 +187,7 @@ a:hover { color: var(--primary); }
   margin-bottom: 28px; gap: 16px;
 }
 .topbar-left { display:flex; align-items:center; gap: 12px; }
-.topbar h1 { font-size:1.35em; font-weight:700; letter-spacing:-.3px; }
+.topbar h1 { font-family:'Space Grotesk',sans-serif; font-size:1.35em; font-weight:700; letter-spacing:-.3px; }
 .hamburger {
   display: none; background: none; border: none; color: var(--text-dim);
   cursor: pointer; padding: 4px;
@@ -216,7 +220,7 @@ a:hover { color: var(--primary); }
 }
 .stat-card.blue::after { background: linear-gradient(90deg, var(--primary), var(--accent)); }
 .stat-card.green::after { background: linear-gradient(90deg, var(--success), #34d399); }
-.stat-card.purple::after { background: linear-gradient(90deg, var(--purple), #a78bfa); }
+.stat-card.purple::after { background: linear-gradient(90deg, #8b5cf6, #a78bfa); }
 .stat-card.amber::after { background: linear-gradient(90deg, var(--warning), #fbbf24); }
 .stat-card:hover::after { opacity: 1; }
 .stat-card:hover { border-color: var(--border-light); box-shadow: var(--shadow-lg); transform: translateY(-2px); }
@@ -225,10 +229,10 @@ a:hover { color: var(--primary); }
   display:flex; align-items:center; justify-content:center;
   flex-shrink:0; position: relative;
 }
-.stat-icon.blue { background: rgba(99,102,241,.15); color: var(--primary); }
+.stat-icon.blue { background: rgba(5,150,105,.15); color: var(--primary); }
 .stat-icon.green { background: rgba(16,185,129,.12); color: var(--success); }
 .stat-icon.amber { background: rgba(245,158,11,.12); color: var(--warning); }
-.stat-icon.purple { background: rgba(139,92,246,.12); color: var(--purple); }
+.stat-icon.purple { background: rgba(139,92,246,.12); color: #a78bfa; }
 .stat-info { line-height:1.3; }
 .stat-val { font-size:1.5em; font-weight:700; letter-spacing:-.5px; }
 .stat-label { font-size:.72em; color: var(--muted); font-weight:500; margin-top:2px; text-transform: uppercase; letter-spacing: .04em; }
@@ -271,7 +275,7 @@ a:hover { color: var(--primary); }
   display:flex; align-items:center; justify-content:center;
   font-size: .7em; font-weight: 700; flex-shrink:0;
 }
-.akun-icon.ssh { background: rgba(99,102,241,.15); color: var(--primary); }
+.akun-icon.ssh { background: rgba(5,150,105,.15); color: var(--primary); }
 .akun-icon.vmess { background: rgba(16,185,129,.12); color: var(--success); }
 .akun-icon.vless { background: rgba(245,158,11,.12); color: var(--warning); }
 .akun-icon.trojan { background: rgba(239,68,68,.1); color: var(--danger); }
@@ -312,7 +316,7 @@ a:hover { color: var(--primary); }
   transition: var(--transition);
   white-space:nowrap;
 }
-.btn-primary { background: linear-gradient(135deg, var(--primary), #7c3aed); color: #fff; }
+.btn-primary { background: linear-gradient(135deg, var(--primary), var(--primary-dim)); color: #fff; }
 .btn-primary:hover { box-shadow: var(--shadow-glow); transform: translateY(-1px); }
 .btn-primary:active { transform: translateY(0); }
 .btn-success { background: var(--success-bg); color: var(--success); border: 1px solid rgba(16,185,129,.25); }
@@ -336,12 +340,12 @@ a:hover { color: var(--primary); }
 .badge-vmess { background: var(--success-bg); color: var(--success); }
 .badge-vless { background: rgba(245,158,11,.12); color: var(--warning); }
 .badge-trojan { background: var(--danger-bg); color: var(--danger); }
-.badge-ssh { background: rgba(99,102,241,.15); color: var(--primary); }
+.badge-ssh { background: rgba(5,150,105,.15); color: var(--primary); }
 
 /* Forms */
 input, select, textarea {
   width:100%; padding: 10px 14px;
-  background: var(--bg-alt);
+  background: rgba(3,5,10,.5);
   border: 1px solid var(--border);
   border-radius: var(--radius-sm);
   color: var(--text);
@@ -350,7 +354,7 @@ input, select, textarea {
 }
 input:focus, select:focus, textarea:focus {
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(99,102,241,.12);
+  box-shadow: 0 0 0 3px rgba(5,150,105,.1);
 }
 .form-group { margin-bottom: 14px; }
 label {
@@ -364,24 +368,24 @@ label {
 .proto-btn {
   display:flex; align-items:center; justify-content:center; gap: 5px;
   padding: 8px 6px; border-radius: var(--radius-sm);
-  background: var(--bg-alt); border: 1px solid var(--border);
+  background: rgba(3,5,10,.5); border: 1px solid var(--border);
   color: var(--text-dim); font-size:.78em; font-weight:500;
   cursor: pointer; font-family: inherit; transition: var(--transition);
 }
-.proto-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(99,102,241,.05); }
-.proto-btn.active { background: rgba(99,102,241,.12); border-color: var(--primary); color: var(--primary); font-weight:600; box-shadow: 0 0 0 1px rgba(99,102,241,.15) inset; }
+.proto-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(5,150,105,.05); }
+.proto-btn.active { background: rgba(5,150,105,.1); border-color: var(--primary); color: var(--primary); font-weight:600; box-shadow: 0 0 0 1px rgba(5,150,105,.15) inset; }
 
 /* Method Buttons */
 .topup-methods { display:flex; flex-wrap:wrap; gap: 8px; }
 .method-btn {
   display:flex; align-items:center; gap: 6px;
   padding: 10px 16px; border-radius: var(--radius-sm);
-  background: var(--bg-alt); border: 1px solid var(--border);
+  background: rgba(3,5,10,.5); border: 1px solid var(--border);
   color: var(--text-dim); font-size:.82em; font-weight:500;
   cursor: pointer; font-family: inherit; transition: var(--transition);
 }
-.method-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(99,102,241,.05); }
-.method-btn.active { background: var(--success-bg); border-color: var(--success); color: var(--success); font-weight:600; }
+.method-btn:hover { border-color: var(--primary); color: var(--primary); background: rgba(5,150,105,.05); }
+.method-btn.active { background: rgba(16,185,129,.1); border-color: var(--success); color: var(--success); font-weight:600; }
 
 /* Order Result */
 .result-box { display:none; margin-top: 16px; }
@@ -393,14 +397,13 @@ label {
 .result-key { font-size:.78em; color: var(--muted); }
 .result-val { font-size:.85em; font-weight:600; color: var(--text); word-break:break-all; }
 .link-box {
-  background: var(--bg-alt); border: 1px solid var(--border);
+  background: rgba(3,5,10,.5); border: 1px solid var(--border);
   border-radius: var(--radius-xs); padding: 8px 12px;
   font-size:.72em; font-family: 'SF Mono','Fira Code',monospace;
   color: var(--text-dim); cursor: pointer; transition: var(--transition);
   word-break: break-all; overflow-wrap: break-word;
   margin-top: 4px; line-height: 1.5;
 }
-.link-box:hover { border-color: var(--primary); color: var(--text); }
 .link-box:hover { border-color: var(--primary); color: var(--text); }
 
 /* Modals */
@@ -463,7 +466,7 @@ label {
 
 /* Payment Info */
 .payment-box {
-  background: var(--bg-alt); border: 1px solid var(--border);
+  background: rgba(3,5,10,.5); border: 1px solid var(--border);
   border-radius: 10px; padding: 16px;
   margin: 12px 0;
 }
@@ -517,14 +520,16 @@ label {
 </head>
 <body>
 
+<div class="grain"></div>
+
 <div class="layout">
 
 <!-- Sidebar -->
 <aside class="sidebar" id="sidebar">
   <div class="sidebar-brand">
-    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#818cf8" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke="#10b981"/></svg>
+    <svg width="34" height="34" viewBox="0 0 24 24" fill="none" stroke="#34d399" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/><path d="M9 12l2 2 4-4" stroke="#10b981"/></svg>
     <div class="sidebar-brand-text">
-      <div class="sidebar-brand-name"><?=$appName?></div>
+      <div class="sidebar-brand-name"><?=$appName?> <em>VPN</em></div>
       <div class="sidebar-brand-ver">Premium VPN Service</div>
     </div>
   </div>
@@ -661,7 +666,7 @@ label {
               </div>
               <div class="akun-detail">
                 <div class="name"><?=htmlspecialchars($a['username'])?></div>
-                <div class="meta"><?=$a['flag']??'🌐'?> <?=htmlspecialchars($a['nama_server'])?> &middot; <span class="badge badge-<?=$a['tipe']?>"><?=strtoupper($a['tipe'])?></span></div>
+                <div class="meta"><?=$a['flag']??'🌐'?> <?=htmlspecialchars($a['nama_server'])?> &middot; <span class="badge badge-<?=$a['tipe']?>" style="font-size:.62rem"><?=strtoupper($a['tipe'])?></span></div>
               </div>
             </div>
             <div class="akun-right">
@@ -802,7 +807,7 @@ label {
               </div>
               <div class="akun-detail">
                 <div class="name"><?=htmlspecialchars($a['username'])?></div>
-                <div class="meta"><?=$a['flag']??'🌐'?> <?=htmlspecialchars($a['nama_server'])?> &middot; <span class="badge badge-<?=$a['tipe']?>"><?=strtoupper($a['tipe'])?></span><?=$a['is_trial']?' &middot; <span class="badge badge-trial">TRIAL</span>':''?></div>
+                <div class="meta"><?=$a['flag']??'🌐'?> <?=htmlspecialchars($a['nama_server'])?> &middot; <span class="badge badge-<?=$a['tipe']?>" style="font-size:.62rem"><?=strtoupper($a['tipe'])?></span><?=$a['is_trial']?' &middot; <span class="badge badge-trial" style="font-size:.62rem">TRIAL</span>':''?></div>
               </div>
             </div>
             <div class="akun-right" style="flex-direction:column;align-items:flex-end;gap:4px">
@@ -812,8 +817,7 @@ label {
                   <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"/><circle cx="12" cy="12" r="3"/></svg>
                 </button>
                 <?php
-                // Find the first available config link for copy button
-                $copyLink = $a['link_tls'] ?: $a['link_nontls'] ?: $a['link_grpc'] ?: '';
+                $copyLink = $a['link_tls'] ?: $a['link_nontls'] ?: $a['link_grpc'] ?:'';
                 if ($copyLink):
                 ?>
                 <button class="btn btn-sm btn-primary" onclick="copyText('<?=htmlspecialchars($copyLink, ENT_QUOTES)?>',this)" title="Salin config">
@@ -879,7 +883,7 @@ label {
             </div>
           </div>
           <div class="form-group"><label>Upload Bukti Transfer (opsional)</label>
-            <input type="file" id="buktiFile" accept="image/*">
+            <input type="file" id="buktiFile" accept="image/*" style="padding:8px">
           </div>
           <button class="btn btn-primary w-full" onclick="doTopup()">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
@@ -905,7 +909,7 @@ label {
             <div class="akun-left">
               <div class="akun-detail">
                 <div class="name"><?=$s['flag']??'🌐'?> <?=htmlspecialchars($s['nama_server'])?></div>
-                <div class="meta"><?=htmlspecialchars($s['lokasi'])?> &middot; <span class="text-mono"><?=htmlspecialchars($s['code_server'])?></span></div>
+                <div class="meta"><?=htmlspecialchars($s['lokasi'])?> &middot; <span style="font-family:'SF Mono',monospace;font-size:.75rem"><?=htmlspecialchars($s['code_server'])?></span></div>
               </div>
             </div>
             <div class="akun-right" style="flex-direction:column;align-items:flex-end;gap:2px">
@@ -986,10 +990,10 @@ label {
               <input type="text" id="settingWa" value="<?=htmlspecialchars($user['whatsapp']??'')?>" placeholder="08xxxxxxxxxx">
             </div>
             <div class="form-group"><label>Password Baru (kosongkan jika tidak diganti)</label>
-              <input type="password" id="settingPass" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;">
+              <input type="password" id="settingPass" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
             </div>
             <div class="form-group"><label>Konfirmasi Password Baru</label>
-              <input type="password" id="settingPassConfirm" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;">
+              <input type="password" id="settingPassConfirm" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;">
             </div>
             <button type="button" class="btn btn-primary" onclick="saveProfile()">Simpan Perubahan</button>
           </form>
@@ -1076,7 +1080,7 @@ function showPage(p) {
   pages.forEach(n => document.getElementById('page-'+n).style.display = n===p?'':'none');
   document.getElementById('pageTitle').textContent = pageTitles[p]||p;
   document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.querySelector('.nav-item[onclick*="showPage(\''+p+'\')"]')?.classList.add('active');
+  document.querySelector('.nav-item[onclick*="showPage(\\''+p+'\\')\"]')?.classList.add('active');
   document.getElementById('pageAlert').innerHTML = '';
   if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('open');
   updateHarga();
@@ -1175,9 +1179,9 @@ function buildResultHTML(res) {
   if(res.uuid) html+='<div class="result-row"><span class="result-key">UUID</span><span class="result-val" style="font-family:monospace;font-size:.75rem">'+escHtml(res.uuid)+'</span></div>';
   if(res.password) html+='<div class="result-row"><span class="result-key">Password</span><span class="result-val">'+escHtml(res.password)+'</span></div>';
   html+='<div class="result-row"><span class="result-key">Expired</span><span class="result-val">'+escHtml(res.expired||'')+'</span></div>';
-  if(res.link_tls){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link TLS:</p><div class="link-box" onclick="copyText(\''+escHtml(res.link_tls)+'\',this)">'+escHtml(res.link_tls)+'</div>';}
-  if(res.link_nontls){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link NonTLS:</p><div class="link-box" onclick="copyText(\''+escHtml(res.link_nontls)+'\',this)">'+escHtml(res.link_nontls)+'</div>';}
-  if(res.link_grpc){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link gRPC:</p><div class="link-box" onclick="copyText(\''+escHtml(res.link_grpc)+'\',this)">'+escHtml(res.link_grpc)+'</div>';}
+  if(res.link_tls){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link TLS:</p><div class="link-box" onclick="copyText(\\''+escHtml(res.link_tls)+'\\',this)">'+escHtml(res.link_tls)+'</div>';}
+  if(res.link_nontls){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link NonTLS:</p><div class="link-box" onclick="copyText(\\''+escHtml(res.link_nontls)+'\\',this)">'+escHtml(res.link_nontls)+'</div>';}
+  if(res.link_grpc){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link gRPC:</p><div class="link-box" onclick="copyText(\\''+escHtml(res.link_grpc)+'\\',this)">'+escHtml(res.link_grpc)+'</div>';}
   if(res.download){html+='<br><a href="'+escHtml(res.download)+'" target="_blank" class="btn btn-outline btn-sm" style="margin-top:.5rem">Download Config</a>';}
   return html;
 }
@@ -1192,14 +1196,13 @@ function showAkunDetail(a) {
   html+='<div class="result-row"><span class="result-key">Server</span><span class="result-val">'+escHtml(a.nama_server||'')+'</span></div>';
   html+='<div class="result-row"><span class="result-key">Expired</span><span class="result-val">'+escHtml(a.masa_aktif||'')+'</span></div>';
 
-  // Helper: create copyable link box
   var makeLinkBox = function(label, link) {
     if(!link) return '';
     var safe = escHtml(link);
     return '<p style="font-size:.72rem;color:var(--muted);margin:.75rem 0 .25rem">'+label+':</p>'+
       '<div style="display:flex;gap:6px;align-items:stretch">'+
-      '<div class="link-box" style="flex:1;margin:0" onclick="copyText(\''+safe+'\',this)">'+safe+'</div>'+
-      '<button class="btn btn-sm btn-primary" style="flex-shrink:0;padding:4px 10px" onclick="copyText(\''+safe+'\',this)">Salin</button>'+
+      '<div class="link-box" style="flex:1;margin:0" onclick="copyText(\\''+safe+'\\',this)">'+safe+'</div>'+
+      '<button class="btn btn-sm btn-primary" style="flex-shrink:0;padding:4px 10px" onclick="copyText(\\''+safe+'\\',this)">Salin</button>'+
       '</div>';
   };
   if(a.link_tls) html += makeLinkBox('Link TLS', a.link_tls);
@@ -1262,7 +1265,7 @@ function copyText(text,el){
     const orig=el.innerHTML; el.innerHTML='Tersalin!'; setTimeout(()=>{el.innerHTML=orig},1500);
   }).catch(()=>{});
 }
-function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;');}
+function escHtml(s){return String(s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/\"/g,'&quot;');}
 </script>
 </body>
 </html>

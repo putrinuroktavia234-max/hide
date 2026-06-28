@@ -64,11 +64,11 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 
                 $emailBody = "
                 <div style='font-family:sans-serif;max-width:480px;margin:0 auto;background:#0f172a;color:#f1f5f9;padding:32px;border-radius:16px;'>
-                  <h2 style='color:#60a5fa;margin-bottom:8px;'>&#9889; {$appName}</h2>
+                  <h2 style='color:#34d399;margin-bottom:8px;'>&#9889; {$appName}</h2>
                   <p style='color:#94a3b8;'>Verifikasi akun kamu</p>
                   <div style='background:#1e293b;border-radius:12px;padding:24px;margin:24px 0;text-align:center;'>
                     <p style='color:#94a3b8;font-size:14px;margin-bottom:8px;'>Kode OTP kamu:</p>
-                    <div style='font-size:40px;font-weight:800;letter-spacing:12px;color:#60a5fa;'>{$otp}</div>
+                    <div style='font-size:40px;font-weight:800;letter-spacing:12px;color:#34d399;'>{$otp}</div>
                     <p style='color:#475569;font-size:12px;margin-top:12px;'>Berlaku 15 menit</p>
                   </div>
                   <p style='color:#64748b;font-size:12px;'>Jika kamu tidak mendaftar, abaikan email ini.</p>
@@ -100,7 +100,7 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
             $otp=str_pad(rand(0,999999),6,'0',STR_PAD_LEFT);
             $otpExp=date('Y-m-d H:i:s',strtotime('+15 minutes'));
             $db->prepare("UPDATE users SET otp_code=?,otp_expires=? WHERE id=?")->execute([$otp,$otpExp,$user['id']]);
-            $emailBody="<div style='font-family:sans-serif;padding:32px;background:#0f172a;color:#f1f5f9;border-radius:16px;'><h2 style='color:#60a5fa;'>Kode OTP Baru</h2><div style='font-size:40px;font-weight:800;letter-spacing:12px;color:#60a5fa;text-align:center;margin:24px 0;'>{$otp}</div><p style='color:#64748b;font-size:12px;'>Berlaku 15 min.</p></div>";
+            $emailBody="<div style='font-family:sans-serif;padding:32px;background:#0f172a;color:#f1f5f9;border-radius:16px;'><h2 style='color:#34d399;'>Kode OTP Baru</h2><div style='font-size:40px;font-weight:800;letter-spacing:12px;color:#34d399;text-align:center;margin:24px 0;'>{$otp}</div><p style='color:#64748b;font-size:12px;'>Berlaku 15 min.</p></div>";
             sendEmail($e,"Kode OTP Baru - {$appName}",$emailBody);
             $success='OTP baru sudah dikirim ke email kamu.';
         } else { $error='Email tidak ditemukan atau sudah terverifikasi.'; }
@@ -122,11 +122,11 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
                 $db->prepare("UPDATE users SET otp_code=?, otp_expires=? WHERE id=?")
                    ->execute([$otp, $otpExp, $user['id']]);
                 $emailBody = "<div style='font-family:sans-serif;max-width:480px;margin:0 auto;background:#0f172a;color:#f1f5f9;padding:32px;border-radius:16px;'>
-                  <h2 style='color:#60a5fa;margin-bottom:8px;'>Reset Password - {$appName}</h2>
+                  <h2 style='color:#34d399;margin-bottom:8px;'>Reset Password - {$appName}</h2>
                   <p style='color:#94a3b8;'>Anda meminta reset password untuk akun <b>{$user['username']}</b>.</p>
                   <div style='background:#1e293b;border-radius:12px;padding:24px;margin:24px 0;text-align:center;'>
                     <p style='color:#94a3b8;font-size:14px;margin-bottom:8px;'>Kode reset password:</p>
-                    <div style='font-size:40px;font-weight:800;letter-spacing:12px;color:#60a5fa;'>{$otp}</div>
+                    <div style='font-size:40px;font-weight:800;letter-spacing:12px;color:#34d399;'>{$otp}</div>
                     <p style='color:#475569;font-size:12px;margin-top:12px;'>Berlaku 15 menit</p>
                   </div>
                   <p style='color:#64748b;font-size:12px;'>Jika Anda tidak meminta reset password, abaikan email ini.</p>
@@ -168,112 +168,115 @@ if ($_SERVER['REQUEST_METHOD']==='POST') {
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title><?=$appName?> — Login</title>
+<title><?=$appName?> &mdash; Login</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700;800&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
 <style>
 *,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
 
 :root {
-  --bg-deep: #070b14;
-  --bg-surface: #0a0f1e;
-  --bg-elevated: #101827;
-  --bg-card: rgba(15,23,42,0.65);
-  --border: rgba(30,58,95,0.4);
-  --border-hover: rgba(96,165,250,0.25);
-  --text-primary: #f1f5f9;
-  --text-secondary: #94a3b8;
-  --text-muted: #475569;
-  --accent: #6366f1;
-  --accent-light: #818cf8;
-  --accent-dark: #4f46e5;
-  --accent-glow: rgba(99,102,241,0.35);
-  --purple: #8b5cf6;
+  --bg-deep: #03050a;
+  --bg-surface: #060913;
+  --bg-elevated: #0c1120;
+  --bg-card: rgba(12, 17, 32, 0.7);
+  --border: rgba(20, 40, 70, 0.4);
+  --border-hover: rgba(5, 150, 105, 0.25);
+  --text-primary: #e8edf5;
+  --text-secondary: #8b97b5;
+  --text-muted: #3d4a6a;
+  --accent: #059669;
+  --accent-light: #34d399;
+  --accent-dark: #047857;
+  --accent-glow: rgba(5, 150, 105, 0.3);
   --danger: #ef4444;
   --danger-bg: rgba(239,68,68,0.1);
   --success: #10b981;
   --success-bg: rgba(16,185,129,0.1);
-  --radius: 16px;
-  --radius-sm: 10px;
-  --radius-xs: 6px;
-  --shadow-card: 0 24px 80px rgba(0,0,0,0.5);
+  --radius: 20px;
+  --radius-sm: 12px;
+  --radius-xs: 8px;
+  --shadow-card: 0 24px 80px rgba(0,0,0,0.6);
   --shadow-glow: 0 8px 32px var(--accent-glow);
   --transition: 0.35s cubic-bezier(0.16,1,0.3,1);
 }
 
 body {
-  font-family:'Inter','Segoe UI',system-ui,-apple-system,sans-serif;
-  background:var(--bg-deep);
-  min-height:100vh;overflow-x:hidden;
-  color:var(--text-primary);
-  -webkit-font-smoothing:antialiased;-moz-osx-font-smoothing:grayscale;
+  font-family: 'Inter', 'Segoe UI', system-ui, -apple-system, sans-serif;
+  background: var(--bg-deep);
+  min-height: 100vh; overflow-x: hidden;
+  color: var(--text-primary);
+  -webkit-font-smoothing: antialiased; -moz-osx-font-smoothing: grayscale;
 }
 
 /* Ambient Background */
 .bg-layer{position:fixed;inset:0;pointer-events:none;z-index:0;overflow:hidden}
-.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(30,58,95,0.1) 1px,transparent 1px),linear-gradient(90deg,rgba(30,58,95,0.1) 1px,transparent 1px);background-size:64px 64px;mask-image:radial-gradient(ellipse 70% 60% at 30% 50%,black 30%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 30% 50%,black 30%,transparent 70%)}
-.bg-orb{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);opacity:0.08;animation:orbFloat 25s ease-in-out infinite}
+.bg-grid{position:absolute;inset:0;background-image:linear-gradient(rgba(20,40,70,0.07) 1px,transparent 1px),linear-gradient(90deg,rgba(20,40,70,0.07) 1px,transparent 1px);background-size:72px 72px;mask-image:radial-gradient(ellipse 70% 60% at 30% 50%,black 25%,transparent 70%);-webkit-mask-image:radial-gradient(ellipse 70% 60% at 30% 50%,black 25%,transparent 70%)}
+.bg-orb{position:absolute;width:600px;height:600px;border-radius:50%;filter:blur(120px);opacity:0.07;animation:orbFloat 25s ease-in-out infinite}
 .bg-orb:nth-child(2){background:var(--accent);top:-200px;left:-150px;animation-delay:-5s}
-.bg-orb:nth-child(3){background:var(--purple);bottom:-250px;right:-100px;animation-delay:-10s}
+.bg-orb:nth-child(3){background:#0d9488;bottom:-250px;right:-100px;animation-delay:-10s}
 @keyframes orbFloat{0%,100%{transform:translate(0,0) scale(1)}33%{transform:translate(40px,-30px) scale(1.05)}66%{transform:translate(-20px,20px) scale(0.95)}}
 
+/* Grain overlay */
+.grain{position:fixed;inset:0;pointer-events:none;z-index:1;opacity:0.03;background-image:url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E");background-repeat:repeat;background-size:256px 256px}
+
 /* Main Layout */
-.main-layout{position:relative;z-index:1;display:flex;min-height:100vh;align-items:stretch}
+.main-layout{position:relative;z-index:2;display:flex;min-height:100vh;align-items:stretch}
 
 /* Left Panel */
 .left-panel{flex:1;display:flex;align-items:center;justify-content:center;padding:3rem;position:relative}
 .left-content{max-width:480px;width:100%}
 
-.logo-mark{width:56px;height:56px;background:linear-gradient(135deg,var(--accent),var(--purple));border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;box-shadow:0 12px 40px var(--accent-glow);transition:var(--transition)}
+.logo-mark{width:56px;height:56px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));border-radius:16px;display:flex;align-items:center;justify-content:center;margin-bottom:1.25rem;box-shadow:0 12px 40px var(--accent-glow);transition:var(--transition)}
 .logo-mark:hover{transform:scale(1.05) rotate(-2deg)}
-.logo-section h1{font-size:2.25rem;font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,#f8fafc 30%,#c7d2fe 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.35rem;line-height:1.15}
+.logo-section h1{font-family:'Space Grotesk',sans-serif;font-size:2.25rem;font-weight:800;letter-spacing:-0.03em;background:linear-gradient(135deg,#f8fafc 30%,#a7f3d0 100%);-webkit-background-clip:text;-webkit-text-fill-color:transparent;background-clip:text;margin-bottom:0.35rem;line-height:1.15}
 .logo-section .tagline{font-size:0.9rem;color:var(--text-secondary);font-weight:400;margin-bottom:2rem}
 
 /* Info Cards */
 .info-group{display:flex;flex-direction:column;gap:0.75rem}
-.info-card{background:rgba(15,23,42,0.35);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;backdrop-filter:blur(8px);transition:var(--transition)}
-.info-card:hover{border-color:var(--border-hover);background:rgba(15,23,42,0.5);transform:translateY(-1px)}
-.info-card-header{display:flex;align-items:center;gap:0.5rem;padding:0.7rem 1rem;font-size:0.78rem;font-weight:600;color:var(--text-primary);background:rgba(30,58,95,0.12);border-bottom:1px solid var(--border);letter-spacing:0.02em}
+.info-card{background:rgba(12,17,32,0.35);border:1px solid var(--border);border-radius:var(--radius-sm);overflow:hidden;backdrop-filter:blur(12px);-webkit-backdrop-filter:blur(12px);transition:var(--transition)}
+.info-card:hover{border-color:var(--border-hover);background:rgba(12,17,32,0.5);transform:translateY(-1px)}
+.info-card-header{display:flex;align-items:center;gap:0.5rem;padding:0.7rem 1rem;font-size:0.78rem;font-weight:600;color:var(--text-primary);background:rgba(5,150,105,0.08);border-bottom:1px solid var(--border);letter-spacing:0.02em}
 .info-card-header svg{color:var(--accent-light)}
 .info-card-body{padding:0.7rem 1rem}
 
 /* Promo */
 .promo-item{display:flex;align-items:flex-start;gap:0.5rem;padding:0.45rem 0}
-.promo-item+.promo-item{border-top:1px solid rgba(30,58,95,0.2)}
+.promo-item+.promo-item{border-top:1px solid rgba(20,40,70,0.25)}
 .promo-item p{font-size:0.75rem;color:var(--text-secondary);line-height:1.5;margin:0}
-.promo-badge{flex-shrink:0;font-size:0.55rem;font-weight:700;padding:0.15rem 0.4rem;border-radius:var(--radius-xs);text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;background:rgba(99,102,241,0.2);color:var(--accent-light)}
+.promo-badge{flex-shrink:0;font-size:0.55rem;font-weight:700;padding:0.15rem 0.4rem;border-radius:var(--radius-xs);text-transform:uppercase;letter-spacing:0.06em;margin-top:3px;background:rgba(5,150,105,0.2);color:var(--accent-light)}
 .promo-badge.discount{background:rgba(16,185,129,0.2);color:#34d399}
-.promo-badge.info{background:rgba(139,92,246,0.2);color:#a78bfa}
+.promo-badge.info{background:rgba(13,148,136,0.2);color:#5eead4}
 
 /* Steps */
 .step-list{display:flex;flex-direction:column;gap:0.55rem}
 .step-item{display:flex;align-items:flex-start;gap:0.7rem}
-.step-num{width:24px;height:24px;min-width:24px;background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;border-radius:50%;font-size:0.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px rgba(99,102,241,0.3)}
+.step-num{width:24px;height:24px;min-width:24px;background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;border-radius:50%;font-size:0.7rem;font-weight:700;display:flex;align-items:center;justify-content:center;box-shadow:0 2px 8px var(--accent-glow)}
 .step-text strong{display:block;font-size:0.75rem;color:var(--text-primary)}
 .step-text span{font-size:0.68rem;color:var(--text-muted)}
 
 /* Contact */
 .contact-links{display:flex;flex-direction:column;gap:0.25rem}
 .contact-link{display:flex;align-items:center;gap:0.6rem;padding:0.5rem 0.5rem;text-decoration:none;font-size:0.78rem;color:var(--text-secondary);border-radius:var(--radius-xs);transition:var(--transition)}
-.contact-link:hover{background:rgba(30,58,95,0.25);color:var(--text-primary)}
+.contact-link:hover{background:rgba(5,150,105,0.08);color:var(--text-primary)}
 .contact-link svg{flex-shrink:0;opacity:0.6}
 
 /* Right Panel */
 .right-panel{flex:0.85;display:flex;align-items:center;justify-content:center;padding:2rem;position:relative}
 .auth-wrap{width:100%;max-width:420px}
-.auth-card{background:var(--bg-card);border:1px solid var(--border);border-radius:20px;padding:2.25rem;backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);box-shadow:var(--shadow-card),0 0 0 1px rgba(99,102,241,0.04) inset;transition:var(--transition)}
-.auth-card:hover{border-color:rgba(99,102,241,0.15)}
+.auth-card{background:var(--bg-card);border:1px solid var(--border);border-radius:var(--radius);padding:2.25rem;backdrop-filter:blur(24px) saturate(180%);-webkit-backdrop-filter:blur(24px) saturate(180%);box-shadow:var(--shadow-card),0 0 0 1px rgba(5,150,105,0.04) inset;transition:var(--transition);animation:cardIn 0.5s ease}
+@keyframes cardIn{from{opacity:0;transform:translateY(20px) scale(0.98)}to{opacity:1;transform:translateY(0) scale(1)}}
+.auth-card:hover{border-color:rgba(5,150,105,0.12)}
 .auth-header{text-align:center;margin-bottom:1.5rem}
-.auth-header h2{font-size:1.4rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.02em;margin-bottom:0.25rem}
+.auth-header h2{font-family:'Space Grotesk',sans-serif;font-size:1.4rem;font-weight:700;color:var(--text-primary);letter-spacing:-0.02em;margin-bottom:0.25rem}
 .auth-header p{font-size:0.85rem;color:var(--text-muted)}
 
 /* Tabs */
-.tabs{display:flex;background:rgba(10,22,40,0.5);border-radius:var(--radius-sm);padding:4px;margin-bottom:1.5rem;gap:2px}
-.tab-btn{flex:1;padding:0.6rem 0.5rem;border:none;border-radius:7px;cursor:pointer;font-size:0.82rem;font-weight:600;font-family:inherit;transition:var(--transition);position:relative;overflow:hidden}
-.tab-btn.active{background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;box-shadow:0 4px 15px rgba(99,102,241,0.35)}
+.tabs{display:flex;background:rgba(3,5,10,0.5);border-radius:var(--radius-xs);padding:4px;margin-bottom:1.5rem;gap:2px}
+.tab-btn{flex:1;padding:0.6rem 0.5rem;border:none;border-radius:var(--radius-xs);cursor:pointer;font-size:0.82rem;font-weight:600;font-family:inherit;transition:var(--transition);position:relative;overflow:hidden}
+.tab-btn.active{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;box-shadow:0 4px 15px var(--accent-glow)}
 .tab-btn:not(.active){background:transparent;color:var(--text-muted)}
-.tab-btn:not(.active):hover{color:var(--text-secondary);background:rgba(30,58,95,0.25)}
+.tab-btn:not(.active):hover{color:var(--text-secondary);background:rgba(5,150,105,0.08)}
 .tab-content{display:none;animation:fadeSlideIn 0.35s ease}
 .tab-content.active{display:block}
 @keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:translateY(0)}}
@@ -281,23 +284,23 @@ body {
 /* Form */
 .form-group{margin-bottom:1rem}
 .form-group label{display:block;font-size:0.72rem;font-weight:600;color:var(--text-secondary);margin-bottom:0.4rem;text-transform:uppercase;letter-spacing:0.06em}
-input[type=text],input[type=email],input[type=password],input[type=number]{width:100%;padding:0.8rem 1rem;background:rgba(10,22,40,0.55);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:0.9rem;font-family:inherit;outline:none;transition:var(--transition)}
-input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(99,102,241,0.12),inset 0 1px 0 rgba(99,102,241,0.05)}
-input::placeholder{color:#334155}
-input:hover:not(:focus){border-color:rgba(30,58,95,0.6)}
+input[type=text],input[type=email],input[type=password],input[type=number]{width:100%;padding:0.8rem 1rem;background:rgba(3,5,10,0.55);border:1px solid var(--border);border-radius:var(--radius-sm);color:var(--text-primary);font-size:0.9rem;font-family:inherit;outline:none;transition:var(--transition)}
+input:focus{border-color:var(--accent);box-shadow:0 0 0 3px rgba(5,150,105,0.1),inset 0 1px 0 rgba(5,150,105,0.05)}
+input::placeholder{color:#242d4a}
+input:hover:not(:focus){border-color:rgba(20,40,70,0.6)}
 
 /* Buttons */
 .btn{width:100%;padding:0.85rem;border:none;border-radius:var(--radius-sm);font-size:0.9rem;font-weight:700;cursor:pointer;font-family:inherit;transition:var(--transition);margin-top:0.25rem;letter-spacing:0.02em;position:relative;overflow:hidden}
-.btn-primary{background:linear-gradient(135deg,var(--accent),var(--purple));color:#fff;box-shadow:0 4px 20px rgba(99,102,241,0.3)}
-.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px rgba(99,102,241,0.45)}
+.btn-primary{background:linear-gradient(135deg,var(--accent),var(--accent-dark));color:#fff;box-shadow:0 4px 20px var(--accent-glow)}
+.btn-primary:hover{transform:translateY(-2px);box-shadow:0 8px 30px var(--accent-glow)}
 .btn-primary:active{transform:translateY(0)}
 .btn-secondary{background:transparent;border:1px solid var(--border);color:var(--text-secondary)}
-.btn-secondary:hover{border-color:var(--accent);color:var(--accent-light);background:rgba(30,58,95,0.15)}
+.btn-secondary:hover{border-color:var(--accent);color:var(--accent-light);background:rgba(5,150,105,0.06)}
 
 /* Alerts */
 .alert{padding:0.8rem 1rem;border-radius:var(--radius-sm);font-size:0.84rem;margin-bottom:1rem;display:flex;align-items:flex-start;gap:0.5rem;animation:fadeSlideIn 0.3s ease}
-.alert-error{background:rgba(127,29,29,0.15);border:1px solid rgba(127,29,29,0.4);color:#fca5a5}
-.alert-success{background:rgba(6,78,59,0.15);border:1px solid rgba(6,95,70,0.4);color:#6ee7b7}
+.alert-error{background:rgba(127,29,29,0.12);border:1px solid rgba(127,29,29,0.35);color:#fca5a5}
+.alert-success{background:rgba(6,78,59,0.12);border:1px solid rgba(6,95,70,0.35);color:#6ee7b7}
 
 /* OTP */
 .otp-note{color:var(--text-secondary);font-size:0.85rem;margin-bottom:1.25rem;line-height:1.6}
@@ -307,20 +310,22 @@ input:hover:not(:focus){border-color:rgba(30,58,95,0.6)}
 .forgot-link:hover{color:var(--accent-light)}
 
 /* Divider */
-.divider{display:flex;align-items:center;gap:0.75rem;margin:1rem 0;color:#334155;font-size:0.78rem}
-.divider::before,.divider::after{content:'';flex:1;border-top:1px solid #1e293b}
+.divider{display:flex;align-items:center;gap:0.75rem;margin:1rem 0;color:#2a3660;font-size:0.78rem}
+.divider::before,.divider::after{content:'';flex:1;border-top:1px solid #121d35}
 
 /* Footer */
-.left-footer{margin-top:1rem;padding:0.7rem 0.8rem;background:rgba(15,23,42,0.3);border-radius:8px;border:1px dashed var(--border)}
+.left-footer{margin-top:1rem;padding:0.7rem 0.8rem;background:rgba(12,17,32,0.3);border-radius:8px;border:1px dashed var(--border)}
 .left-footer p{font-size:0.7rem;color:var(--text-muted);line-height:1.5;margin:0}
 
 /* Responsive */
-@media(max-width:900px){.left-panel{display:none}.right-panel{flex:1;padding:1.5rem}.auth-card{padding:1.75rem}}
+@media(max-width:900px){.left-panel{display:none}.right-panel{flex:1;padding:1.5rem}.auth-card{padding:1.75rem;border-radius:14px}}
 @media(min-width:901px)and (max-width:1100px){.left-panel{padding:1.5rem}}
 @media(prefers-reduced-motion:reduce){*,*::before,*::after{animation-duration:0.01ms!important;animation-iteration-count:1!important;transition-duration:0.01ms!important}}
 </style>
 </head>
 <body>
+
+<div class="grain"></div>
 
 <!-- Ambient Background -->
 <div class="bg-layer">
@@ -349,7 +354,7 @@ input:hover:not(:focus){border-color:rgba(30,58,95,0.6)}
         <div class="info-card">
           <div class="info-card-header">
             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-            <span>Pengumuman & Promo</span>
+            <span>Pengumuman &amp; Promo</span>
           </div>
           <div class="info-card-body">
 <?php
@@ -391,10 +396,10 @@ foreach ($announcements as $a):
           <div class="info-card-body">
             <div class="step-list">
               <div class="step-item"><div class="step-num">1</div><div class="step-text"><strong>Klik tab Daftar</strong><span>di form sebelah kanan</span></div></div>
-              <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Isi username & email</strong><span>pastikan email aktif</span></div></div>
+              <div class="step-item"><div class="step-num">2</div><div class="step-text"><strong>Isi username &amp; email</strong><span>pastikan email aktif</span></div></div>
               <div class="step-item"><div class="step-num">3</div><div class="step-text"><strong>Buat password</strong><span>minimal 6 karakter</span></div></div>
               <div class="step-item"><div class="step-num">4</div><div class="step-text"><strong>Verifikasi OTP</strong><span>cek kode di email kamu</span></div></div>
-              <div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>Login & Order VPN</strong><span>pilih paket, bayar, langsung aktif</span></div></div>
+              <div class="step-item"><div class="step-num">5</div><div class="step-text"><strong>Login &amp; Order VPN</strong><span>pilih paket, bayar, langsung aktif</span></div></div>
             </div>
           </div>
         </div>
@@ -447,11 +452,13 @@ foreach ($announcements as $a):
 
         <?php if($error):?>
         <div class="alert alert-error">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
           <span><?=$error?></span>
         </div>
         <?php endif;?>
         <?php if($success):?>
         <div class="alert alert-success">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="flex-shrink:0;margin-top:1px"><polyline points="20 6 9 17 4 12"/></svg>
           <span><?=$success?></span>
         </div>
         <?php endif;?>
@@ -466,7 +473,7 @@ foreach ($announcements as $a):
             </div>
             <div class="form-group">
               <label>Password</label>
-              <input type="password" name="password" placeholder="&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;&#8226;" required autocomplete="current-password">
+              <input type="password" name="password" placeholder="&bull;&bull;&bull;&bull;&bull;&bull;&bull;&bull;" required autocomplete="current-password">
             </div>
             <button type="submit" class="btn btn-primary">Masuk Sekarang</button>
             <a class="forgot-link" onclick="showTab('forgot');var u=document.querySelector('[name=username]');if(u)document.getElementById('forgotEmail').value=u.value||''">Lupa Password?</a>
