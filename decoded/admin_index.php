@@ -433,13 +433,13 @@ textarea{resize:vertical;min-height:80px}
 </div>
 
 <div class="tabs-bar">
-  <button class="tab-btn active" onclick="showTab('dashboard')">Dashboard</button>
-  <button class="tab-btn" onclick="showTab('topup')">Topup<?php if($stats['topup_p']>0):?><span class="badge-count"><?=$stats['topup_p']?></span><?php endif;?></button>
-  <button class="tab-btn" onclick="showTab('servers')">Server</button>
-  <button class="tab-btn" onclick="showTab('users')">Users</button>
-  <button class="tab-btn" onclick="showTab('orders')">Orders</button>
-  <button class="tab-btn" onclick="showTab('akuns')">VPN Accounts</button>
-  <button class="tab-btn" onclick="showTab('settings')">Settings</button>
+  <button class="tab-btn active" onclick="showTab(this,'dashboard')">Dashboard</button>
+  <button class="tab-btn" onclick="showTab(this,'topup')">Topup<?php if($stats['topup_p']>0):?><span class="badge-count"><?=$stats['topup_p']?></span><?php endif;?></button>
+  <button class="tab-btn" onclick="showTab(this,'servers')">Server</button>
+  <button class="tab-btn" onclick="showTab(this,'users')">Users</button>
+  <button class="tab-btn" onclick="showTab(this,'orders')">Orders</button>
+  <button class="tab-btn" onclick="showTab(this,'akuns')">VPN Accounts</button>
+  <button class="tab-btn" onclick="showTab(this,'settings')">Settings</button>
   <a href="../change_password.php" class="tab-btn" style="color:#f59e0b">Password</a>
 </div>
 
@@ -837,11 +837,12 @@ textarea{resize:vertical;min-height:80px}
 </div>
 
 <script>
-function showTab(t){
-  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
-  document.querySelectorAll('.tab-btn').forEach(b=>b.classList.remove('active'));
-  document.getElementById('tab-'+t).classList.add('active');
-  event.target.classList.add('active');
+function showTab(btn,t){
+  document.querySelectorAll('.page').forEach(function(p){p.classList.remove('active');});
+  document.querySelectorAll('.tab-btn').forEach(function(b){b.classList.remove('active');});
+  var el=document.getElementById('tab-'+t);
+  if(el) el.classList.add('active');
+  if(btn) btn.classList.add('active');
 }
 </script>
 
