@@ -536,39 +536,39 @@ label {
 
   <div class="sidebar-section">Menu</div>
   <div class="sidebar-nav">
-    <a class="nav-item active" onclick="showPage('home')">
+    <button class="nav-item active" data-page="home" onclick="showPage('home')" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><polyline points="9 22 9 12 15 12 15 22"/></svg>
       Dashboard
-    </a>
-    <a class="nav-item" onclick="showPage('order')">
+    </button>
+    <button class="nav-item" data-page="order" onclick="showPage('order')" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></svg>
       Order VPN
-    </a>
-    <a class="nav-item" onclick="showPage('akun')">
+    </button>
+    <button class="nav-item" data-page="akun" onclick="showPage('akun')" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"/><circle cx="8.5" cy="7" r="4"/><polyline points="17 11 19 13 23 9"/></svg>
       Akun VPN
       <?php if($totalAkun>0):?><span class="nav-badge"><?=$totalAkun?></span><?php endif;?>
-    </a>
-    <a class="nav-item" onclick="showPage('topup')">
+    </button>
+    <button class="nav-item" data-page="topup" onclick="showPage('topup')" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></svg>
       Isi Saldo
-    </a>
+    </button>
   </div>
 
   <div class="sidebar-section">Info</div>
   <div class="sidebar-nav">
-    <a class="nav-item" onclick="showPage('server')">
+    <button class="nav-item" data-page="server" onclick="showPage('server')" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="2" y="2" width="20" height="8" rx="2" ry="2"/><rect x="2" y="14" width="20" height="8" rx="2" ry="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
       Status Server
-    </a>
-    <a class="nav-item" onclick="showPage('riwayat')">
+    </button>
+    <button class="nav-item" data-page="riwayat" onclick="showPage('riwayat')" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
       Riwayat
-    </a>
-    <a class="nav-item" onclick="showPage('setting')">
+    </button>
+    <button class="nav-item" data-page="setting" onclick="showPage('setting')" type="button">
       <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06A1.65 1.65 0 0 0 4.68 15a1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06A1.65 1.65 0 0 0 9 4.68a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06A1.65 1.65 0 0 0 19.4 9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
       Setting Akun
-    </a>
+    </button>
   </div>
 
   <?php if($role==='admin'):?>
@@ -1077,12 +1077,13 @@ const pages = ['home','order','akun','topup','server','riwayat','setting'];
 const pageTitles = {home:'Dashboard',order:'Order VPN',akun:'Akun VPN',topup:'Isi Saldo',server:'Status Server',riwayat:'Riwayat',setting:'Setting Akun'};
 
 function showPage(p) {
-  pages.forEach(n => document.getElementById('page-'+n).style.display = n===p?'':'none');
-  document.getElementById('pageTitle').textContent = pageTitles[p]||p;
-  document.querySelectorAll('.nav-item').forEach(el => el.classList.remove('active'));
-  document.querySelector('.nav-item[onclick*="showPage(\\''+p+'\\')\"]')?.classList.add('active');
-  document.getElementById('pageAlert').innerHTML = '';
-  if(window.innerWidth<=768) document.getElementById('sidebar').classList.remove('open');
+  pages.forEach(function(n){var el=document.getElementById('page-'+n);if(el)el.style.display=(n===p?'':'none');});
+  var t=document.getElementById('pageTitle');if(t)t.textContent=pageTitles[p]||p;
+  document.querySelectorAll('.nav-item').forEach(function(el){el.classList.remove('active');});
+  var active=document.querySelector('.nav-item[data-page="'+p+'"]');
+  if(active) active.classList.add('active');
+  var a=document.getElementById('pageAlert');if(a)a.innerHTML='';
+  if(window.innerWidth<=768){var sb=document.getElementById('sidebar');if(sb)sb.classList.remove('open');}
   updateHarga();
 }
 
@@ -1179,9 +1180,9 @@ function buildResultHTML(res) {
   if(res.uuid) html+='<div class="result-row"><span class="result-key">UUID</span><span class="result-val" style="font-family:monospace;font-size:.75rem">'+escHtml(res.uuid)+'</span></div>';
   if(res.password) html+='<div class="result-row"><span class="result-key">Password</span><span class="result-val">'+escHtml(res.password)+'</span></div>';
   html+='<div class="result-row"><span class="result-key">Expired</span><span class="result-val">'+escHtml(res.expired||'')+'</span></div>';
-  if(res.link_tls){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link TLS:</p><div class="link-box" onclick="copyText(\\''+escHtml(res.link_tls)+'\\',this)">'+escHtml(res.link_tls)+'</div>';}
-  if(res.link_nontls){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link NonTLS:</p><div class="link-box" onclick="copyText(\\''+escHtml(res.link_nontls)+'\\',this)">'+escHtml(res.link_nontls)+'</div>';}
-  if(res.link_grpc){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link gRPC:</p><div class="link-box" onclick="copyText(\\''+escHtml(res.link_grpc)+'\\',this)">'+escHtml(res.link_grpc)+'</div>';}
+  if(res.link_tls){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link TLS:</p><div class="link-box" onclick="copyText(\''+escHtml(res.link_tls)+'\',this)">'+escHtml(res.link_tls)+'</div>';}
+  if(res.link_nontls){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link NonTLS:</p><div class="link-box" onclick="copyText(\''+escHtml(res.link_nontls)+'\',this)">'+escHtml(res.link_nontls)+'</div>';}
+  if(res.link_grpc){html+='<p style="font-size:.72rem;color:var(--muted);margin:.5rem 0 .25rem">Link gRPC:</p><div class="link-box" onclick="copyText(\''+escHtml(res.link_grpc)+'\',this)">'+escHtml(res.link_grpc)+'</div>';}
   if(res.download){html+='<br><a href="'+escHtml(res.download)+'" target="_blank" class="btn btn-outline btn-sm" style="margin-top:.5rem">Download Config</a>';}
   return html;
 }
@@ -1201,8 +1202,8 @@ function showAkunDetail(a) {
     var safe = escHtml(link);
     return '<p style="font-size:.72rem;color:var(--muted);margin:.75rem 0 .25rem">'+label+':</p>'+
       '<div style="display:flex;gap:6px;align-items:stretch">'+
-      '<div class="link-box" style="flex:1;margin:0" onclick="copyText(\\''+safe+'\\',this)">'+safe+'</div>'+
-      '<button class="btn btn-sm btn-primary" style="flex-shrink:0;padding:4px 10px" onclick="copyText(\\''+safe+'\\',this)">Salin</button>'+
+      '<div class="link-box" style="flex:1;margin:0" onclick="copyText(\''+safe+'\',this)">'+safe+'</div>'+
+      '<button class="btn btn-sm btn-primary" style="flex-shrink:0;padding:4px 10px" onclick="copyText(\''+safe+'\',this)">Salin</button>'+
       '</div>';
   };
   if(a.link_tls) html += makeLinkBox('Link TLS', a.link_tls);
