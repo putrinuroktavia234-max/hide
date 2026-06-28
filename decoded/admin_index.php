@@ -551,8 +551,8 @@ textarea{resize:vertical;min-height:80px}
           </script>
 
           <div style="display:flex;gap:.4rem;flex-wrap:wrap">
-            <form method="POST" style="display:inline"><input type="hidden" name="action" value="approve_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><button type="submit" class="btn btn-green btn-sm">Active Approve</button></form>
-            <form method="POST" style="display:inline"><input type="hidden" name="action" value="reject_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><input type="hidden" name="note" value="Ditolak admin"><button type="submit" class="btn btn-red btn-sm">Tolak</button></form>
+            <form method="POST" style="display:inline"><input type="hidden" name="action" value="approve_topup"><input type="hidden" name="topup_id" value="<?=$t['id']?>"><button type="submit" class="btn btn-green btn-sm">Active Approve</button></form>
+            <form method="POST" style="display:inline"><input type="hidden" name="action" value="reject_topup"><input type="hidden" name="topup_id" value="<?=$t['id']?>"><input type="hidden" name="note" value="Ditolak admin"><button type="submit" class="btn btn-red btn-sm">Tolak</button></form>
           </div>
         </div>
         <?php endforeach; endif;?>
@@ -577,8 +577,8 @@ textarea{resize:vertical;min-height:80px}
             <td><?=date('d M Y H:i',strtotime($t['created_at']))?></td>
             <td>
               <?php if($t['status']==='pending'):?>
-              <form method="POST" style="display:inline"><input type="hidden" name="action" value="approve_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><button class="btn btn-green btn-sm">Active</button></form>
-              <form method="POST" style="display:inline"><input type="hidden" name="action" value="reject_topup"><?php echo csrfField(); ?><input type="hidden" name="topup_id" value="<?=$t['id']?>"><input type="hidden" name="note" value="Ditolak"><button class="btn btn-red btn-sm">Reject</button></form>
+              <form method="POST" style="display:inline"><input type="hidden" name="action" value="approve_topup"><input type="hidden" name="topup_id" value="<?=$t['id']?>"><button class="btn btn-green btn-sm">Active</button></form>
+              <form method="POST" style="display:inline"><input type="hidden" name="action" value="reject_topup"><input type="hidden" name="topup_id" value="<?=$t['id']?>"><input type="hidden" name="note" value="Ditolak"><button class="btn btn-red btn-sm">Reject</button></form>
               <?php endif;?>
               <?php if($t['bukti_transfer']):?><a href="<?=htmlspecialchars($t['bukti_transfer'])?>" target="_blank" class="btn btn-outline btn-sm">View</a><?php endif;?>
             </td>
@@ -597,7 +597,7 @@ textarea{resize:vertical;min-height:80px}
       <div id="addServerForm" style="display:none;padding:1.25rem;border-bottom:1px solid var(--border);background:linear-gradient(135deg,rgba(5,150,105,.04),rgba(13,148,136,.04))">
         <form method="POST">
             <input type="hidden" name="action" value="add_server">
-            <?php echo csrfField(); ?>
+            
             <div class="grid2">
             <div><label>Nama Server</label><input name="nama_server" placeholder="BIZNET IDC" required></div>
             <div><label>Kode Server</label><input name="code_server" placeholder="sgp1" required></div>
@@ -625,7 +625,7 @@ textarea{resize:vertical;min-height:80px}
         </div>
         <form method="POST">
             <input type="hidden" name="action" value="auto_detect_server">
-            <?php echo csrfField(); ?>
+            
             <div class="grid2">
             <div><label>Nama Server <span style="color:var(--muted);font-weight:400">(otomatis)</span></label><input name="nama_server" placeholder="BIZNET IDC"></div>
             <div><label>Kode Server <span style="color:var(--danger)">*</span></label><input name="code_server" placeholder="sgp1" required></div>
@@ -663,7 +663,7 @@ textarea{resize:vertical;min-height:80px}
                 <button class="btn btn-yellow btn-sm"><?=$s['status']==='ready'?'MNT':'ON'?></button>
               </form>
               <form method="POST" style="display:inline" onsubmit="return confirm('Hapus server ini?')">
-                <input type="hidden" name="action" value="delete_server"><?php echo csrfField(); ?>
+                <input type="hidden" name="action" value="delete_server">
                 <input type="hidden" name="server_id" value="<?=$s['id']?>">
                 <button class="btn btn-red btn-sm">Hapus</button>
               </form>
@@ -695,7 +695,7 @@ textarea{resize:vertical;min-height:80px}
             <td>
               <?php if($u['role']!=='admin'):?>
               <form method="POST" style="display:inline" onsubmit="return confirm('Hapus user <?=htmlspecialchars($u['username'])?>?')">
-                <input type="hidden" name="action" value="delete_user"><?php echo csrfField(); ?>
+                <input type="hidden" name="action" value="delete_user">
                 <input type="hidden" name="user_id" value="<?=$u['id']?>">
                 <button class="btn btn-red btn-sm">Hapus</button>
               </form>
@@ -759,7 +759,7 @@ textarea{resize:vertical;min-height:80px}
   <!-- SETTINGS -->
   <div class="page" id="tab-settings">
     <form method="POST" enctype="multipart/form-data">
-    <input type="hidden" name="action" value="save_settings"><?php echo csrfField(); ?>
+    <input type="hidden" name="action" value="save_settings">
     <div class="card">
       <div class="card-header"><div class="card-title">Application Info</div></div>
       <div class="card-body">
